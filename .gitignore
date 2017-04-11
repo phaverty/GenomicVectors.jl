@@ -1,4 +1,2 @@
 *.jl.cov
 *.jl.mem
-test/testData/HumanOmni2.5-4v1_B-H_MappingInformation.txt
-test/testData/HumanOmni2.5-4v1_B-H_MappingInformation.jld
