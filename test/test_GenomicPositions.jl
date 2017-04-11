@@ -23,6 +23,7 @@ chromosomes=["chr2","chr2","chrX"]
 x = GenomicPositions( pos, chromosomes, seqinfo )
 @test x.genopos == [300001,300002,500003]
 @test genostarts(x) == [300001,300002,500003]
+@test genoends(x) == [300001,300002,500003]
 @test x[2] == 300002
 @test typeof(similar(x)) == typeof(x)
 y = copy(x)
