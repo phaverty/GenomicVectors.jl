@@ -46,11 +46,11 @@ pos = Int64[3e5,1.8e5,1.9e5,1e4]
 x = GenomicPositions(pos,chrs,chrinfo)
 @test starts(x) == pos
 @test ends(x) == pos
-@test widths(x) == RLEVector(1, length(pos))
+#@test widths(x) == RLEVector(1, length(pos))
 @test chr_info(x) == chrinfo
 @test genome(x) == "hg19"
 @test chr_names(x) == ["chr1", "chr2", "chrX"]
-@test isa(strands(x), RLEVector)
+#@test isa(strands(x), RLEVector)
 
 ## Indexing
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
