@@ -1,0 +1,191 @@
+        - #########################
+        - ### GenomicPositions Type
+        - #########################
+        - 
+        - """
+        -     GenomicPositions(chrpos, chromosomes, genomeinfo)
+        -     GenomicPositions(genopos, genomeinfo)
+        - 
+        - Represents single-nucleotide positions in a genome.
+        - 
+        - This type uses its (immutable) `GenomeInfo` slot object to describe corresponding genome and
+        -     positions can be expressed relative to this concatenated, linearized genome or relative
+        -     to the chromosome containing a given position.
+        - 
+        - Sorting is by chromosome, as ordered by chrinfo,
+        - 
+        - By convention, all postions in a `GenomicPositions` are considered to be on the plus strand.
+        - 
+        - ##
+        - 
+        - ## Examples
+        - ```julia
+        -     genomeinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+        -     chrs = ["chr2","chr1","chr2","chrX"]
+        -     pos = Int64[3e4,4.2e3,1.9e5,1e4]
+        -     gpos = genopos(pos,chrs,chrinfo)
+        -     x = GenomicPositions(pos,chrs,genomeinfo)
+        -     y = GenomicPositions(gpos,genomeinfo)
+        -     same_genome(x, y)
+        -     sort!(y)
+        -     convert(DataFrame, y)
+        - ```
+        - """
+        - type GenomicPositions{T1 <: Integer} <: AbstractGenomicVector{T1}
+        -     genopos::Vector{T1}
+        -     chrinfo::GenomeInfo{T1}
+        -     function GenomicPositions(genopos, chrinfo)
+       21         new(genopos,chrinfo)
+        -     end
+        - end
+       21 GenomicPositions{T1 <: Integer}(genopos::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicPositions{T1}(genopos, chrinfo)
+       22 GenomicPositions{T1 <: Integer}(pos::Vector{T1}, chromosomes::Vector{String}, chrinfo::GenomeInfo{T1}) = GenomicPositions{T1}(genopos(pos, chromosomes, chrinfo),chrinfo)
+        - 
+        - ## Getters
+       13 genostarts(x::GenomicPositions) = copy(x.genopos)
+        8 _genostarts(x::GenomicPositions) = x.genopos # Pass by reference for internal use
+        - genoends(x::GenomicPositions) = copy(x.genopos)
+        - _genoends(x::GenomicPositions) = x.genopos # Pass by reference for internal use
+       12 starts(x::GenomicPositions) = chrpos(x.genopos,chr_info(x))
+        1 ends(x::GenomicPositions) = chrpos(x.genopos,chr_info(x))
+        1 widths(x::GenomicPositions) = RLEVector(1, length(x))
+        - 
+        - ## Indexing
+      134 Base.getindex(x::GenomicPositions, i::Int) = x.genopos[i]
+        - 
+        - function Base.getindex(x::GenomicPositions, i::AbstractVector)
+        2     GenomicPositions( x.genopos[i], x.chrinfo )
+        - end
+        - 
+        - function Base.setindex!(x::GenomicPositions, value, i)
+        2     (min,max) = extrema(i)
+       18     if min < 1 || max > x.chrinfo.chr_ends[end]
+        0         error("Incoming genopos is outside the bounds of the genome.")
+        -     end
+        4     x.genopos[i] = value
+        4     return(x)
+        - end
+        - 
+        - ## Show
+        - function Base.show(io::IO, ::MIME"text/plain", x::GenomicPositions)
+        -     t = typeof(x)::DataType
+        -     show(io, t)
+        -     write(io, "\nGenome Metadata:\n  ")
+        -     show(io, x.chrinfo)
+        -     write(io, "\nChromosome Positions:\n  ")
+        -     Base.show_vector(io, x.genopos,"[","]")
+        - end
+        - 
+        - ## Conversions
+        - function Base.convert(::Type{DataFrame}, x::GenomicPositions)
+        2     n = length(x)
+        4     chrs = chr_names(x)
+        4     n_chrs = length(chrs)
+        4     c = similar(chrs, n)
+        4     p = similar(x.genopos, n)
+        4     ends = chr_ends(x.chrinfo)
+        4     offsets = chr_offsets(x.chrinfo)
+        4     i = 1
+       42     for pos in x.genopos
+       16         ind = searchsortedfirst(ends, pos, one(Int64), n_chrs, Base.Forward)
+       24         c[i] = chrs[ ind ]
+       24         p[i] = pos - offsets[ ind ]
+       32         i = i + 1
+        -     end
+        4     return( DataFrame( Chromosome=c, Position=p ) )
+        - end
+        - 
+        - function Base.convert(::Type{Vector{String}}, x::GenomicPositions)
+        1     df = convert(DataFrame,x)
+        7     eltype(chr_names(x))[ string(chr, ":", pos, "-", pos) for (chr,pos) in zip(df[:Chromosome], df[:Position]) ]
+        - end
+        1 Base.convert(::Type{Vector}, x::GenomicPositions) = genostarts(x)
+        - 
+        - """
+        - Conversion of GenomicPositions to IntervalCollection adds index as metadata in order to recover order later.
+        - """
+        - function Base.convert(::Type{IntervalCollection}, x::GenomicPositions)
+        -     genome = convert(StringField,genome(x))
+        -     IntervalCollection( [Interval(genome,s,s,"?",i) for (i,s) in enumerate(x)] )
+        - end
+        - 
+        - ## Altering Positions
+        - function slide!(gpos::GenomicPositions, x::Integer)
+        4     offsets = chr_offsets(gpos)
+        8     ends = chr_ends(gpos)
+        8     n_chrs = length(ends)
+        8     chr_ind = 1
+        8     i = 1
+       79     for g in gpos.genopos
+       72         if g > ends[chr_ind] || g <= offsets[chr_ind] # Find new chr
+       18             chr_ind = searchsortedfirst(ends, g, one(Int64), n_chrs, Base.Forward)
+        -         end
+       24         newg = g + x
+       72         if newg > ends[chr_ind] || newg <= offsets[chr_ind]
+        2             throw(ArgumentError("Genomic position $g falls outside the bounds of chromosome $(chr_names(gpos)[chr_ind]) when shifted by $x."))
+        -         end
+       22         gpos.genopos[i] = newg
+       44         i = i + 1
+        -     end
+        6     gpos
+        - end
+        - 
+        1 slide(gr::GenomicPositions, x::Integer) = slide!( copy(gr), x )
+        - 
+        1 Base.empty!(x::GenomicPositions) = empty!(x.genopos)
+        - 
+        - ## Sorting
+        - function Base.sort(x::GenomicPositions; rev::Bool=false)
+        2     GenomicPositions( sort(genostarts(x), rev=rev), chr_info(x) )
+        - end
+        - 
+        - function Base.sort!(x::GenomicPositions; rev::Bool=false)
+        3     sort!(x.genopos, rev=rev)
+        4     x
+        - end
+        - issorted(x::GenomicPositions; rev=false) = issorted(genpos(x), rev=ref)
+        - sortperm(x::GenomicPositions; rev=false) = sortperm(genpos(x), rev=ref)
+        - 
+        - ## Querying Positions
+        - function Base.in(query::GenomicPositions, target::GenomicPositions)
+        4     same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
+       24     [ in(x,target) for x in genostarts(query) ] # TODO: Make BitVector maybe via (generator)?
+        - end
+        2 overlaps(query::GenomicPositions, target::GenomicPositions) = in(query, target) # Synonymous for a pair of gpos
+        - 
+        - function indexin(query::GenomicPositions, target::GenomicPositions)
+        -     same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
+        -     indexin(genostarts(query), genostarts(target))
+        - end
+        - 
+        - overlapin(x::GenomicPositions, y::GenomicPositions) = indexin(x, y)
+        - 
+        - """
+        - For each `query` finds index in `target` that is nearest on the same chromosome.
+        - If no match on the same chromosome exists, the index will be 0.
+        - """
+        - function nearest{T}(query::GenomicPositions{T}, target::GenomicPositions{T})
+        2     same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
+        4     target_gpos = target.genopos
+        4     target_chrs = chromosomes(target)
+        4     nquery = length(query)
+        4     res = Vector{Int64}(nquery)
+        4     i = 1
+       98     for (qpos, qchr) in zip(genostarts(query), chromosomes(query))
+       16         temp_min = typemax(Int64)
+       16         temp_min_index = 0
+       16         j = 1
+      392         for (tpos, tchr) in zip(target_gpos, target_chrs)
+       64             new_min = abs(tpos - qpos)
+      160             if new_min < temp_min && qchr == tchr
+       22                 temp_min = new_min
+       33                 temp_min_index = j
+        -             end
+      128             j = j + 1
+        -         end
+       16         res[i] = temp_min_index
+       32         i = i + 1
+        -     end
+        4     res
+        - end
+        - 

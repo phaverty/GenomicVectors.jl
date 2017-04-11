@@ -1,0 +1,269 @@
+        - ######################
+        - ### GenomicRanges Type
+        - ######################
+        - 
+        - """
+        - # `GenomicRanges`
+        - `GenomicRanges` represent closed ranges in a genome. This type uses its (immutable) `GenomeInfo` slot object to describe
+        -         corresponding genome and positions can be expressed relative to this concatenated, linearized genome or relative to the chromosome containing a given position.
+        - 
+        - ## Examples
+        -     chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+        -     chrs = ["chr1","chr2","chr2","chrX"]
+        -     starts = [100, 200, 300, 400]
+        -     ends = [120, 240, 350, 455]
+        -     gr = GenomicRanges(chrs,starts,ends,chrinfo)
+        - 
+        - ## Indexing
+        - Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`. Indexing by a scalar produces a two-tuple of the start and end positions in genome location units.
+        - 
+        - """
+        - type GenomicRanges{T1 <: Integer} <: AbstractGenomicVector{T1}
+        -     starts::Vector{T1}
+        -     ends::Vector{T1}
+        -     strands::Vector{Strand}
+        -     chrinfo::GenomeInfo{T1}
+        -     function GenomicRanges(starts, ends, strands, chrinfo)
+       38         length(starts) != length(ends) && throw(ArgumentError("starts and ends must be of the same length."))
+       74         if strands == nothing
+       32             strands = Vector{Strand}(length(starts))
+       48             strands[:] = STRAND_NA
+        -         else
+       43             length(starts) != length(strands) && throw(ArgumentError("starts, ends and stands must be of the same length."))
+        -         end
+      191         new(starts, ends, strands, chrinfo)
+        -     end
+        - end
+        - ## Create with specified strands
+        2 GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, strands::Vector{Char}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo),strands,chrinfo)
+        5 GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, strands::Vector{Strand}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo),strands,chrinfo)
+        - GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, strands::Vector{Char}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,strands,chrinfo)
+       14 GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, strands::Vector{Strand}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,strands,chrinfo)
+        - ## Create with default strands
+       13 GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo), nothing, chrinfo)
+        4 GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,nothing,chrinfo)
+        - 
+        - ## Getters
+        1 _genostarts(x::GenomicRanges) = x.starts # Pass by reference for internal use
+        1 _genoends(x::GenomicRanges) = x.ends # Pass by reference for internal use
+        - _strands(x::GenomicRanges) = x.strands # Pass by reference for internal use
+        - 
+        - genostarts(x::GenomicRanges) = copy(x.starts)
+        - genoends(x::GenomicRanges) = copy(x.ends)
+        3 strands(x::GenomicRanges) = copy(x.strands)
+        - 
+        1 starts(x::GenomicRanges) = chrpos(x.starts,chr_info(x))
+        1 ends(x::GenomicRanges) = chrpos(x.ends,chr_info(x))
+        1 widths(x::GenomicRanges) = (x.ends - x.starts) .+ 1
+        - 
+        - ## Indexing
+        - each(x::GenomicRanges) = zip(x.starts,x.ends)
+      196 Base.getindex(x::GenomicRanges, i::Int) = (x.starts[i],x.ends[i],x.strands[i])
+        - 
+        - function Base.getindex(x::GenomicRanges, i::AbstractArray)
+       11     GenomicRanges( x.starts[i], x.ends[i], x.strands[i], chr_info(x) )
+        - end
+        - 
+        - function Base.setindex!(x::GenomicRanges, value, i)
+        -     (min,max) = extrema(i)
+        -     if min < 1 || max > x.chrinfo.chr_ends[end]
+        -         error("Incoming genopos is outside the bounds of the genome.")
+        -     end
+        -     x.genopos[i] = value
+        -     return(x)
+        - end
+        - 
+        - function Base.vcat(x::GenomicRanges,y::GenomicRanges)
+        2     same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
+        4     GenomicRanges(vcat(x.starts,y.starts),vcat(x.ends,y.ends),vcat(x.strands,y.strands),chr_info(x))
+        - end
+        - 
+        - ## Show
+        - function Base.show(io::IO, ::MIME"text/plain", x::GenomicRanges)
+        -     t = typeof(x)::DataType
+        -     show(io, t)
+        -     write(io, "\nGenome Metadata:\n  ")
+        -     show(io, x.chrinfo)
+        -     write(io, "\nChromosome Start Positions:\n ")
+        -     Base.show_vector(io, starts(x),"[","]")
+        -     write(io, "\nChromosome End Positions:\n ")
+        -     Base.show_vector(io, ends(x),"[","]")
+        -     write(io, "\nChromosome Strand:\n ")
+        -     Base.show_vector(io, strands(x),"[","]")
+        - end
+        - 
+        - ## Conversions
+        - function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+        2     n = length(x)
+        4     chrs = chr_names(x)
+        4     n_chrs = length(chrs)
+        4     c = similar(chrs, n)
+        4     s = similar(x.starts, n)
+        4     e = similar(x.ends, n)
+        4     ends = chr_ends(x.chrinfo)
+        4     offsets = chr_offsets(x.chrinfo)
+        4     i = 1
+       98     for (spos,epos) in zip(x.starts,x.ends)
+       16         ind = searchsortedfirst(ends, spos, one(Int64), n_chrs, Base.Forward)
+       24         c[i] = chrs[ ind ]
+       16         o = offsets[ ind ]
+       24         s[i] = spos - o
+       24         e[i] = epos - o
+       32         i = i + 1
+        -     end
+        4     return( DataFrame( Chromosome=c, Start=s, End=e, Strand=copy(strands(x)) ) )
+        - end
+        - 
+        - function Base.convert(::Type{Vector{String}}, x::GenomicRanges)
+        1     df = convert(DataFrame,x)
+        7     String[ string(c, ":", s, "-", e) for (c,s,e) in zip(df[:Chromosome], df[:Start], df[:End]) ]
+        - end
+        - 
+        - Base.convert(::Type{Vector}, x::GenomicRanges) = [ (s,e) for (s,e) in x ]
+        - 
+        - Base.convert(::Type{GenomicPositions}, x::GenomicRanges) = GenomicPositions(starts(x), chr_info(x))
+        - 
+        - """
+        - Conversion of GenomicRanges to IntervalCollection adds index as metadata in order to recover order later.
+        - """
+        - function Base.convert(::Type{IntervalCollection}, x::GenomicRanges)
+       20     g = genome(x)
+      160     IntervalCollection( sort([Interval(g,b,e,s,i) for (i,(b,e,s)) in enumerate(x)]) )
+        - end
+        - 
+        - ## Altering Positions
+        - function slide!(gr::GenomicRanges, x::Integer)
+        2     offsets = chr_offsets(gr)
+        4     ends = chr_ends(gr)
+        4     n_chrs = length(ends)
+        4     chr_ind = 1
+        4     i = 1
+      112     for (s,e) in gr
+       48         if e > ends[chr_ind] || s <= offsets[chr_ind] # Find new chr
+       12             chr_ind = searchsortedfirst(ends, s, one(Int64), n_chrs, Base.Forward)
+        -         end
+       16         news = s + x
+       16         newe = e + x
+       48         if newe > ends[chr_ind] || news <= offsets[chr_ind]
+        0             throw(ArgumentError("Genomic position ($s,$e) falls outside the bounds of chromosome $(chr_names(gr)[chr_ind]) when shifted by $x."))
+        -         end
+       16         gr.starts[i] = news
+       16         gr.ends[i] = newe
+       32         i = i + 1
+        -     end
+        4     gr
+        - end
+        - 
+        1 slide(gr::GenomicRanges, x::Integer) = slide!( copy(gr), x )
+        - 
+        - function empty!(x::GenomicRanges)
+        -     empty!(x.starts)
+        -     empty!(x.ends)
+        -     empty!(x.strands)
+        -     x
+        - end
+        - 
+        - ## Sorting
+        - function Base.sort!(x::GenomicRanges; rev::Bool=false)
+        3     mat = sortrows( hcat(x.starts, x.ends), rev=rev )
+        6     x.starts = mat[:,1]
+        6     x.ends = mat[:,2]
+        4     x
+        - end
+        - 
+        - function Base.sort(x::GenomicRanges; rev::Bool=false)
+        2     mat = sortrows( hcat(x.starts, x.ends), rev=rev )
+        2     GenomicRanges( mat[:,1], mat[:,2], chr_info(x) )
+        - end
+        - 
+        - function issorted(x::GenomicRanges; rev=false)
+        -     length(x) == 0 && return true
+        -     (prev_s,prev_e) = x[1]
+        -     if rev
+        -         for (s,e) in x
+        -             if s > prev_s || (s == prev_s && e > prev_e)
+        -                 return false
+        -             end
+        -         end
+        -     else
+        -         for (s,e) in x
+        -             if s < prev_s || (s == prev_s && e < prev_e)
+        -                 return false
+        -             end
+        -         end
+        -     end
+        -     true
+        - end
+        - 
+        - function sortperm(x::GenomicRanges; rev=false)
+        -     sortperm( convert(Vector,gr), rev=rev )
+        - end
+        - 
+        - ## Querying Positions
+        - # Note that the standard set operations require exact matches and
+        - # a separate set of functions work on overlaps
+        - # N.B. intersect(tree1,tree2) returns an iterator of overlapping pairs. This is like
+        - # The twocol matrix of match pairs in R's IRanges::findOverlaps()
+        - 
+        - # Identical matches (set ops)
+        - function Base.findin(x::GenomicRanges, y::GenomicRanges)
+        6     same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
+        -     ## FIXME: This can't possibly be efficient. Get Bio.Intervals to discriminate exact and overlap matching.
+       12     xit = convert(IntervalCollection,x)
+       12     yit = convert(IntervalCollection,y)
+       12     ol = intersect(xit,yit)
+       12     inds = Vector{Int64}(0)
+      162     for (el_a,el_b) in ol
+       96         if first(el_a) == first(el_b) && last(el_a) == last(el_b) && strand(el_a) == strand(el_b)
+       36             push!(inds,metadata(el_a))
+        -         end
+        -     end
+       12     sort(unique(inds))
+        - end
+        - 
+        - function Base.in(x::GenomicRanges, y::GenomicRanges)
+        3     inds = falses(length(x))
+        6     inds[ findin(x,y) ] = true
+        6     inds
+        - end
+        - 
+        2 Base.setdiff(x::GenomicRanges, y::GenomicRanges) = x[ !in(x,y) ]
+        2 Base.intersect(x::GenomicRanges, y::GenomicRanges) = x[ findin(x,y) ]
+        - 
+        - function Base.union(x::GenomicRanges, y::GenomicRanges)
+        1     ic = convert(IntervalCollection,vcat(x,y))
+        2     ic = unique(ic)
+        2     inds = [ metadata(el) for el in ic ]
+        2     gr = GenomicRanges( [ first(el) for el in ic ], [ last(el) for el in ic ], [ strand(el) for el in ic ], chr_info(x) )
+        2     gr = gr[inds]
+        2     gr
+        - end
+        - 
+        - # Overlap ops
+        - """
+        - Finds sorted, unique indexes of `x` that are in `y`. In other words, it i like
+        - findin, but by range overlap.
+        - """
+        - function overlapin(x::GenomicRanges, y::GenomicRanges)
+        3     same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
+        6     xit = convert(IntervalCollection,x)
+        6     yit = convert(IntervalCollection,y)
+        6     ol = intersect(xit,yit)
+       21     sort( unique( [ metadata(el_a) for (el_a,el_b) in ol ] ) )
+        - end
+        - 
+        - """
+        - Like overlapin, but returns a BitVector indicating which of `x` have an overlapin
+        - in `y`.
+        - """
+        - function hasoverlap(x::GenomicRanges, y::GenomicRanges)
+        1   inds = falses(length(x))
+        2   inds[ overlapin(x,y) ] = true
+        2   inds
+        - end
+        - 
+        - """
+        - Like intersect, but by overlap.
+        - """
+        1 overlap(x::GenomicRanges, y::GenomicRanges) = x[ overlapin(x,y) ]
+        - 

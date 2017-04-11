@@ -1,0 +1,49 @@
+        - #########################
+        - ### Utility Functions ###
+        - #########################
+        - 
+        - """
+        - Given chromosome and chromosome position information and a description of
+        - the chromosomes (a GenoPos object), calculate the corresponding positions
+        - in the linear genome.
+        - """
+        - function genopos(pos, chromosomes, chrinfo::GenomeInfo)
+       65     offsets = chr_offsets(chrinfo)
+      130     lengths = chr_lengths(chrinfo)
+      195     gpos = similar(offsets, length(pos))
+      130     prev_chr = chromosomes[1]
+      455     len = lengths[prev_chr]
+     3671     @inbounds for (i,x,chr) in zip(1:length(pos), pos, chromosomes)
+     1757         if chr != prev_chr
+      248             prev_chr = chr
+      992             len = lengths[prev_chr]
+        -         end
+     1255         if 1 <= x <= len
+     2259             gpos[i] = x + offsets[prev_chr]
+        -         else
+      316             error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
+        -         end
+        -     end
+      130     gpos
+        - end
+        - 
+        - """
+        - Given positions in the linear genome, calculate the position on the relevant chromosome.
+        - """
+        - function chrpos(pos, chrinfo::GenomeInfo)
+       15     ends = chr_ends(chrinfo)
+       30     offsets = chr_offsets(chrinfo)
+       30     nchr = length(ends)
+       30     res = similar(pos,length(pos))
+       30     r = 1
+       30     i = 1
+      379     @inbounds for g in pos
+      456         if g > ends[r] || g <= offsets[r]
+      138             r = searchsortedfirst(ends, g, 1, nchr, Base.Forward)
+        -         end
+      228         res[i] = pos[i] - offsets[ r ]
+      319         i = i + 1
+        -     end
+       30     res
+        - end
+        - 

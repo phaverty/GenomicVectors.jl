@@ -1,0 +1,37 @@
+        - abstract AbstractGenomicVector{T} <: AbstractVector{T}
+        - 
+        - ## Required API for an AbstractGenomicVector
+        - ## chr_info() must return a GenomeInfo object.
+        - ##   This allows all of the methods on GenomeInfo to work.
+        - ## _genostarts() must return a vector of start positions relative to the GenomeInfo. May be direct access, so 
+        - 
+        - ## Functions that work on the underlying GenomeInfo
+        - ## Documented by GenomeInfo
+      148 chr_info(x::AbstractGenomicVector) = x.chrinfo # Immutable, so just pass along
+        - for op in [:chr_names, :chr_lengths, :chr_ends, :chr_offsets, :genome]
+       44     @eval $(op)(x::AbstractGenomicVector) = $(op)(chr_info(x))
+        - end
+        - 
+       30 same_genome(x::AbstractGenomicVector, y::AbstractGenomicVector) = chr_info(x) == chr_info(y)
+        - 
+        - ## General purpose getters
+        - function chromosomes(x::AbstractGenomicVector)
+        4     names = chr_names(x)
+        8     ends = chr_ends(x.chrinfo)
+        8     offsets = chr_offsets(x.chrinfo)
+        8     nchr = length(names)
+        8     res = similar(names, length(x))
+        8     r = 1
+        8     i = 1
+       88     @inbounds for pos in _genostarts(x)
+       96         if pos > ends[r] || pos <= offsets[r]
+       24             r = searchsortedfirst(ends, pos, 1, nchr, Base.Forward)
+        -         end
+       48         res[i] = names[r]
+       68         i = i + 1
+        -     end
+        8     res
+        - end
+        1 strands(x::AbstractGenomicVector) = RLEVector("+", length(x))
+        - 
+        - 
