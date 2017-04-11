@@ -1,5 +1,5 @@
 site_name:        GenomicRanges.jl
-repo_url:         http://resscm.gene.com/bioinfo/projects/julia/GenomicRanges
+repo_url:         https://github.com/phaverty/GenomicVectors.jl
 site_description: GenomicRanges and GenomicPositions for julia, inspired by BioConductor.
 site_author:      Peter Haverty
 theme:            readthedocs
