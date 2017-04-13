@@ -7,13 +7,16 @@ Given chromosome and chromosome position information and a description of
 the chromosomes (a GenoPos object), calculate the corresponding positions
 in the linear genome.
 """
-function genopos(pos, chromosomes, chrinfo::GenomeInfo)
+function genopos(positions, chromosomes, chrinfo::GenomeInfo)
+    if length(positions) != length(chromosomes)
+        throw(ArgumentError("Arguments positions and chromosomes must have the same length."))
+    end
     offsets = chr_offsets(chrinfo)
     lengths = chr_lengths(chrinfo)
-    gpos = similar(offsets, length(pos))
+    gpos = similar(offsets, length(positions))
     prev_chr = chromosomes[1]
     len = lengths[prev_chr]
-    @inbounds for (i,x,chr) in zip(1:length(pos), pos, chromosomes)
+    @inbounds for (i,x,chr) in zip(1:length(positions), positions, chromosomes)
         if chr != prev_chr
             prev_chr = chr
             len = lengths[prev_chr]
