@@ -4,6 +4,7 @@ using GenomicVectors
 using Base.Test
 using RLEVectors
 using DataFrames
+using Bio.Intervals
 
 @testset begin
     
