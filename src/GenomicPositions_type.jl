@@ -105,8 +105,8 @@ Base.convert(::Type{Vector}, x::GenomicPositions) = genostarts(x)
 Conversion of GenomicPositions to IntervalCollection adds index as metadata in order to recover order later.
 """
 function Base.convert(::Type{IntervalCollection}, x::GenomicPositions)
-    genome = convert(StringField,genome(x))
-    IntervalCollection( [Interval(genome,s,s,"?",i) for (i,s) in enumerate(x)] )
+    g = genome(x)
+    IntervalCollection( sort([Interval(g,s,s,'?',i) for (i,s) in enumerate(x)]) )
 end
 
 ## Altering Positions

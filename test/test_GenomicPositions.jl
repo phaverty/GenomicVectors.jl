@@ -23,7 +23,9 @@ chromosomes=["chr2","chr2","chrX"]
 x = GenomicPositions( pos, chromosomes, seqinfo )
 @test x.genopos == [300001,300002,500003]
 @test genostarts(x) == [300001,300002,500003]
+@test GenomicVectors._genostarts(x) == [300001,300002,500003]
 @test genoends(x) == [300001,300002,500003]
+@test GenomicVectors._genoends(x) == [300001,300002,500003]
 @test x[2] == 300002
 @test typeof(similar(x)) == typeof(x)
 y = copy(x)
@@ -79,7 +81,14 @@ gp = GenomicPositions( gpos, chrinfo )
 @test convert(Vector,gp) == gpos
 @test convert(DataFrame,gp) == DataFrame(Chromosome=chrs, Position=pos)
 @test convert(Vector{String},gp) == [ "$(c):$(p)-$(p)" for (c,p) in zip(chrs,pos) ]
-
+ic = IntervalCollection([
+                          Interval("hg19",300000,300000,'?',1),
+                          Interval("hg19",480000,480000,'?',2),
+                          Interval("hg19",490000,490000,'?',3),
+                          Interval("hg19",510000,510000,'?',4)
+                         ])
+@test convert(IntervalCollection,gp) == ic
+    
 ## Altering
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]
