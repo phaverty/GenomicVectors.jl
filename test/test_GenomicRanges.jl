@@ -2,8 +2,8 @@ module TestGenomicRanges
 
 using GenomicVectors
 using Base.Test
-using DataFrames
 using Bio.Intervals
+using DataFrames
 
 @testset begin
 

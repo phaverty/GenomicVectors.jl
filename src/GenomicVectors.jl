@@ -7,6 +7,7 @@ module GenomicVectors
 using RLEVectors
 using AxisArrays
 using Bio.Intervals
+using DataFrames
 
 # utils
 export genopos

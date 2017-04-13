@@ -2,8 +2,8 @@ module TestGenomicPositions
 
 using GenomicVectors
 using Base.Test
-using DataFrames
 using RLEVectors
+using DataFrames
 
 @testset begin
     

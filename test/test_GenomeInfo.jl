@@ -2,7 +2,6 @@ module TestGenomeInfo
 
 using GenomicVectors
 using Base.Test
-using DataFrames
 
 @testset begin
     
