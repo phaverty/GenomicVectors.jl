@@ -186,11 +186,13 @@
 <ul>
 <li>[ ] Make sure my hash and == are what AutoHashEquals would say</li>
 <li>[ ] chrpos, chromosomes, genopos util functions so similar. What can I factor out?</li>
+<li>[ ] sort(GR) should use sortperm(each(GR))</li>
 </ul>
 <p><a id='Bugs-1'></a></p>
 <h1 id="bugs">Bugs</h1>
 <ul>
 <li>[x] chromosomes function contains type instability</li>
+<li>[x] sortperm(x::GenomicRanges; rev=false) is inconsistent with sort(x::GenomicRanges; rev=false)</li>
 </ul>
               
             </div>
