@@ -159,7 +159,7 @@ end
 
 slide(gr::GenomicRanges, x::Integer) = slide!( copy(gr), x )
 
-function empty!(x::GenomicRanges)
+function Base.empty!(x::GenomicRanges)
     empty!(x.starts)
     empty!(x.ends)
     empty!(x.strands)
@@ -179,7 +179,7 @@ function Base.sort(x::GenomicRanges; rev::Bool=false)
     GenomicRanges( mat[:,1], mat[:,2], chr_info(x) )
 end
 
-function issorted(x::GenomicRanges; rev=false)
+function Base.issorted(x::GenomicRanges; rev::Bool=false)
     length(x) == 0 && return true
     (prev_s,prev_e) = x[1]
     if rev
@@ -198,7 +198,7 @@ function issorted(x::GenomicRanges; rev=false)
     true
 end
 
-function sortperm(x::GenomicRanges; rev=false)
+function Base.sortperm(x::GenomicRanges; rev=false)
     sortperm( convert(Vector,gr), rev=rev )
 end
 
@@ -220,6 +220,8 @@ function Base.findin(x::GenomicRanges, y::GenomicRanges)
         if first(el_a) == first(el_b) && last(el_a) == last(el_b) && strand(el_a) == strand(el_b)
             push!(inds,metadata(el_a))
         end
+
+
     end
     sort(unique(inds))
 end

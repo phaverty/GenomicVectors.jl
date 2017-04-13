@@ -146,8 +146,8 @@ function Base.sort!(x::GenomicPositions; rev::Bool=false)
     sort!(x.genopos, rev=rev)
     x
 end
-issorted(x::GenomicPositions; rev=false) = issorted(genostarts(x), rev=rev)
-sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
+Base.issorted(x::GenomicPositions; rev=false) = issorted(genostarts(x), rev=rev)
+Base.sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
 
 ## Querying Positions
 function Base.in(query::GenomicPositions, target::GenomicPositions)
@@ -156,7 +156,7 @@ function Base.in(query::GenomicPositions, target::GenomicPositions)
 end
 overlaps(query::GenomicPositions, target::GenomicPositions) = in(query, target) # Synonymous for a pair of gpos
 
-function indexin(query::GenomicPositions, target::GenomicPositions)
+function Base.indexin(query::GenomicPositions, target::GenomicPositions)
     same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
     indexin(genostarts(query), genostarts(target))
 end
