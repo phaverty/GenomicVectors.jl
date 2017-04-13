@@ -13,24 +13,5 @@ for op in [:chr_names, :chr_lengths, :chr_ends, :chr_offsets, :genome]
 end
 
 same_genome(x::AbstractGenomicVector, y::AbstractGenomicVector) = chr_info(x) == chr_info(y)
-
-## General purpose getters
-function chromosomes(x::AbstractGenomicVector)
-    names = chr_names(x)
-    ends = chr_ends(x.chrinfo)
-    offsets = chr_offsets(x.chrinfo)
-    nchr = length(names)
-    res = similar(names, length(x))
-    r = 1
-    i = 1
-    @inbounds for pos in _genostarts(x)
-        if pos > ends[r] || pos <= offsets[r]
-            r = searchsortedfirst(ends, pos, 1, nchr, Base.Forward)
-        end
-        res[i] = names[r]
-        i = i + 1
-    end
-    res
-end
 strands(x::AbstractGenomicVector) = RLEVector("+", length(x))
 
