@@ -143,8 +143,8 @@ function Base.sort!(x::GenomicPositions; rev::Bool=false)
     sort!(x.genopos, rev=rev)
     x
 end
-issorted(x::GenomicPositions; rev=false) = issorted(genpos(x), rev=ref)
-sortperm(x::GenomicPositions; rev=false) = sortperm(genpos(x), rev=ref)
+issorted(x::GenomicPositions; rev=false) = issorted(genostarts(x), rev=rev)
+sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
 
 ## Querying Positions
 function Base.in(query::GenomicPositions, target::GenomicPositions)

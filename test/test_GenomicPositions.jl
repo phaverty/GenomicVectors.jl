@@ -163,6 +163,24 @@ y = GenomicPositions(ypos,chrs,chrinfo)
 prepend!(x,y)
 @test starts(x) == Int64[2e5,1.8e5,1.8e5,1e4,3e5,1.8e5,1.9e5,1e4]
 
+## Order
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+xchrs = ["chr1","chr2","chr2","chrX"]
+ychrs = ["chr1","chr2","chr2","chrX"]
+zchrs = ["chr2","chr1","chr2","chrX"]
+xpos = Int64[3e2,1.8e5,1.9e5,1e4]
+ypos = Int64[1,3,2,4]
+zpos = Int64[1,2,3,4]
+x = GenomicPositions(xpos,xchrs,chrinfo)
+y = GenomicPositions(ypos,ychrs,chrinfo)
+z = GenomicPositions(zpos,zchrs,chrinfo)
+@test issorted(x) == true
+@test issorted(y) == false
+@test issorted(z) == false
+@test sortperm(x) == [1,2,3,4]
+@test sortperm(y) == [1,3,2,4]
+@test sortperm(z) == [2,1,3,4]
+
 end # testset
 
 end # module
