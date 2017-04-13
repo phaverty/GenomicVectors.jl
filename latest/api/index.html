@@ -143,6 +143,7 @@
 <li><a href="./#GenomicVectors.GenomeInfo"><code>GenomicVectors.GenomeInfo</code></a></li>
 <li><a href="./#GenomicVectors.GenomicPositions"><code>GenomicVectors.GenomicPositions</code></a></li>
 <li><a href="./#GenomicVectors.GenomicRanges"><code>GenomicVectors.GenomicRanges</code></a></li>
+<li><a href="./#GenomicVectors.chromosomes"><code>GenomicVectors.chromosomes</code></a></li>
 <li><a href="./#GenomicVectors.chrpos"><code>GenomicVectors.chrpos</code></a></li>
 <li><a href="./#GenomicVectors.genopos"><code>GenomicVectors.genopos</code></a></li>
 <li><a href="./#GenomicVectors.nearest"><code>GenomicVectors.nearest</code></a></li>
@@ -168,7 +169,7 @@ chr_offsets(chrinfo)
 chrinfo[2] # 5e5
 </code></pre>
 
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/7f88869257bbf467ae40a0532e44f0c7729ff9ac/src/GenomeInfo_type.jl#L2-L18' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/826dcdf42885f63f0c61512957609d58141b824c/src/GenomeInfo_type.jl#L2-L18' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.GenomicPositions' href='#GenomicVectors.GenomicPositions'>#</a>
 <strong><code>GenomicVectors.GenomicPositions</code></strong> &mdash; <em>Type</em>.</p>
 <pre><code>GenomicPositions(chrpos, chromosomes, genomeinfo)
@@ -192,7 +193,7 @@ GenomicPositions(genopos, genomeinfo)
     convert(DataFrame, y)
 </code></pre>
 
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/7f88869257bbf467ae40a0532e44f0c7729ff9ac/src/GenomicPositions_type.jl#L5-L33' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/826dcdf42885f63f0c61512957609d58141b824c/src/GenomicPositions_type.jl#L5-L33' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.GenomicRanges' href='#GenomicVectors.GenomicRanges'>#</a>
 <strong><code>GenomicVectors.GenomicRanges</code></strong> &mdash; <em>Type</em>.</p>
 <p><strong><code>GenomicRanges</code></strong></p>
@@ -207,20 +208,132 @@ gr = GenomicRanges(chrs,starts,ends,chrinfo)
 
 <p><strong>Indexing</strong></p>
 <p>Indexing a <code>GenomicRanges</code> with an array produces a new <code>GenomicRanges</code>. Indexing by a scalar produces a two-tuple of the start and end positions in genome location units.</p>
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/7f88869257bbf467ae40a0532e44f0c7729ff9ac/src/GenomicRanges_type.jl#L5-L20' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/826dcdf42885f63f0c61512957609d58141b824c/src/GenomicRanges_type.jl#L5-L20' class='documenter-source'>source</a><br></p>
 <p><a id='Genome-Location-API-1'></a></p>
 <h2 id="genome-location-api">Genome Location API</h2>
 <p><code>GenomicVectors.jl</code> has ... All <code>AbstractGenomicVector</code>s implement the API for <code>GenomeInfo</code> for access to their genome descriptions.</p>
 <p><a id='Accessing-position-info-1'></a></p>
 <h2 id="accessing-position-info">Accessing position info</h2>
-<pre><code>starts
-widths
-ends
-genopos
-chrpos
-chromosomes
+<p><a id='RLEVectors.starts' href='#RLEVectors.starts'>#</a>
+<strong><code>RLEVectors.starts</code></strong> &mdash; <em>Function</em>.</p>
+<p><strong>RLEVectors</strong></p>
+<p><code>RLEVectors</code> is an alternate implementation of the Rle type from Bioconductor's IRanges package by H. Pages, P. Aboyoun and M. Lawrence. RLEVectors represent a vector with repeated values as the ordered set of values and repeat extents. In the field of genomics, data of various types measured across the ~3 billion letters in the human genome can often be represented in a few thousand runs. It is useful to know the bounds of genome regions covered by these runs, the values associated with these runs, and to be able to perform various mathematical operations on these values.</p>
+<p><code>RLEVectors</code> can be created from a single vector or a vector of values and a vector of run ends. In either case runs of values or zero length runs will be compressed out. RLEVectors can be expanded to a full vector with <code>collect</code>.</p>
+<p><strong>Aliases</strong></p>
+<p>Several aliases are defined for specific types of RLEVector (or collections thereof).</p>
+<pre><code>FloatRle              RLEVector{Float64,UInt32}
+IntegerRle            RLEVector{Int64,UInt32}
+BoolRle               RLEVector{Bool,UInt32}
+StringRle             RLEVector{String,UInt32}
+RLEVectorList{T1,T2}  Vector{ RLEVector{T1,T2} }
 </code></pre>
 
+<p><strong>Constructors</strong></p>
+<p><code>RLEVector</code>s can be created by specifying a vector to compress or the runvalues and run ends.</p>
+<pre><code>x = RLEVector([1,1,2,2,3,3,4,4,4])
+x = RLEVector([4,5,6],[3,6,9])
+</code></pre>
+
+<p><strong>Describing <code>RLEVector</code> objects</strong></p>
+<p><code>RLEVector</code>s implement the usual descriptive functions for an array as well as some that are specific to the type.</p>
+<ul>
+<li><code>length(x)</code> The full length of the vector, uncompressed</li>
+<li><code>size(x)</code> Same as <code>length</code>, as for any other vector</li>
+<li><code>size(x,dim)</code> Returns <code>(length(x),1) for dim == 1</code></li>
+<li><code>starts(x)</code> The index of the beginning of each run</li>
+<li><code>widths(x)</code> The width of each run</li>
+<li><code>ends(x)</code> The index of the end of each run</li>
+<li><code>values(x)</code> The data value for each run</li>
+<li><code>isempty(x)</code> Returns boolean, as for any other vector</li>
+<li><code>nrun(x)</code> Returns the number of runs represented in the array</li>
+<li><code>eltype(x)</code> Returns the element type of the runs</li>
+<li><code>endtype(x)</code> Returns the element type of the run ends</li>
+</ul>
+<p><a target='_blank' href='https://github.com/phaverty/RLEVectors.jl/tree/f617f9c699fe6527f4b605b0c49241fe709155bc/src/describe.jl#L71' class='documenter-source'>source</a><br></p>
+<p><a id='RLEVectors.widths' href='#RLEVectors.widths'>#</a>
+<strong><code>RLEVectors.widths</code></strong> &mdash; <em>Function</em>.</p>
+<p><strong>RLEVectors</strong></p>
+<p><code>RLEVectors</code> is an alternate implementation of the Rle type from Bioconductor's IRanges package by H. Pages, P. Aboyoun and M. Lawrence. RLEVectors represent a vector with repeated values as the ordered set of values and repeat extents. In the field of genomics, data of various types measured across the ~3 billion letters in the human genome can often be represented in a few thousand runs. It is useful to know the bounds of genome regions covered by these runs, the values associated with these runs, and to be able to perform various mathematical operations on these values.</p>
+<p><code>RLEVectors</code> can be created from a single vector or a vector of values and a vector of run ends. In either case runs of values or zero length runs will be compressed out. RLEVectors can be expanded to a full vector with <code>collect</code>.</p>
+<p><strong>Aliases</strong></p>
+<p>Several aliases are defined for specific types of RLEVector (or collections thereof).</p>
+<pre><code>FloatRle              RLEVector{Float64,UInt32}
+IntegerRle            RLEVector{Int64,UInt32}
+BoolRle               RLEVector{Bool,UInt32}
+StringRle             RLEVector{String,UInt32}
+RLEVectorList{T1,T2}  Vector{ RLEVector{T1,T2} }
+</code></pre>
+
+<p><strong>Constructors</strong></p>
+<p><code>RLEVector</code>s can be created by specifying a vector to compress or the runvalues and run ends.</p>
+<pre><code>x = RLEVector([1,1,2,2,3,3,4,4,4])
+x = RLEVector([4,5,6],[3,6,9])
+</code></pre>
+
+<p><strong>Describing <code>RLEVector</code> objects</strong></p>
+<p><code>RLEVector</code>s implement the usual descriptive functions for an array as well as some that are specific to the type.</p>
+<ul>
+<li><code>length(x)</code> The full length of the vector, uncompressed</li>
+<li><code>size(x)</code> Same as <code>length</code>, as for any other vector</li>
+<li><code>size(x,dim)</code> Returns <code>(length(x),1) for dim == 1</code></li>
+<li><code>starts(x)</code> The index of the beginning of each run</li>
+<li><code>widths(x)</code> The width of each run</li>
+<li><code>ends(x)</code> The index of the end of each run</li>
+<li><code>values(x)</code> The data value for each run</li>
+<li><code>isempty(x)</code> Returns boolean, as for any other vector</li>
+<li><code>nrun(x)</code> Returns the number of runs represented in the array</li>
+<li><code>eltype(x)</code> Returns the element type of the runs</li>
+<li><code>endtype(x)</code> Returns the element type of the run ends</li>
+</ul>
+<p><a target='_blank' href='https://github.com/phaverty/RLEVectors.jl/tree/f617f9c699fe6527f4b605b0c49241fe709155bc/src/describe.jl#L71' class='documenter-source'>source</a><br></p>
+<p><a id='RLEVectors.ends' href='#RLEVectors.ends'>#</a>
+<strong><code>RLEVectors.ends</code></strong> &mdash; <em>Function</em>.</p>
+<p><strong>RLEVectors</strong></p>
+<p><code>RLEVectors</code> is an alternate implementation of the Rle type from Bioconductor's IRanges package by H. Pages, P. Aboyoun and M. Lawrence. RLEVectors represent a vector with repeated values as the ordered set of values and repeat extents. In the field of genomics, data of various types measured across the ~3 billion letters in the human genome can often be represented in a few thousand runs. It is useful to know the bounds of genome regions covered by these runs, the values associated with these runs, and to be able to perform various mathematical operations on these values.</p>
+<p><code>RLEVectors</code> can be created from a single vector or a vector of values and a vector of run ends. In either case runs of values or zero length runs will be compressed out. RLEVectors can be expanded to a full vector with <code>collect</code>.</p>
+<p><strong>Aliases</strong></p>
+<p>Several aliases are defined for specific types of RLEVector (or collections thereof).</p>
+<pre><code>FloatRle              RLEVector{Float64,UInt32}
+IntegerRle            RLEVector{Int64,UInt32}
+BoolRle               RLEVector{Bool,UInt32}
+StringRle             RLEVector{String,UInt32}
+RLEVectorList{T1,T2}  Vector{ RLEVector{T1,T2} }
+</code></pre>
+
+<p><strong>Constructors</strong></p>
+<p><code>RLEVector</code>s can be created by specifying a vector to compress or the runvalues and run ends.</p>
+<pre><code>x = RLEVector([1,1,2,2,3,3,4,4,4])
+x = RLEVector([4,5,6],[3,6,9])
+</code></pre>
+
+<p><strong>Describing <code>RLEVector</code> objects</strong></p>
+<p><code>RLEVector</code>s implement the usual descriptive functions for an array as well as some that are specific to the type.</p>
+<ul>
+<li><code>length(x)</code> The full length of the vector, uncompressed</li>
+<li><code>size(x)</code> Same as <code>length</code>, as for any other vector</li>
+<li><code>size(x,dim)</code> Returns <code>(length(x),1) for dim == 1</code></li>
+<li><code>starts(x)</code> The index of the beginning of each run</li>
+<li><code>widths(x)</code> The width of each run</li>
+<li><code>ends(x)</code> The index of the end of each run</li>
+<li><code>values(x)</code> The data value for each run</li>
+<li><code>isempty(x)</code> Returns boolean, as for any other vector</li>
+<li><code>nrun(x)</code> Returns the number of runs represented in the array</li>
+<li><code>eltype(x)</code> Returns the element type of the runs</li>
+<li><code>endtype(x)</code> Returns the element type of the run ends</li>
+</ul>
+<p><a target='_blank' href='https://github.com/phaverty/RLEVectors.jl/tree/f617f9c699fe6527f4b605b0c49241fe709155bc/src/describe.jl#L71' class='documenter-source'>source</a><br></p>
+<p><a id='GenomicVectors.genopos' href='#GenomicVectors.genopos'>#</a>
+<strong><code>GenomicVectors.genopos</code></strong> &mdash; <em>Function</em>.</p>
+<p>Given chromosome and chromosome position information and a description of the chromosomes (a GenoPos object), calculate the corresponding positions in the linear genome.</p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/826dcdf42885f63f0c61512957609d58141b824c/src/utils.jl#L5-L9' class='documenter-source'>source</a><br></p>
+<p><a id='GenomicVectors.chrpos' href='#GenomicVectors.chrpos'>#</a>
+<strong><code>GenomicVectors.chrpos</code></strong> &mdash; <em>Function</em>.</p>
+<p>Given positions in the linear genome, calculate the position on the relevant chromosome.</p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/826dcdf42885f63f0c61512957609d58141b824c/src/utils.jl#L33-L35' class='documenter-source'>source</a><br></p>
+<p><a id='GenomicVectors.chromosomes' href='#GenomicVectors.chromosomes'>#</a>
+<strong><code>GenomicVectors.chromosomes</code></strong> &mdash; <em>Function</em>.</p>
+<p>Given positions in the linear genome, calculate the position on the relevant chromosome.</p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/826dcdf42885f63f0c61512957609d58141b824c/src/utils.jl#L53-L55' class='documenter-source'>source</a><br></p>
 <p><a id='Modifying-positions-1'></a></p>
 <h2 id="modifying-positions">Modifying positions</h2>
 <pre><code>slide
