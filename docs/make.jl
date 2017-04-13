@@ -4,6 +4,6 @@ makedocs()
 
 deploydocs(
            repo = "github.com/phaverty/GenomicVectors.jl.git",
-           julia = "0.5",
+           julia = "release",
            DOCUMENTER_DEBUG = true
            )
