@@ -74,10 +74,9 @@ function Base.show(io::IO, ::MIME"text/plain", x::GenomicPositions)
     write(io, "\nGenome Metadata:\n  ")
     show(io, x.chrinfo)
     write(io, "\nChromosomes:\n  ")
-    Base.show_vector(io, x,"[","]")
+    Base.show_vector(io, chromosomes(x),"[","]")
     write(io, "\nChromosome Positions:\n  ")
     Base.show_vector(io, starts(x),"[","]")
-    
 end
 
 ## Conversions
