@@ -40,7 +40,8 @@ gr = GenomicRanges(chrs,s,e,chrinfo)
 @test ends(gr) == e
 @test widths(gr) == [21,41,51,56]
 @test strands(gr) == [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
-
+@test chromosomes(gr) == chrs
+    
 # Sorting
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]

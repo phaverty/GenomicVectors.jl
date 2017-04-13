@@ -55,6 +55,7 @@ strands(x::GenomicRanges) = copy(x.strands)
 starts(x::GenomicRanges) = chrpos(x.starts,chr_info(x))
 ends(x::GenomicRanges) = chrpos(x.ends,chr_info(x))
 widths(x::GenomicRanges) = (x.ends - x.starts) .+ 1
+chromosomes(x::GenomicRanges) = chromosomes(_genostarts(x),chr_info(x))
 
 ## Indexing
 each(x::GenomicRanges) = zip(x.starts,x.ends)

@@ -22,7 +22,6 @@ using Base.Test
     @test chromosomes(g,chrinfo) == ["chr10","chr7","chrM","chr10","chr7"]
 
     # chr_and_pos
-    
 end #testset
 
 end #module
