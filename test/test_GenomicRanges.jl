@@ -127,6 +127,16 @@ gr2 = GenomicRanges(chrs[1:2],s[1:2],e[1:2],chrinfo)
 prepend!(gr2,gr3)
 @test gr2 == gr[ [3,4,1,2] ]
 
+# Other
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+chrs = ["chr1","chr2","chr2","chrX"]
+s = [400, 300, 200, 150]
+e = s + 20
+d = [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
+gr = GenomicRanges(chrs,s,e,d,chrinfo)
+empty!(gr)
+@test gr == GenomicRanges(Int64[],Int64[],Strand[],chrinfo)
+
 end # testset
 
 end # module
