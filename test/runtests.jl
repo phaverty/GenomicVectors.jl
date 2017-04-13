@@ -3,7 +3,8 @@ using Base.Test
 
 # write your own tests here
 test_files = [
-              "test_GenomeInfo.jl"
+              "test_utils.jl"
+              ,"test_GenomeInfo.jl"
               ,"test_GenomicPositions.jl"
               ,"test_GenomicRanges.jl"
               ]

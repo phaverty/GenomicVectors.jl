@@ -14,7 +14,8 @@ s = [100, 200, 300, 400]
 e = [120, 240, 350, 455]
 gr = GenomicRanges(chrs,s,e,chrinfo)
 @test isa(gr,GenomicRanges)
-@test typeof(show(gr)) == Void # At least test that show does not give error
+io = IOBuffer()
+@test typeof(show(io,gr)) == Void # At least test that show does not give error
     
 @test_throws ArgumentError GenomicRanges(chrs,s,e[1:2],chrinfo)
 @test_throws ArgumentError GenomicRanges(chrs,s,e,['.','.'],chrinfo)

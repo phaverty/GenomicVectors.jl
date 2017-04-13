@@ -33,7 +33,8 @@ y = copy(x)
 @test y == x
 slide!(y, 5)
 @test !(y == x)
-@test typeof(show(x)) == Void # At least test that show does not give error
+io = IOBuffer()
+@test typeof(show(io,x)) == Void # At least test that show does not give error
     
 # Regression test, second half of duped positions had wrong chrpos
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])

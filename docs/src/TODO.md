@@ -1,6 +1,3 @@
-# Things I need from IntervalTree
-* [ ] AbstractIntervalTree
-
 # Features
 * [ ] `show` for GenomicRanges should covert genoPos to chrPos
 * [x] as.string for GenomicPositions
@@ -46,7 +43,9 @@ keys on GenomeInfo and type of chrs
 * [ ] show on GP should use convert(String,gp)
 * [x] store [0 ; chr_ends] in GenomeInfo chr_ends, chr_offsets,
 chr_lengths then just x[2:end], x[1:end-1], diff(x)
- * [ ] Make sure my hash and == are what AutoHashEquals would say 
+* [ ] Make sure my hash and == are what AutoHashEquals would say 
+* [ ] chrpos, chromosomes, genopos util functions so similar. What can I factor out?
+
 
 # Bugs
 * [x] chromosomes function contains type instability

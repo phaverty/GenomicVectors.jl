@@ -33,19 +33,42 @@ end
 """
 Given positions in the linear genome, calculate the position on the relevant chromosome.
 """
-function chrpos(pos, chrinfo::GenomeInfo)
+function chrpos(positions, chrinfo::GenomeInfo)
     ends = chr_ends(chrinfo)
     offsets = chr_offsets(chrinfo)
     nchr = length(ends)
-    res = similar(pos,length(pos))
+    res = similar(positions,length(positions))
     r = 1
     i = 1
-    @inbounds for g in pos
+    @inbounds for g in positions
         if g > ends[r] || g <= offsets[r]
             r = searchsortedfirst(ends, g, 1, nchr, Base.Forward)
         end
-        res[i] = pos[i] - offsets[ r ]
+        res[i] = positions[i] - offsets[ r ]
         i = i + 1
     end
     res
 end
+
+"""
+Given positions in the linear genome, calculate the position on the relevant chromosome.
+"""
+function chromosomes(positions, chrinfo::GenomeInfo)
+    ends = chr_ends(chrinfo)
+    offsets = chr_offsets(chrinfo)
+    chrs = chr_names(chrinfo)
+    nchr = length(ends)
+    res = similar(chr_names(chrinfo),length(positions))
+    r = 1
+    i = 1
+    @inbounds for g in positions
+        if g > ends[r] || g <= offsets[r]
+            r = searchsortedfirst(ends, g, 1, nchr, Base.Forward)
+        end
+        res[i] = chrs[r]
+        i = i + 1
+    end
+    res
+end
+
+# chr_and_pos (vec of tuples)
