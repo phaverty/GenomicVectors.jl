@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GenomicRanges and GenomicPositions for julia, inspired by BioConductor.">
+  <meta name="author" content="Peter Haverty">
+  <link rel="shortcut icon" href="./img/favicon.ico">
+  <title>Home - GenomicRanges.jl</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/highlight.css">
+  <link href="./assets/Documenter.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Home";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/";
+  </script>
+  
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> GenomicRanges.jl</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href=".">Home</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#genomicvectors">GenomicVectors</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#introduction">Introduction</a></li>
+        
+            <li><a class="toctree-l3" href="#implementation">Implementation</a></li>
+        
+            <li><a class="toctree-l3" href="#working-with-locations">Working with locations</a></li>
+        
+            <li><a class="toctree-l3" href="#ordering">Ordering</a></li>
+        
+            <li><a class="toctree-l3" href="#intersection-overlap-operations">Intersection / overlap operations</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">News</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="NEWS/">Changelog</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="TODO/">TODO</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="api/">API</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="future/">The Future</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">GenomicRanges.jl</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Home</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/phaverty/GenomicVectors.jl/edit/master/docs/index.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><a id='GenomicVectors-1'></a></p>
+<h1 id="genomicvectors">GenomicVectors</h1>
+<p><a id='Introduction-1'></a></p>
+<h2 id="introduction">Introduction</h2>
+<p><code>GenomicVectors</code> is an alternate implementation of the <code>GPos</code> and <code>GenomicRanges</code> types from Bioconductor's GenomicRanges package by P. Aboyoun, H. Pages and M. Lawrence. These <code>GenomicPositions</code> and <code>GenomicRanges</code> types are <code>Vectors</code> that serve as markers of locations on a given genome. They can be used independently or as indices and/or annotation on other objects.</p>
+<p>These types are commonly used in conjuction with <code>RLEVectors</code> from the package of the same name, which also often contain data arrayed along a genome. For example <code>GenomicDataFrame</code> may use a <code>GPos</code> or <code>GenomicRanges</code> as a row index and use <code>RLEVector</code> objects for data columns. This is a common method of storing segmented DNA copy number for multiple samples in R's <code>genoset</code> package.</p>
+<p><a id='Implementation-1'></a></p>
+<h2 id="implementation">Implementation</h2>
+<p>These <code>Vector</code> types each contain a <code>GenomicInfo</code> object, which annotates the names of the relevant genome and its chromosomes as well as the lengths of each chromosome. Operations on two or more of these genomic vectors require that they contain identical <code>GenomeInfo</code> objects.</p>
+<p>The primary "innovation" of these types is that genome locations are stored as the 1-based index into the linear genome of concatenated chromosomes described by the immutable <code>GenomeInfo</code> object. The relevant chromosome for this <code>genopos</code> can be looked up efficiently as the <code>GenomeInfo</code> holds the <code>cumsum</code> of the chromosome lengths. Using binary search and the usual optimization for a sorted vector of queries, these lookups are O(numpositions * log(numchromosomes)) in the worst case and O(numpositions) in the best case.</p>
+<p><a id='Creation-1'></a></p>
+<h3 id="creation">Creation</h3>
+<p><code>GenomeInfo</code> and <code>GenomicPositions</code> objects can be created as follows:</p>
+<pre><code class="julia">using GenomicVectors
+
+chrinfo = GenomeInfo(&quot;hg19&quot;,[&quot;chr1&quot;,&quot;chr2&quot;,&quot;chrX&quot;],Int64[3e5,2e5,1e4])
+chrs = [&quot;chr1&quot;,&quot;chr2&quot;,&quot;chr2&quot;,&quot;chrX&quot;]
+pos = Int64[3e5,1.8e5,1.9e5,1e4]
+
+x = GenomicPositions(pos,chrs,chrinfo)
+
+gpos = genopos(pos,chrs,chrinfo)
+y = GenomicPositions(gpos,chrinfo)
+</code></pre>
+
+<p><a id='Describing-1'></a></p>
+<h3 id="describing">Describing</h3>
+<p><code>GenomeInfo</code> objects have various accessors that describe the chomosomes and their boundaries in the concatenated, linear genome. They are also immutable so that the meaning of indices into a concatenated genome cannot change unexpectedly. Objects that contain a <code>GenomeInfo</code> implement the same methods.</p>
+<pre><code class="julia">chrinfo = GenomeInfo(&quot;hg19&quot;,[&quot;chr1&quot;,&quot;chr2&quot;,&quot;chrX&quot;],Int64[3e5,2e5,1e4])
+genome(chrinfo)
+chr_names(chrinfo)
+chr_ends(chrinfo)
+chr_lengths(chrinfo)
+chr_offsets(chrinfo)
+
+chrs = [&quot;chr1&quot;,&quot;chr2&quot;,&quot;chr2&quot;,&quot;chrX&quot;]
+pos = Int64[3e5,1.8e5,1.9e5,1e4]
+x = GenomicPositions(pos,chrs,chrinfo)
+chr_names(x)
+chr_ends(x)
+chr_lengths(x)
+chr_offsets(x)
+</code></pre>
+
+<p>Similarly, <code>GenomicPositions</code> and similar objects can describe the positions they represent. <code>GenomicRanges</code> and <code>GenomicPositions</code> have the same API, for interchangeability, even when functions are more naturally position- or range-related. Some of these functions are shared with <code>RLEVectors</code> as ranges and runs have much in common.</p>
+<pre><code class="julia">chrinfo = GenomeInfo(&quot;hg19&quot;,[&quot;chr1&quot;,&quot;chr2&quot;,&quot;chrX&quot;],Int64[3e5,2e5,1e4])
+chrs = [&quot;chr1&quot;,&quot;chr2&quot;,&quot;chr2&quot;,&quot;chrX&quot;]
+pos = Int64[3e5,1.8e5,1.9e5,1e4]
+x = GenomicPositions(pos,chrs,chrinfo)
+chrpos(x)
+starts(x)
+ends(x)
+widths(x)
+</code></pre>
+
+<p><a id='Working-with-locations-1'></a></p>
+<h2 id="working-with-locations">Working with locations</h2>
+<p>Genome locations may be modified (slid along the genome, resized, etc.) in various ways, but operations that would exceed the bounds of the relevant chromosome generate errors.</p>
+<p>Queries of a genomic vector are only relevant in the context of a specific genome. Therefore, comparisons are only implemented between the collection of types that can be checked for identical <code>GenomeInfo</code> information.</p>
+<p>Standard vector item matching operations require identity of items, rather than overlapping ranges. Overlap operations are implemented as distinct functions, as in Bioconductor.</p>
+<pre><code class="julia">chrinfo = GenomeInfo(&quot;GRCh38&quot;,[&quot;chr1&quot;,&quot;chr2&quot;,&quot;chr3&quot;,&quot;chrX&quot;,&quot;chrY&quot;,&quot;chrM&quot;],Int64[3e5,2e5,1e4,5e4,2e3,1e3])
+x = GenomicPositions( [ 200,100,150,50,500,20000], [&quot;chr2&quot;,&quot;chr2&quot;,&quot;chr2&quot;,&quot;chrM&quot;,&quot;chrY&quot;,&quot;chr1&quot;], chrinfo)
+y = GenomicPositions( [ 220,100,50,50,420,10000], [&quot;chr2&quot;,&quot;chr2&quot;,&quot;chr2&quot;,&quot;chrM&quot;,&quot;chrY&quot;,&quot;chr1&quot;], chrinfo)
+x in y
+indexin(x,y)
+slide!(x,20)
+x in y
+overlaps(x,y)
+
+</code></pre>
+
+<p><a id='Ordering-1'></a></p>
+<h2 id="ordering">Ordering</h2>
+<p>Given the linearized representation of the genome, ordering operations are done with respect first to position within a chromosome and then to the order of chromosomes specified in the contained <code>GenomeInfo</code> object. Stand, for types that implement it, is not considered in ordering. This is different than how strand is handled in R's Bioconductor classes.</p>
+<pre><code class="julia">using DataFrames
+chrinfo = GenomeInfo(&quot;GRCh38&quot;,[&quot;chr1&quot;,&quot;chr2&quot;,&quot;chr3&quot;,&quot;chrX&quot;,&quot;chrY&quot;,&quot;chrM&quot;],Int64[3e5,2e5,1e4,5e4,2e3,1e3])
+x = GenomicPositions( [ 200,100,150,50,500,20000], [&quot;chr2&quot;,&quot;chr2&quot;,&quot;chr2&quot;,&quot;chrM&quot;,&quot;chrY&quot;,&quot;chr1&quot;], chrinfo)
+sortperm(x)
+sort!(x,rev=true)
+issorted(x)
+y = sort(x)
+issorted(y)
+convert(DataFrame, y)
+</code></pre>
+
+<p><a id='Intersection-/-overlap-operations-1'></a></p>
+<h2 id="intersection-overlap-operations">Intersection / overlap operations</h2>
+<p>Currently we depend on Bio.jl and the <code>IntervalCollection</code> for overlap queries. We provide <code>convert</code> methods to make <code>IntervalCollection</code>s. These collections store the genome-scale positions put the genome string in the chromosome string field, resulting in a single tree. We add the index of each interval in the <code>AbstractGenomicVector</code> in the metadata slot of each <code>Interval</code> which can be used to relate the <code>IntervalCollection</code> back to our original object.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="NEWS/" class="btn btn-neutral float-right" title="Changelog">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/phaverty/GenomicVectors.jl" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+        <span style="margin-left: 15px"><a href="NEWS/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="./js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="./assets/mathjaxhelper.js"></script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 0.16.3
+Build Date UTC : 2017-04-13 02:56:21
+-->
