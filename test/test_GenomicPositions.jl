@@ -20,8 +20,8 @@ y = GenomicPositions(gpos,chrinfo)
 chrs = ["chr1","chr2","chrX"]
 seqinfo = GenomeInfo("hg19",chrs,Int64[3e5,2e5,1e4])
 pos = [ 1, 2, 3]
-chromosomes=["chr2","chr2","chrX"]
-x = GenomicPositions( pos, chromosomes, seqinfo )
+chrs=["chr2","chr2","chrX"]
+x = GenomicPositions( pos, chrs, seqinfo )
 @test x.genopos == [300001,300002,500003]
 @test genostarts(x) == [300001,300002,500003]
 @test GenomicVectors._genostarts(x) == [300001,300002,500003]

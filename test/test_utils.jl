@@ -1,4 +1,4 @@
-module TestGenomicPositions
+module TestUtils
 
 using GenomicVectors
 using Base.Test
