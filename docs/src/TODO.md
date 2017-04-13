@@ -45,7 +45,8 @@ keys on GenomeInfo and type of chrs
 chr_lengths then just x[2:end], x[1:end-1], diff(x)
 * [ ] Make sure my hash and == are what AutoHashEquals would say 
 * [ ] chrpos, chromosomes, genopos util functions so similar. What can I factor out?
-
+* [ ] sort(GR) should use sortperm(each(GR))
 
 # Bugs
 * [x] chromosomes function contains type instability
+* [x] sortperm(x::GenomicRanges; rev=false) is inconsistent with sort(x::GenomicRanges; rev=false)

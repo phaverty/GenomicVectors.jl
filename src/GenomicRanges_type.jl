@@ -179,28 +179,8 @@ function Base.sort(x::GenomicRanges; rev::Bool=false)
     GenomicRanges( mat[:,1], mat[:,2], chr_info(x) )
 end
 
-function Base.issorted(x::GenomicRanges; rev::Bool=false)
-    length(x) == 0 && return true
-    (prev_s,prev_e) = x[1]
-    if rev
-        for (s,e) in x
-            if s > prev_s || (s == prev_s && e > prev_e)
-                return false
-            end
-        end
-    else
-        for (s,e) in x
-            if s < prev_s || (s == prev_s && e < prev_e)
-                return false
-            end
-        end
-    end
-    true
-end
-
-function Base.sortperm(x::GenomicRanges; rev=false)
-    sortperm( convert(Vector,gr), rev=rev )
-end
+Base.issorted(x::GenomicRanges; rev::Bool=false) = issorted( each(x), rev=rev )
+Base.sortperm(x::GenomicRanges; rev=false) = sortperm( collect(each(x)), rev=rev ) # No method for iterator
 
 ## Querying Positions
 # Note that the standard set operations require exact matches and
