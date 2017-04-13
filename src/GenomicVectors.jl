@@ -18,7 +18,6 @@ import Bio.Intervals: StringField, Interval, IntervalCollection, Strand
 export GenomeInfo, AbstractGenomicVector, GenomicPositions, GenomicRanges
 
 # GenomeInfo
-import AxisArrays: AxisArray
 export chr_ends, chr_lengths, chr_offsets, chr_names, same_genome
 
 # GenomicPositions and GenomicRanges
