@@ -61,7 +61,7 @@ end
 function Base.setindex!(x::GenomicPositions, value, i)
     (min,max) = extrema(i)
     if min < 1 || max > x.chrinfo.chr_ends[end]
-        error("Incoming genopos is outside the bounds of the genome.")
+        throw(BoundsError("Incoming genopos is outside the bounds of the genome."))
     end
     x.genopos[i] = value
     return(x)

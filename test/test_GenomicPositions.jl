@@ -28,6 +28,8 @@ x = GenomicPositions( pos, chrs, seqinfo )
 @test genoends(x) == [300001,300002,500003]
 @test GenomicVectors._genoends(x) == [300001,300002,500003]
 @test x[2] == 300002
+@test_throws BoundsError x[0] = 4
+@test_throws BoundsError x[9] = 4
 @test typeof(similar(x)) == typeof(x)
 y = copy(x)
 @test y == x
