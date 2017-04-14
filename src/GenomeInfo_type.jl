@@ -1,3 +1,6 @@
+###################
+### GenomeInfo Type
+###################
 
 """
 # GenomeInfo Type

@@ -23,7 +23,10 @@ io = IOBuffer()
 # Indexing
 @test gr[2] == (300000 + 200, 300000 + 240, STRAND_NA)
 @test gr[2:3] == GenomicRanges(chrs[2:3],s[2:3],e[2:3],chrinfo)
-
+gr[2] = (40123,40456,STRAND_POS)
+@test gr == GenomicRanges([100,40123,300300,500400],[120,40456,300350,500455],[STRAND_NA,STRAND_POS,STRAND_NA,STRAND_NA],chrinfo)
+@test_throws ArgumentError gr[1] = (1,300000000,STRAND_NA)
+    
 # Creating with strand
 gr = GenomicRanges(chrs,s,e,['.','.','.','.'],chrinfo)
 @test isa(gr,GenomicRanges)
@@ -91,7 +94,7 @@ ic = IntervalCollection([
 @test convert(IntervalCollection,gr) == ic
 @test [ metadata(el) for el in ic ] == [1,3,2,4] # Another test that meta right
 @test convert(Vector,gr) == [ (400,420), (300300,300320), (300200,300220), (500150,500170) ]
-@test convert(GenomicPositions,gr) == GenomicPositions(chrs,s,chrinfo)
+@test convert(GenomicPositions,gr) == GenomicPositions(s,chrs,chrinfo)
 
 # Altering
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])

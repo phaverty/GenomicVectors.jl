@@ -4,8 +4,10 @@
 
 """
 # `GenomicRanges`
-`GenomicRanges` represent closed ranges in a genome. This type uses its (immutable) `GenomeInfo` slot object to describe
-        corresponding genome and positions can be expressed relative to this concatenated, linearized genome or relative to the chromosome containing a given position.
+`GenomicRanges` represent closed ranges in a genome. This type uses
+    its (immutable) `GenomeInfo` slot object to describe corresponding
+    genome and positions can be expressed relative to this concatenated,
+    linearized genome or relative to the chromosome containing a given position.
 
 ## Examples
     chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
@@ -15,7 +17,11 @@
     gr = GenomicRanges(chrs,starts,ends,chrinfo)
 
 ## Indexing
-Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`. Indexing by a scalar produces a two-tuple of the start and end positions in genome location units.
+    Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`. Getting/setting by a
+    scalar gives/takes a three-tuple of the (start,end,strand) in genome location units. In the
+    near future, this will likely switch to using Bio.Intervals.Interval. The `each` function
+    produces an iterator of (start,end) two-tuples in genome location units. This is use for many
+    internal functions, like sorting. This is intentionally similar to `RLEVectors.each`.
 
 """
 type GenomicRanges{T1 <: Integer} <: AbstractGenomicVector{T1}
@@ -29,16 +35,20 @@ type GenomicRanges{T1 <: Integer} <: AbstractGenomicVector{T1}
             strands = Vector{Strand}(length(starts))
             strands[:] = STRAND_NA
         else
-            length(starts) != length(strands) && throw(ArgumentError("starts, ends and stands must be of the same length."))
+            if length(starts) != length(strands)
+                throw(ArgumentError("starts, ends and stands must be of the same length."))
+            end
         end
         new(starts, ends, strands, chrinfo)
     end
 end
+
 ## Create with specified strands
 GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, strands::Vector{Char}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo),strands,chrinfo)
 GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, strands::Vector{Strand}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo),strands,chrinfo)
 GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, strands::Vector{Char}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,strands,chrinfo)
 GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, strands::Vector{Strand}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,strands,chrinfo)
+
 ## Create with default strands
 GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo), nothing, chrinfo)
 GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,nothing,chrinfo)
@@ -62,9 +72,13 @@ each(x::GenomicRanges) = zip(x.starts,x.ends)
 Base.getindex(x::GenomicRanges, i::Int) = (x.starts[i],x.ends[i],x.strands[i])
 
 function Base.setindex!(x::GenomicRanges, value::Tuple{Int64,Int64,Strand}, i::Int)
-    (s,e) = genopos( [leftposition(value),rightposition(value)], [seqname(value),seqname(value)], chr_info(x) )
-    if leftposition(value) < 1 || rightposition(value) > x.chrinfo.chr_ends[end]
-        throw(ArgumentError("Incoming genopos is outside the bounds of the genome."))
+    #    (s,e) = genopos( [leftposition(value),rightposition(value)], [seqname(value),seqname(value)], chr_info(x) )
+    #if leftposition(value) < 1 || rightposition(value) > x.chrinfo.chr_ends[end]
+    #    throw(ArgumentError("Incoming genopos is outside the bounds of the genome."))
+    #end
+    chrs = chromosomes( [value[1],value[2]], chr_info(x) )
+    if chrs[1] != chrs[2]
+        throw(ArgumentError("Incoming genomic positions must be on the same chromosome."))
     end
     x.starts[i] = value[1]
     x.ends[i] = value[2]

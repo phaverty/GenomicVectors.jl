@@ -44,6 +44,7 @@ function chrpos(positions, chrinfo::GenomeInfo)
         if g > ends[r] || g <= offsets[r]
             r = searchsortedfirst(ends, g, 1, nchr, Base.Forward)
         end
+        r = min(r,nchr)
         res[i] = positions[i] - offsets[ r ]
         i = i + 1
     end
@@ -65,6 +66,7 @@ function chromosomes(positions, chrinfo::GenomeInfo)
         if g > ends[r] || g <= offsets[r]
             r = searchsortedfirst(ends, g, 1, nchr, Base.Forward)
         end
+        r = min(r,nchr)
         res[i] = chrs[r]
         i = i + 1
     end
