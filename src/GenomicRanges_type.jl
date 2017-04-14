@@ -5,9 +5,9 @@
 """
 # `GenomicRanges`
 `GenomicRanges` represent closed ranges in a genome. This type uses
-    its (immutable) `GenomeInfo` slot object to describe corresponding
-    genome and positions can be expressed relative to this concatenated,
-    linearized genome or relative to the chromosome containing a given position.
+its (immutable) `GenomeInfo` slot object to describe corresponding
+genome and positions can be expressed relative to this concatenated,
+linearized genome or relative to the chromosome containing a given position.
 
 ## Examples
     chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
@@ -17,11 +17,11 @@
     gr = GenomicRanges(chrs,starts,ends,chrinfo)
 
 ## Indexing
-    Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`. Getting/setting by a
-    scalar gives/takes a three-tuple of the (start,end,strand) in genome location units. In the
-    near future, this will likely switch to using Bio.Intervals.Interval. The `each` function
-    produces an iterator of (start,end) two-tuples in genome location units. This is use for many
-    internal functions, like sorting. This is intentionally similar to `RLEVectors.each`.
+Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`. Getting/setting by a
+scalar gives/takes a three-tuple of the (start,end,strand) in genome location units. In the
+near future, this will likely switch to using Bio.Intervals.Interval. The `each` function
+produces an iterator of (start,end) two-tuples in genome location units. This is use for many
+internal functions, like sorting. This is intentionally similar to `RLEVectors.each`.
 
 """
 type GenomicRanges{T1 <: Integer} <: AbstractGenomicVector{T1}
