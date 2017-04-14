@@ -29,19 +29,32 @@ gr = GenomicRanges(chrs,s,e,['.','.','.','.'],chrinfo)
 @test isa(gr,GenomicRanges)
 gr = GenomicRanges(chrs,s,e,[STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,],chrinfo)
 @test isa(gr,GenomicRanges)
+gs = genopos(s,chrs,chrinfo)
+ge = genopos(e,chrs,chrinfo)
+gr = GenomicRanges(ge,gs,['.','.','.','.'],chrinfo)
+@test isa(gr,GenomicRanges)
+gr = GenomicRanges(gs,ge,[STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,],chrinfo)
+@test isa(gr,GenomicRanges)
 
 # Describing
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]
 s = [100, 200, 300, 400]
 e =  [120, 240, 350, 455]
+gs = genopos(s,chrs,chrinfo)
+ge = genopos(e,chrs,chrinfo)
 gr = GenomicRanges(chrs,s,e,chrinfo)
 @test starts(gr) == s
 @test ends(gr) == e
 @test widths(gr) == [21,41,51,56]
+@test genostarts(gr) == gs
+@test GenomicVectors._genostarts(gr) == gs
+@test GenomicVectors._genoends(gr) == ge
+@test genoends(gr) == ge
 @test strands(gr) == [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
+@test GenomicVectors._strands(gr) == [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
 @test chromosomes(gr) == chrs
-    
+
 # Sorting
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]
