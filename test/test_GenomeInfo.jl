@@ -15,6 +15,8 @@ x = GenomeInfo("hg19",chrs,Int64[3e5,2e5,1e4])
 @test chr_names(x) == chrs
 io = IOBuffer()
 @test typeof(show(io,x)) == Void # At least test that show does not give error
+@test x["chr2"] == 500000
+@test x[2] == 500000
     
 end # testset
     
