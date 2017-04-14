@@ -68,7 +68,7 @@ function Base.setindex!(x::GenomicPositions, value, i)
 end
 
 ## Show
-function Base.show(io::IO, ::MIME"text/plain", x::GenomicPositions)
+function Base.show(io::IO, x::GenomicPositions)
     t = typeof(x)::DataType
     show(io, t)
     write(io, "\nGenome Metadata:\n  ")

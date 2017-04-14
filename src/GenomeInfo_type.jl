@@ -30,7 +30,7 @@ function GenomeInfo{T1<:Integer}( name::String, chromosomes::Vector{String}, len
     GenomeInfo{T1}(name, chromosomes, lengths)
 end
 
-function Base.show(io::IO, ::MIME"text/plain", x::GenomeInfo)
+function Base.show(io::IO, x::GenomeInfo)
     t = typeof(x)::DataType
     show(io, t)
     write(io,"\nGenome: ", x.name)

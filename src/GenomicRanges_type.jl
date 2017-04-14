@@ -80,7 +80,7 @@ function Base.vcat(x::GenomicRanges,y::GenomicRanges)
 end
 
 ## Show
-function Base.show(io::IO, ::MIME"text/plain", x::GenomicRanges)
+function Base.show(io::IO, x::GenomicRanges)
     t = typeof(x)::DataType
     show(io, t)
     write(io, "\nGenome Metadata:\n  ")
