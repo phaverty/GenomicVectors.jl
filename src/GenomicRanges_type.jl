@@ -61,23 +61,24 @@ chromosomes(x::GenomicRanges) = chromosomes(_genostarts(x),chr_info(x))
 each(x::GenomicRanges) = zip(x.starts,x.ends)
 Base.getindex(x::GenomicRanges, i::Int) = (x.starts[i],x.ends[i],x.strands[i])
 
+function Base.setindex!(x::GenomicRanges, value::Tuple{Int64,Int64,Strand}, i::Int)
+    (s,e) = genopos( [leftposition(value),rightposition(value)], [seqname(value),seqname(value)], chr_info(x) )
+    if leftposition(value) < 1 || rightposition(value) > x.chrinfo.chr_ends[end]
+        throw(ArgumentError("Incoming genopos is outside the bounds of the genome."))
+    end
+    x.starts[i] = value[1]
+    x.ends[i] = value[2]
+    x.strands[i] = value[3]
+    return(x)
+end
+
 function Base.getindex(x::GenomicRanges, i::AbstractArray)
     GenomicRanges( x.starts[i], x.ends[i], x.strands[i], chr_info(x) )
 end
 
-function Base.setindex!(x::GenomicRanges, value, i)
-    (min,max) = extrema(i)
-    if min < 1 || max > x.chrinfo.chr_ends[end]
-        error("Incoming genopos is outside the bounds of the genome.")
-    end
-    x.genopos[i] = value
-    return(x)
-end
-
-function Base.vcat(x::GenomicRanges,y::GenomicRanges)
-    same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
-    GenomicRanges(vcat(x.starts,y.starts),vcat(x.ends,y.ends),vcat(x.strands,y.strands),chr_info(x))
-end
+#function Base.setindex!(x::GenomicRanges, value::GenomicRanges, i::AbstractArray)
+#
+#end
 
 ## Show
 function Base.show(io::IO, x::GenomicRanges)
@@ -106,7 +107,7 @@ function Base.convert(::Type{DataFrame}, x::GenomicRanges)
     ends = chr_ends(x.chrinfo)
     offsets = chr_offsets(x.chrinfo)
     i = 1
-    for (spos,epos) in zip(x.starts,x.ends)
+    for (spos,epos) in each(x)
         ind = searchsortedfirst(ends, spos, one(Int64), n_chrs, Base.Forward)
         c[i] = chrs[ ind ]
         o = offsets[ ind ]
@@ -122,7 +123,7 @@ function Base.convert(::Type{Vector{String}}, x::GenomicRanges)
     String[ string(c, ":", s, "-", e) for (c,s,e) in zip(df[:Chromosome], df[:Start], df[:End]) ]
 end
 
-Base.convert(::Type{Vector}, x::GenomicRanges) = [ (s,e) for (s,e) in x ]
+Base.convert(::Type{Vector}, x::GenomicRanges) = collect(each(x))
 
 Base.convert(::Type{GenomicPositions}, x::GenomicRanges) = GenomicPositions(starts(x), chr_info(x))
 
@@ -141,7 +142,7 @@ function slide!(gr::GenomicRanges, x::Integer)
     n_chrs = length(ends)
     chr_ind = 1
     i = 1
-    for (s,e) in gr
+    for (s,e) in each(gr)
         if e > ends[chr_ind] || s <= offsets[chr_ind] # Find new chr
             chr_ind = searchsortedfirst(ends, s, one(Int64), n_chrs, Base.Forward)
         end
@@ -164,6 +165,11 @@ function Base.empty!(x::GenomicRanges)
     empty!(x.ends)
     empty!(x.strands)
     x
+end
+
+function Base.vcat(x::GenomicRanges,y::GenomicRanges)
+    same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
+    GenomicRanges(vcat(x.starts,y.starts),vcat(x.ends,y.ends),vcat(x.strands,y.strands),chr_info(x))
 end
 
 ## Sorting

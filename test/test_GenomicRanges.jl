@@ -102,7 +102,9 @@ gr2 = GenomicRanges(chrs,s+5,e+5,chrinfo)
 @test slide(gr,5) == gr2
 slide!(gr,5)
 @test gr == gr2
+@test_throws ArgumentError slide!(gr,90000000000000)
 
+    
 # Searching
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 gr1 = GenomicRanges( [30123,40456,40000],[30130,40500,40100],chrinfo )

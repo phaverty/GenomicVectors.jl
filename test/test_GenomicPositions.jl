@@ -38,6 +38,8 @@ slide!(y, 5)
 io = IOBuffer()
 @test typeof(show(io,x)) == Void # At least test that show does not give error
     
+
+
 # Regression test, second half of duped positions had wrong chrpos
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]
