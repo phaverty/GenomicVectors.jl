@@ -136,6 +136,13 @@ y = GenomicPositions([30,5,21,1000],chrs,chrinfo)
 x = GenomicPositions([30,5,21,1000],["chr1","chr2","chr2","chrX"],chrinfo)
 @test nearest(x, y) == [0,2,3,4]
 
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+chrs = ["chr2","chr2","chr2","chrX"]
+x = GenomicPositions([5,20,30,5],chrs,chrinfo)
+y = GenomicPositions([30,5,21,1000],chrs,chrinfo)
+@test indexin(x,y) == [2,0,1,0]
+@test overlapin(x,y) == [2,0,1,0]
+
 ## Array operations
 # size, length, endof, empty!, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!, setdiff!, symdiff!, intersect!
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
