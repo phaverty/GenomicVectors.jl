@@ -91,7 +91,7 @@ ic = IntervalCollection([
 @test convert(IntervalCollection,gr) == ic
 @test [ metadata(el) for el in ic ] == [1,3,2,4] # Another test that meta right
 @test convert(Vector,gr) == [ (400,420), (300300,300320), (300200,300220), (500150,500170) ]
-@test convert(GenomicPositions,gr) == GenomicPositions(chrs,s,chrinfo)
+@test convert(GenomicPositions,gr) == GenomicPositions(s,chrs,chrinfo)
 
 # Altering
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])

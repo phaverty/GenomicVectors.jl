@@ -125,7 +125,7 @@ end
 
 Base.convert(::Type{Vector}, x::GenomicRanges) = collect(each(x))
 
-Base.convert(::Type{GenomicPositions}, x::GenomicRanges) = GenomicPositions(starts(x), chr_info(x))
+Base.convert(::Type{GenomicPositions}, x::GenomicRanges) = GenomicPositions(genostarts(x), chr_info(x))
 
 """
 Conversion of GenomicRanges to IntervalCollection adds index as metadata in order to recover order later.
