@@ -169,7 +169,7 @@ chr_offsets(chrinfo)
 chrinfo[2] # 5e5
 </code></pre>
 
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4ddfa4b0abcce6afd40ccbb4ad78fd1933e97604/src/GenomeInfo_type.jl#L5-L21' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/ae8d394f07fa2141688aafdc5c35d6bbd03bb3a8/src/GenomeInfo_type.jl#L5-L21' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.GenomicPositions' href='#GenomicVectors.GenomicPositions'>#</a>
 <strong><code>GenomicVectors.GenomicPositions</code></strong> &mdash; <em>Type</em>.</p>
 <pre><code>GenomicPositions(chrpos, chromosomes, genomeinfo)
@@ -193,7 +193,7 @@ GenomicPositions(genopos, genomeinfo)
     convert(DataFrame, y)
 </code></pre>
 
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4ddfa4b0abcce6afd40ccbb4ad78fd1933e97604/src/GenomicPositions_type.jl#L5-L33' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/ae8d394f07fa2141688aafdc5c35d6bbd03bb3a8/src/GenomicPositions_type.jl#L5-L33' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.GenomicRanges' href='#GenomicVectors.GenomicRanges'>#</a>
 <strong><code>GenomicVectors.GenomicRanges</code></strong> &mdash; <em>Type</em>.</p>
 <p><strong><code>GenomicRanges</code></strong></p>
@@ -208,7 +208,7 @@ gr = GenomicRanges(chrs,starts,ends,chrinfo)
 
 <p><strong>Indexing</strong></p>
 <p>Indexing a <code>GenomicRanges</code> with an array produces a new <code>GenomicRanges</code>. Getting/setting by a scalar gives/takes a three-tuple of the (start,end,strand) in genome location units. In the near future, this will likely switch to using Bio.Intervals.Interval. The <code>each</code> function produces an iterator of (start,end) two-tuples in genome location units. This is use for many internal functions, like sorting. This is intentionally similar to <code>RLEVectors.each</code>.</p>
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4ddfa4b0abcce6afd40ccbb4ad78fd1933e97604/src/GenomicRanges_type.jl#L5-L26' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/ae8d394f07fa2141688aafdc5c35d6bbd03bb3a8/src/GenomicRanges_type.jl#L5-L26' class='documenter-source'>source</a><br></p>
 <p><a id='Genome-Location-API-1'></a></p>
 <h2 id="genome-location-api">Genome Location API</h2>
 <p><code>GenomicVectors.jl</code> has ... All <code>AbstractGenomicVector</code>s implement the API for <code>GenomeInfo</code> for access to their genome descriptions.</p>
@@ -325,15 +325,15 @@ x = RLEVector([4,5,6],[3,6,9])
 <p><a id='GenomicVectors.genopos' href='#GenomicVectors.genopos'>#</a>
 <strong><code>GenomicVectors.genopos</code></strong> &mdash; <em>Function</em>.</p>
 <p>Given chromosome and chromosome position information and a description of the chromosomes (a GenoPos object), calculate the corresponding positions in the linear genome.</p>
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4ddfa4b0abcce6afd40ccbb4ad78fd1933e97604/src/utils.jl#L5-L9' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/ae8d394f07fa2141688aafdc5c35d6bbd03bb3a8/src/utils.jl#L5-L9' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.chrpos' href='#GenomicVectors.chrpos'>#</a>
 <strong><code>GenomicVectors.chrpos</code></strong> &mdash; <em>Function</em>.</p>
 <p>Given positions in the linear genome, calculate the position on the relevant chromosome.</p>
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4ddfa4b0abcce6afd40ccbb4ad78fd1933e97604/src/utils.jl#L33-L35' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/ae8d394f07fa2141688aafdc5c35d6bbd03bb3a8/src/utils.jl#L33-L35' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.chromosomes' href='#GenomicVectors.chromosomes'>#</a>
 <strong><code>GenomicVectors.chromosomes</code></strong> &mdash; <em>Function</em>.</p>
 <p>Given positions in the linear genome, calculate the position on the relevant chromosome.</p>
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4ddfa4b0abcce6afd40ccbb4ad78fd1933e97604/src/utils.jl#L54-L56' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/ae8d394f07fa2141688aafdc5c35d6bbd03bb3a8/src/utils.jl#L54-L56' class='documenter-source'>source</a><br></p>
 <p><a id='Modifying-positions-1'></a></p>
 <h2 id="modifying-positions">Modifying positions</h2>
 <pre><code>slide
