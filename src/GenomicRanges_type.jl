@@ -21,8 +21,10 @@ Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`.
 
 Getting/setting by a scalar gives/takes a Bio.Intervals.Interval. The leftposition and
 rightposition in this Interval must be in genome location units and correspond to the
-same chromosome. The seqname must match the genome of the GenomicRanges. Any metadata
-for the Interval is ignored.
+same chromosome. The seqname must match the genome of the GenomicRanges. Outgoing Intervals
+will have the index `i` as their metadata. This makes it possible to obtain the original
+ordering if Intervals after conversion to, say, an IntervalCollection. Any metadata 
+for an incoming Interval is ignored.
 
 The `each` function produces an iterator of (start,end) two-tuples in genome location
 units. This is use for many internal functions, like sorting. This is intentionally
@@ -74,20 +76,15 @@ chromosomes(x::GenomicRanges) = chromosomes(_genostarts(x),chr_info(x))
 
 ## Indexing
 each(x::GenomicRanges) = zip(x.starts,x.ends)
-Base.getindex(x::GenomicRanges, i::Int) = (x.starts[i],x.ends[i],x.strands[i])
+Base.getindex(x::GenomicRanges, i::Int) = Interval(genome(x),x.starts[i],x.ends[i],x.strands[i],i)
 
-function Base.setindex!(x::GenomicRanges, value::Tuple{Int64,Int64,Strand}, i::Int)
-    #    (s,e) = genopos( [leftposition(value),rightposition(value)], [seqname(value),seqname(value)], chr_info(x) )
-    #if leftposition(value) < 1 || rightposition(value) > x.chrinfo.chr_ends[end]
-    #    throw(ArgumentError("Incoming genopos is outside the bounds of the genome."))
-    #end
-    chrs = chromosomes( [value[1],value[2]], chr_info(x) )
-    if chrs[1] != chrs[2]
-        throw(ArgumentError("Incoming genomic positions must be on the same chromosome."))
+function Base.setindex!(x::GenomicRanges, value::Interval, i::Int)
+    if !same_genome(x,value)
+        throw(ArgumentError("Arguments x and value must must be of the same genome."))
     end
-    x.starts[i] = value[1]
-    x.ends[i] = value[2]
-    x.strands[i] = value[3]
+    x.starts[i] = leftposition(value)
+    x.ends[i] = rightposition(value)
+    x.strands[i] = strand(value)
     return(x)
 end
 
@@ -151,7 +148,7 @@ Conversion of GenomicRanges to IntervalCollection adds index as metadata in orde
 """
 function Base.convert(::Type{IntervalCollection}, x::GenomicRanges)
     g = genome(x)
-    IntervalCollection( sort([Interval(g,b,e,s,i) for (i,(b,e,s)) in enumerate(x)]) )
+    IntervalCollection( sort( [i for i in x] ) )
 end
 
 ## Altering Positions
