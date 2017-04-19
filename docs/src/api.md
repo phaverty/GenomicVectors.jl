@@ -19,9 +19,9 @@ All `AbstractGenomicVector`s implement the API for `GenomeInfo` for access to th
 
 ## Accessing position info
 ```@docs
-starts
-widths
-ends
+GenomicVectors.starts
+GenomicVectors.widths
+GenomicVectors.ends
 genopos
 chrpos
 chromosomes
@@ -34,7 +34,10 @@ slide!
 ```
 
 ## Querying positions
-As in Bioconductor, location query operations discriminate between exact and overlapping matches. In addition to exact versus overlapping coordinates, exact matching includes strand, while overlap matching does not. In `GenomcVectors.jl`, the standard set operations use exact matching and custom overlap functions are defined for `AbstractGenomicVector`.
+As in Bioconductor, location query operations discriminate between exact and overlapping matches. In
+addition to exact versus overlapping coordinates, exact matching includes strand, while overlap matching
+does not. In `GenomcVectors.jl`, the standard set operations use exact matching and custom overlap
+functions are defined for `AbstractGenomicVector`.
 
 ### Overlap function
 ```@docs
