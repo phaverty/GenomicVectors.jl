@@ -46,7 +46,7 @@ chr_lengths then just x[2:end], x[1:end-1], diff(x)
 * [ ] Make sure my hash and == are what AutoHashEquals would say 
 * [ ] chrpos, chromosomes, genopos util functions so similar. What can I factor out?
 * [ ] sort(GR) should use sortperm(each(GR))
-* [ ] getindex and setindex for i::Int should use Interval not tuple
+* [x] getindex and setindex for i::Int should use Interval not tuple
 
 # Bugs
 * [x] chromosomes function contains type instability
