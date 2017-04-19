@@ -17,11 +17,16 @@ linearized genome or relative to the chromosome containing a given position.
     gr = GenomicRanges(chrs,starts,ends,chrinfo)
 
 ## Indexing
-Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`. Getting/setting by a
-scalar gives/takes a three-tuple of the (start,end,strand) in genome location units. In the
-near future, this will likely switch to using Bio.Intervals.Interval. The `each` function
-produces an iterator of (start,end) two-tuples in genome location units. This is use for many
-internal functions, like sorting. This is intentionally similar to `RLEVectors.each`.
+Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`.
+
+Getting/setting by a scalar gives/takes a Bio.Intervals.Interval. The leftposition and
+rightposition in this Interval must be in genome location units and correspond to the
+same chromosome. The seqname must match the genome of the GenomicRanges. Any metadata
+for the Interval is ignored.
+
+The `each` function produces an iterator of (start,end) two-tuples in genome location
+units. This is use for many internal functions, like sorting. This is intentionally
+similar to `RLEVectors.each`.
 
 """
 type GenomicRanges{T1 <: Integer} <: AbstractGenomicVector{T1}

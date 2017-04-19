@@ -15,7 +15,7 @@ end
 same_genome(x::AbstractGenomicVector, y::AbstractGenomicVector) = chr_info(x) == chr_info(y)
 function same_genome(x::AbstractGenomicVector, y::Interval)
     seqname(y) != genome(x) && return false
-    chrs = chromosomes( leftposition(y),rightposition(y), chr_info(x) )
+    chrs = chromosomes( [leftposition(y),rightposition(y)], chr_info(x) )
     chrs[1] != chrs[2] && return false
     return true
 end
