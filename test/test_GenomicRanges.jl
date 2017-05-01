@@ -38,7 +38,9 @@ gr = GenomicRanges(ge,gs,['.','.','.','.'],chrinfo)
 @test isa(gr,GenomicRanges)
 gr = GenomicRanges(gs,ge,[STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,],chrinfo)
 @test isa(gr,GenomicRanges)
-
+gr2 = GenomicRanges(gs,ge,[STRAND_POS,STRAND_NEG,STRAND_NA,STRAND_POS,],chrinfo)
+@test copy(gr2) == gr2
+    
 # Describing
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]
@@ -65,16 +67,13 @@ s = [400, 300, 200, 150]
 e = s + 20
 strand = ['.','+','-','+']   
 gr = GenomicRanges(chrs,s,e,strand,chrinfo)
-
 @test issorted(gr) == false
 gr2 = sort(gr)
-@test gr2 == GenomicRanges( ["chr1","chr2","chr2","chrX"], [400,200,300,150], [420,220,320,170], chrinfo )
+@test gr2 == GenomicRanges( ["chr1","chr2","chr2","chrX"], [400,200,300,150], [420,220,320,170], ['.','-','+','+'], chrinfo )
 @test issorted(gr2) == true
 sort!(gr)
 @test gr == gr2
-
-@test sort!(gr,rev=true) == GenomicRanges( ["chrX","chr2","chr2","chr1"], [150,300,200,400], [170,320,220,420], chrinfo )
-
+@test sort!(gr,rev=true) == GenomicRanges( ["chrX","chr2","chr2","chr1"], [150,300,200,400], [170,320,220,420], ['+','+','-','.'], chrinfo )
 gr = GenomicRanges(chrs,s,e,chrinfo)
 @test sortperm(gr) == [1,3,2,4]
 
@@ -109,7 +108,6 @@ slide!(gr,5)
 @test gr == gr2
 @test_throws ArgumentError slide!(gr,90000000000000)
 
-    
 # Searching
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 gr1 = GenomicRanges( [30123,40456,40000],[30130,40500,40100],chrinfo )

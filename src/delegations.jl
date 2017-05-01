@@ -5,7 +5,7 @@
 ### Operations on, and return, GenomicPostions
 for op in [:similar, :copy, :unique]
     @eval (Base.$op)(x::GenomicPositions) = GenomicPositions(($op)(_genostarts(x)), chr_info(x))
-    @eval (Base.$op)(x::GenomicRanges) = GenomicRanges(($op)(_genostarts(x)), ($op)(_genoends(x)), chr_info(x))
+    @eval (Base.$op)(x::GenomicRanges) = GenomicRanges(($op)(_genostarts(x)), ($op)(_genoends(x)), ($op)(_strands(x)), chr_info(x))
 end
 
 ### Operations that operate directly on the internal genopos, not mutating
