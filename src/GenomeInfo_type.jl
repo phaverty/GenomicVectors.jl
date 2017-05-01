@@ -29,7 +29,7 @@ immutable GenomeInfo{T1<:Integer}
     end
 end
 
-function GenomeInfo{T1<:Integer}( name::String, chromosomes::Vector{String}, lengths::Vector{T1})
+function GenomeInfo{T1<:Integer}(name::String, chromosomes::Vector{String}, lengths::Vector{T1})
     GenomeInfo{T1}(name, chromosomes, lengths)
 end
 

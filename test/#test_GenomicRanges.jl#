@@ -68,7 +68,7 @@ gr = GenomicRanges(chrs,s,e,strand,chrinfo)
 
 @test issorted(gr) == false
 gr2 = sort(gr)
-@test gr2 == GenomicRanges( ["chr1","chr2","chr2","chrX"], [400,200,300,150], [420,220,320,170], chrinfo )
+@test gr2 == GenomicRanges( ["chr1","chr2","chr2","chrX"], [400,200,300,150], [420,220,320,170], ['.','-','+','+'], chrinfo )
 @test issorted(gr2) == true
 sort!(gr)
 @test gr == gr2

@@ -190,16 +190,14 @@ end
 
 ## Sorting
 function Base.sort!(x::GenomicRanges; rev::Bool=false)
-    mat = sortrows( hcat(x.starts, x.ends), rev=rev )
-    x.starts = mat[:,1]
-    x.ends = mat[:,2]
+    ind = sortperm(collect(each(x)),rev=rev)
+    x.starts[:] = x.starts[ind]
+    x.ends[:] = x.ends[ind]
+    x.strands[:] = x.strands[ind]
     x
 end
 
-function Base.sort(x::GenomicRanges; rev::Bool=false)
-    mat = sortrows( hcat(x.starts, x.ends), rev=rev )
-    GenomicRanges( mat[:,1], mat[:,2], chr_info(x) )
-end
+Base.sort(x::GenomicRanges; rev::Bool=false) = sort!(copy(x))
 
 Base.issorted(x::GenomicRanges; rev::Bool=false) = issorted( each(x), rev=rev )
 Base.sortperm(x::GenomicRanges; rev=false) = sortperm( collect(each(x)), rev=rev ) # No method for iterator
