@@ -45,7 +45,7 @@ keys on GenomeInfo and type of chrs
 chr_lengths then just x[2:end], x[1:end-1], diff(x)
 * [ ] Make sure my hash and == are what AutoHashEquals would say 
 * [ ] chrpos, chromosomes, genopos util functions so similar. What can I factor out?
-* [ ] sort(GR) should use sortperm(each(GR))
+* [x] sort(GR) should use sortperm(each(GR))
 * [x] getindex and setindex for i::Int should use Interval not tuple
 
 # Bugs
