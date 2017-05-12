@@ -3,7 +3,7 @@ module TestGenomicRanges
 using GenomicVectors
 using Base.Test
 using Bio.Intervals
-using DataFrames
+using DataTables
 
 @testset begin
 
@@ -83,7 +83,7 @@ chrs = ["chr1","chr2","chr2","chrX"]
 s = [400, 300, 200, 150]
 e = s + 20
 gr = GenomicRanges(chrs,s,e,chrinfo)
-@test convert(DataFrame,gr) == DataFrame(Chromosome=chrs,Start=s,End=e,Strand=[STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA])
+@test convert(DataTable,gr) == DataTable(Chromosome=chrs,Start=s,End=e,Strand=[STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA])
 @test convert(Vector{String},gr) == ["chr1:400-420","chr2:300-320","chr2:200-220","chrX:150-170"]
 ic = IntervalCollection([
                         Interval("hg19",400,420,'?',1),
@@ -144,7 +144,6 @@ append!(gr2,gr3)
 gr2 = GenomicRanges(chrs[1:2],s[1:2],e[1:2],chrinfo)
 prepend!(gr2,gr3)
 @test gr2 == gr[ [3,4,1,2] ]
-
 # Other
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]

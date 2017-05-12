@@ -3,7 +3,7 @@ module TestGenomicPositions
 using GenomicVectors
 using Base.Test
 using RLEVectors
-using DataFrames
+using DataTables
 using Bio.Intervals
 
 @testset begin
@@ -86,7 +86,7 @@ pos = Int64[3e5,1.8e5,1.9e5,1e4]
 gpos = genopos(pos,chrs,chrinfo)
 gp = GenomicPositions( gpos, chrinfo )
 @test convert(Vector,gp) == gpos
-@test convert(DataFrame,gp) == DataFrame(Chromosome=chrs, Position=pos)
+@test convert(DataTable,gp) == DataTable(Chromosome=chrs, Position=pos)
 @test convert(Vector{String},gp) == [ "$(c):$(p)-$(p)" for (c,p) in zip(chrs,pos) ]
 ic = IntervalCollection([
                           Interval("hg19",300000,300000,'?',1),

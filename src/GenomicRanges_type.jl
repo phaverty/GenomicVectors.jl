@@ -113,7 +113,7 @@ function Base.show(io::IO, x::GenomicRanges)
 end
 
 ## Conversions
-function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+function Base.convert(::Type{DataTable}, x::GenomicRanges)
     n = length(x)
     chrs = chr_names(x)
     n_chrs = length(chrs)
@@ -131,11 +131,11 @@ function Base.convert(::Type{DataFrame}, x::GenomicRanges)
         e[i] = epos - o
         i = i + 1
     end
-    return( DataFrame( Chromosome=c, Start=s, End=e, Strand=copy(strands(x)) ) )
+    return( DataTable( Chromosome=c, Start=s, End=e, Strand=copy(strands(x)) ) )
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicRanges)
-    df = convert(DataFrame,x)
+    df = convert(DataTable,x)
     String[ string(c, ":", s, "-", e) for (c,s,e) in zip(df[:Chromosome], df[:Start], df[:End]) ]
 end
 

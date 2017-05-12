@@ -7,7 +7,7 @@ module GenomicVectors
 using RLEVectors
 using AxisArrays
 using Bio.Intervals
-using DataFrames
+using DataTables
 
 # utils
 export genopos
@@ -36,6 +36,7 @@ include("AbstractGenomicVector_type.jl")
 include("utils.jl")
 include("GenomicPositions_type.jl")
 include("GenomicRanges_type.jl")
+include("GenomicTable_type.jl")
 include("delegations.jl")
 
 if VERSION >= v"0.5.0"

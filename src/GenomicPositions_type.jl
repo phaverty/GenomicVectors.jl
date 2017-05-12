@@ -28,7 +28,7 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
     y = GenomicPositions(gpos,genomeinfo)
     same_genome(x, y)
     sort!(y)
-    convert(DataFrame, y)
+    convert(DataTable, y)
 ```
 """
 type GenomicPositions{T1 <: Integer} <: AbstractGenomicVector{T1}
@@ -80,7 +80,7 @@ function Base.show(io::IO, x::GenomicPositions)
 end
 
 ## Conversions
-function Base.convert(::Type{DataFrame}, x::GenomicPositions)
+function Base.convert(::Type{DataTable}, x::GenomicPositions)
     n = length(x)
     chrs = chr_names(x)
     n_chrs = length(chrs)
@@ -95,11 +95,11 @@ function Base.convert(::Type{DataFrame}, x::GenomicPositions)
         p[i] = pos - offsets[ ind ]
         i = i + 1
     end
-    return( DataFrame( Chromosome=c, Position=p ) )
+    return( DataTable( Chromosome=c, Position=p ) )
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicPositions)
-    df = convert(DataFrame,x)
+    df = convert(DataTable,x)
     eltype(chr_names(x))[ string(chr, ":", pos, "-", pos) for (chr,pos) in zip(df[:Chromosome], df[:Position]) ]
 end
 Base.convert(::Type{Vector}, x::GenomicPositions) = genostarts(x)
