@@ -30,6 +30,9 @@ export getindex, setindex!, overlapin, overlap, in, each, hasoverlap
 import Base: similar, copy, unique, size, length, endof, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!
 export similar, copy, unique, size, length, endof, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!
 
+# GenomicTable
+export GenomicTable, rowindex, table
+
 ### Includes
 include("GenomeInfo_type.jl")
 include("AbstractGenomicVector_type.jl")

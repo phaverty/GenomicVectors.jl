@@ -37,7 +37,7 @@ function Base.show(io::IO, x::GenomeInfo)
     t = typeof(x)::DataType
     show(io, t)
     write(io,"\nGenome: ", x.name)
-    write(io,"\nChromosome Lengths: \n")
+    write(io,"\nChromosome Lengths: ")
     for (name, len) in zip(chr_names(x), chr_lengths(x))
        write(io,"\n $(name) : $(len)")
     end
