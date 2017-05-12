@@ -21,7 +21,13 @@ using DataTables
     @test rowindex(gt) == GenomicVectors._rowindex(gt)
     @test table(gt) == DataTable(a=1:2,b=5:6)
     @test rowindex(gt) == GenomicPositions(pos[1:2],chrs[1:2],genomeinfo)
-
+    gt = GenomicTable(gp,dt)
+    @test convert(Vector,gt[:b]) == convert(Vector,gt[2])
+    gt[2] = [4,3,2,1]
+    @test convert(Vector,gt[2]) == [4,3,2,1]
+    gt[2:3,[2]] = [7,6]
+    @test convert(Vector,gt[2]) == [4,7,6,1]
+    
 end # testset
 
 end # module
