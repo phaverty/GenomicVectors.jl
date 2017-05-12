@@ -28,6 +28,11 @@ rowindex(gt::GenomicTable) = copy(gt.rowindex)
 table(gt::GenomicTable) = copy(gt.table)
 _rowindex(gt::GenomicTable) = gt.rowindex
 _table(gt::GenomicTable) = gt.table
+DataTables.nrow(x::GenomicTable) = nrow(_table(x))
+DataTables.ncol(x::GenomicTable) = ncol(_table(x))
+DataTables.index(x::GenomicTable) = index(_table(x))
+DataTables.columns(x::GenomicTable) = columns(_table(x))
+Base.names(x::GenomicTable) = names(_table(x))
 
 function Base.show(io::IO, x::GenomicTable)
     t = typeof(x)
@@ -35,9 +40,11 @@ function Base.show(io::IO, x::GenomicTable)
     println("\n\nRow Index:")
     show(io,_rowindex(x))
     println("\n\nTable:")
-    show(io,_table(x)
+    show(io,_table(x))
 end
-
+         
 Base.getindex(gt::GenomicTable,i,j) = GenomicTable(rowindex(gt)[i], table(gt)[i,j])
 Base.getindex(gt::GenomicTable,j) = GenomicTable(rowindex(gt), table(gt)[j])
 Base.getindex(gt::GenomicTable,j::ColumnIndex) = table(gt)[j]
+Base.setindex!(gt::GenomicTable,value,j) = setindex!(_table(gt),value,j)
+Base.setindex!(gt::GenomicTable,value,i,j) = setindex!(_table(gt),value,i,j)
