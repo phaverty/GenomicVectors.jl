@@ -61,6 +61,8 @@ GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vec
 GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,nothing,chrinfo)
 
 ## Getters
+chr_info(x::GenomicRanges) = x.chrinfo
+
 _genostarts(x::GenomicRanges) = x.starts # Pass by reference for internal use
 _genoends(x::GenomicRanges) = x.ends # Pass by reference for internal use
 _strands(x::GenomicRanges) = x.strands # Pass by reference for internal use

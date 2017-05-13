@@ -42,6 +42,8 @@ GenomicPositions{T1 <: Integer}(genopos::Vector{T1}, chrinfo::GenomeInfo{T1}) = 
 GenomicPositions{T1 <: Integer}(pos::Vector{T1}, chromosomes::Vector{String}, chrinfo::GenomeInfo{T1}) = GenomicPositions{T1}(genopos(pos, chromosomes, chrinfo),chrinfo)
 
 ## Getters
+chr_info(x::GenomicRanges) = x.chrinfo
+
 genostarts(x::GenomicPositions) = copy(x.genopos)
 _genostarts(x::GenomicPositions) = x.genopos # Pass by reference for internal use
 genoends(x::GenomicPositions) = copy(x.genopos)
@@ -50,6 +52,7 @@ starts(x::GenomicPositions) = chrpos(x.genopos,chr_info(x))
 ends(x::GenomicPositions) = chrpos(x.genopos,chr_info(x))
 widths(x::GenomicPositions) = RLEVector(1, length(x))
 chromosomes(x::GenomicPositions) = chromosomes(x.genopos,chr_info(x))
+strands(x::GenomicPositions) = RLEVector("+", length(x))
 
 ## Indexing
 Base.getindex(x::GenomicPositions, i::Int) = x.genopos[i]

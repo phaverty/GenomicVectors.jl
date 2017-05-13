@@ -12,10 +12,10 @@ GenomicPositions
 GenomicRanges
 ```
 
-## Genome Location API
-`GenomicVectors.jl` has ...
-All `AbstractGenomicVector`s implement the API for `GenomeInfo` for access to their genome descriptions.
-
+## Interfaces
+```@docs
+AbstractGenomicVector
+```
 
 ## Accessing position info
 ```@docs
