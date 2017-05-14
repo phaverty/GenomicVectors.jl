@@ -99,4 +99,4 @@ function same_genome(x, y::Interval)
 end
 same_genome(x::Interval, y) = same_genome(y,x)
 
-@doc (@doc AbstractGenomicVector), chr_info, chr_names, chr_lengths, chr_ends, chr_offsets, genome, same_genome
+@doc (@doc GenomeInfo), chr_info, chr_names, chr_lengths, chr_ends, chr_offsets, genome, same_genome

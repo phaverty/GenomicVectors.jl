@@ -35,6 +35,8 @@ some useful stuff like rwidth and length for free.
 * [ ] Should starts and ends for GenomicRanges be a n x 2 matrix or two vectors? Matrix is nice for
   sortrows. Also if I want to have a view, I can have just one.
 * [ ] Should chromosome names be symbols rather than strings?
+* [ ] Should GenoPos Interface require genostarts, genoends, strands and then define
+everything else in those terms?
 
 # Improvements
 * [x] Swap GenomicPositions inner- and outer-constructors

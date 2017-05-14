@@ -28,10 +28,9 @@ rowindex(gt::GenomicTable) = copy(gt.rowindex)
 table(gt::GenomicTable) = copy(gt.table)
 _rowindex(gt::GenomicTable) = gt.rowindex
 _table(gt::GenomicTable) = gt.table
-DataTables.nrow(x::GenomicTable) = nrow(_table(x))
-DataTables.ncol(x::GenomicTable) = ncol(_table(x))
-DataTables.index(x::GenomicTable) = index(_table(x))
-DataTables.columns(x::GenomicTable) = columns(_table(x))
+for op in [:nrow, :ncol, :index, :columns]
+    @eval (DataTables.$op)(x::GenomicTable) = ($op)(_table(x))
+end
 Base.names(x::GenomicTable) = names(_table(x))
 
 function Base.show(io::IO, x::GenomicTable)
@@ -48,3 +47,12 @@ Base.getindex(gt::GenomicTable,j) = GenomicTable(rowindex(gt), table(gt)[j])
 Base.getindex(gt::GenomicTable,j::ColumnIndex) = table(gt)[j]
 Base.setindex!(gt::GenomicTable,value,j) = setindex!(_table(gt),value,j)
 Base.setindex!(gt::GenomicTable,value,i,j) = setindex!(_table(gt),value,i,j)
+
+## Getters that delegate to the genome info
+for op in [:chr_info, :starts, :ends, :widths, :strands, :genostarts, :genoends, :chromosomes, :each]
+    @eval ($op)(x::GenomicTable) = ($op)(_rowindex(x))
+end
+function Base.vcat(x::GenomicTable,y::GenomicTable)
+    same_genome(x,y) || throw(ArgumentError("x and y must be from the same genome"))
+    GenomicTable( vcat(_rowindex(x),_rowindex(y)), vcat(_table(x),_table(y)) )
+end

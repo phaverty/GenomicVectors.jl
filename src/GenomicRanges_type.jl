@@ -60,24 +60,18 @@ GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, stran
 GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo), nothing, chrinfo)
 GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,nothing,chrinfo)
 
-## Getters
+## For GenomeInfo Interface
 chr_info(x::GenomicRanges) = x.chrinfo
 
+## For GenoPos Interface
 _genostarts(x::GenomicRanges) = x.starts # Pass by reference for internal use
 _genoends(x::GenomicRanges) = x.ends # Pass by reference for internal use
 _strands(x::GenomicRanges) = x.strands # Pass by reference for internal use
-
 genostarts(x::GenomicRanges) = copy(x.starts)
 genoends(x::GenomicRanges) = copy(x.ends)
 strands(x::GenomicRanges) = copy(x.strands)
 
-starts(x::GenomicRanges) = chrpos(x.starts,chr_info(x))
-ends(x::GenomicRanges) = chrpos(x.ends,chr_info(x))
-widths(x::GenomicRanges) = (x.ends - x.starts) .+ 1
-chromosomes(x::GenomicRanges) = chromosomes(_genostarts(x),chr_info(x))
-
 ## Indexing
-each(x::GenomicRanges) = zip(x.starts,x.ends)
 Base.getindex(x::GenomicRanges, i::Int) = Interval(genome(x),x.starts[i],x.ends[i],x.strands[i],i)
 
 function Base.setindex!(x::GenomicRanges, value::Interval, i::Int)
@@ -142,7 +136,6 @@ function Base.convert(::Type{Vector{String}}, x::GenomicRanges)
 end
 
 Base.convert(::Type{Vector}, x::GenomicRanges) = collect(each(x))
-
 Base.convert(::Type{GenomicPositions}, x::GenomicRanges) = GenomicPositions(genostarts(x), chr_info(x))
 
 """
@@ -192,7 +185,7 @@ end
 
 ## Sorting
 function Base.sort!(x::GenomicRanges; rev::Bool=false)
-    ind = sortperm(collect(each(x)),rev=rev)
+    ind = sortperm(x,rev=rev)
     x.starts[:] = x.starts[ind]
     x.ends[:] = x.ends[ind]
     x.strands[:] = x.strands[ind]
@@ -200,7 +193,6 @@ function Base.sort!(x::GenomicRanges; rev::Bool=false)
 end
 
 Base.sort(x::GenomicRanges; rev::Bool=false) = sort!(copy(x))
-
 Base.issorted(x::GenomicRanges; rev::Bool=false) = issorted( each(x), rev=rev )
 Base.sortperm(x::GenomicRanges; rev=false) = sortperm( collect(each(x)), rev=rev ) # No method for iterator
 

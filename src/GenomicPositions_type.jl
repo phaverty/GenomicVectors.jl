@@ -41,25 +41,20 @@ end
 GenomicPositions{T1 <: Integer}(genopos::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicPositions{T1}(genopos, chrinfo)
 GenomicPositions{T1 <: Integer}(pos::Vector{T1}, chromosomes::Vector{String}, chrinfo::GenomeInfo{T1}) = GenomicPositions{T1}(genopos(pos, chromosomes, chrinfo),chrinfo)
 
-## Getters
-chr_info(x::GenomicRanges) = x.chrinfo
+## For GenomeInfo Interface
+chr_info(x::GenomicPositions) = x.chrinfo
 
+## For GenoPos Interface
 genostarts(x::GenomicPositions) = copy(x.genopos)
 _genostarts(x::GenomicPositions) = x.genopos # Pass by reference for internal use
 genoends(x::GenomicPositions) = copy(x.genopos)
 _genoends(x::GenomicPositions) = x.genopos # Pass by reference for internal use
-starts(x::GenomicPositions) = chrpos(x.genopos,chr_info(x))
-ends(x::GenomicPositions) = chrpos(x.genopos,chr_info(x))
 widths(x::GenomicPositions) = RLEVector(1, length(x))
-chromosomes(x::GenomicPositions) = chromosomes(x.genopos,chr_info(x))
 strands(x::GenomicPositions) = RLEVector("+", length(x))
 
 ## Indexing
 Base.getindex(x::GenomicPositions, i::Int) = x.genopos[i]
-
-function Base.getindex(x::GenomicPositions, i::AbstractVector)
-    GenomicPositions( x.genopos[i], x.chrinfo )
-end
+Base.getindex(x::GenomicPositions, i::AbstractVector) = GenomicPositions( x.genopos[i], x.chrinfo )
 
 function Base.setindex!(x::GenomicPositions, value, i)
     (min,max) = extrema(i)
@@ -112,7 +107,7 @@ Conversion of GenomicPositions to IntervalCollection adds index as metadata in o
 """
 function Base.convert(::Type{IntervalCollection}, x::GenomicPositions)
     g = genome(x)
-    IntervalCollection( sort([Interval(g,s,s,'?',i) for (i,s) in enumerate(x)]) )
+    IntervalCollection( sort([Interval(g,s,s,STRAND_POS,i) for (i,s) in enumerate(x)]) )
 end
 
 ## Altering Positions
@@ -141,14 +136,8 @@ slide(gr::GenomicPositions, x::Integer) = slide!( copy(gr), x )
 Base.empty!(x::GenomicPositions) = empty!(x.genopos)
 
 ## Sorting
-function Base.sort(x::GenomicPositions; rev::Bool=false)
-    GenomicPositions( sort(genostarts(x), rev=rev), chr_info(x) )
-end
-
-function Base.sort!(x::GenomicPositions; rev::Bool=false)
-    sort!(x.genopos, rev=rev)
-    x
-end
+Base.sort(x::GenomicPositions; rev::Bool=false) = GenomicPositions( sort(genostarts(x), rev=rev), chr_info(x) )
+Base.sort!(x::GenomicPositions; rev::Bool=false) = sort!(x.genopos, rev=rev)
 Base.issorted(x::GenomicPositions; rev=false) = issorted(genostarts(x), rev=rev)
 Base.sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
 
