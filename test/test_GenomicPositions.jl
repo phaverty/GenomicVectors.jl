@@ -89,10 +89,10 @@ gp = GenomicPositions( gpos, chrinfo )
 @test convert(DataTable,gp) == DataTable(Chromosome=chrs, Position=pos)
 @test convert(Vector{String},gp) == [ "$(c):$(p)-$(p)" for (c,p) in zip(chrs,pos) ]
 ic = IntervalCollection([
-                          Interval("hg19",300000,300000,'?',1),
-                          Interval("hg19",480000,480000,'?',2),
-                          Interval("hg19",490000,490000,'?',3),
-                          Interval("hg19",510000,510000,'?',4)
+                          Interval("hg19",300000,300000,STRAND_POS,1),
+                          Interval("hg19",480000,480000,STRAND_POS,2),
+                          Interval("hg19",490000,490000,STRAND_POS,3),
+                          Interval("hg19",510000,510000,STRAND_POS,4)
                          ])
 @test convert(IntervalCollection,gp) == ic
     
