@@ -141,6 +141,7 @@ chrs = ["chr2","chr2","chr2","chrX"]
 x = GenomicPositions([5,20,30,5],chrs,chrinfo)
 y = GenomicPositions([30,5,21,1000],chrs,chrinfo)
 @test indexin(x,y) == [2,0,1,0]
+@test findin(x,y) == [1,3]
 @test overlapin(x,y) == [2,0,1,0]
 
 ## Array operations

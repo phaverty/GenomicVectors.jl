@@ -141,18 +141,9 @@ Base.sort!(x::GenomicPositions; rev::Bool=false) = sort!(x.genopos, rev=rev)
 Base.issorted(x::GenomicPositions; rev=false) = issorted(genostarts(x), rev=rev)
 Base.sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
 
-## Querying Positions
-function Base.in(query::GenomicPositions, target::GenomicPositions)
-    same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
-    [ in(x,target) for x in genostarts(query) ] # TODO: Make BitVector
-end
-overlaps(query::GenomicPositions, target::GenomicPositions) = in(query, target) # Synonymous for a pair of gpos
-
-function Base.indexin(query::GenomicPositions, target::GenomicPositions)
-    same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
-    indexin(genostarts(query), genostarts(target))
-end
-overlapin(x::GenomicPositions, y::GenomicPositions) = indexin(x, y)
+## Querying Positions, optimizations for GP
+hasoverlap(query::GenomicPositions, target::GenomicPositions) = in(query, target) # Synonymous for a pair of gpos
+indexoverlap(x::GenomicPositions, y::GenomicPositions) = indexin(x, y)
 
 """
 For each `query` finds index in `target` that is nearest on the same chromosome.

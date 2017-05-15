@@ -214,16 +214,8 @@ function Base.findin(x::GenomicRanges, y::GenomicRanges)
         if first(el_a) == first(el_b) && last(el_a) == last(el_b) && strand(el_a) == strand(el_b)
             push!(inds,metadata(el_a))
         end
-
-
     end
     sort(unique(inds))
-end
-
-function Base.in(x::GenomicRanges, y::GenomicRanges)
-    inds = falses(length(x))
-    inds[ findin(x,y) ] = true
-    inds
 end
 
 Base.setdiff(x::GenomicRanges, y::GenomicRanges) = x[ !in(x,y) ]
@@ -243,25 +235,10 @@ end
 Finds sorted, unique indexes of `x` that are in `y`. In other words, it i like
 findin, but by range overlap.
 """
-function overlapin(x::GenomicRanges, y::GenomicRanges)
+function indexoverlap(x::GenomicRanges, y::GenomicRanges)
     same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
     xit = convert(IntervalCollection,x)
     yit = convert(IntervalCollection,y)
     ol = intersect(xit,yit)
     sort( unique( [ metadata(el_a) for (el_a,el_b) in ol ] ) )
 end
-
-"""
-Like overlapin, but returns a BitVector indicating which of `x` have an overlapin
-in `y`.
-"""
-function hasoverlap(x::GenomicRanges, y::GenomicRanges)
-  inds = falses(length(x))
-  inds[ overlapin(x,y) ] = true
-  inds
-end
-
-"""
-Like intersect, but by overlap.
-"""
-overlap(x::GenomicRanges, y::GenomicRanges) = x[ overlapin(x,y) ]
