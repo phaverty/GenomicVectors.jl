@@ -203,23 +203,6 @@ Base.sortperm(x::GenomicRanges; rev=false) = sortperm( collect(each(x)), rev=rev
 # The twocol matrix of match pairs in R's IRanges::findOverlaps()
 
 # Identical matches (set ops)
-function Base.findin(x::GenomicRanges, y::GenomicRanges)
-    same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
-    ## FIXME: This can't possibly be efficient. Get Bio.Intervals to discriminate exact and overlap matching.
-    xit = convert(IntervalCollection,x)
-    yit = convert(IntervalCollection,y)
-    ol = intersect(xit,yit)
-    inds = Vector{Int64}(0)
-    for (el_a,el_b) in ol
-        if first(el_a) == first(el_b) && last(el_a) == last(el_b) && strand(el_a) == strand(el_b)
-            push!(inds,metadata(el_a))
-        end
-    end
-    sort(unique(inds))
-end
-
-Base.setdiff(x::GenomicRanges, y::GenomicRanges) = x[ !in(x,y) ]
-Base.intersect(x::GenomicRanges, y::GenomicRanges) = x[ findin(x,y) ]
 
 function Base.union(x::GenomicRanges, y::GenomicRanges)
     ic = convert(IntervalCollection,vcat(x,y))

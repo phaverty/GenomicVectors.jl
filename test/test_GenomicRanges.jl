@@ -112,14 +112,14 @@ slide!(gr,5)
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 gr1 = GenomicRanges( [30123,40456,40000],[30130,40500,40100],chrinfo )
 gr2 = GenomicRanges( [100,30123,40000],[200,30130,40200],chrinfo )
-@test findin(gr1,gr2) == [1]
 @test indexin(gr1,gr2) == [2,0,0]
+@test findin(gr1,gr2) == [1]
 @test intersect(gr1,gr2) == gr1[ [1] ]
 @test setdiff(gr1,gr2) == gr1[ [2,3] ]
 @test in(gr1,gr2) == BitArray([ true, false, false ])
-@test overlapin(gr1,gr2) == [1,3]
-@test overlap(gr1,gr2) == gr1[ [1,3] ]
-@test hasoverlap(gr1,gr2) == BitArray([ true, false, true ])
+#@test overlapin(gr1,gr2) == [1,3]
+#@test overlap(gr1,gr2) == gr1[ [1,3] ]
+#@test hasoverlap(gr1,gr2) == BitArray([ true, false, true ])
 
 # Array ops from delegate
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
