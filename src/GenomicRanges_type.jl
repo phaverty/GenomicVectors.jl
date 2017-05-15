@@ -127,7 +127,7 @@ function Base.convert(::Type{DataTable}, x::GenomicRanges)
         e[i] = epos - o
         i = i + 1
     end
-    return( DataTable( Chromosome=c, Start=s, End=e, Strand=copy(strands(x)) ) )
+    return( DataTable( [c,s,e,strands(x)],[:Chromosome, :Start, :End, :Strand] ) )
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicRanges)
