@@ -39,9 +39,12 @@ addition to exact versus overlapping coordinates, exact matching includes strand
 does not. In `GenomcVectors.jl`, the standard set operations use exact matching and custom overlap
 functions are defined for `AbstractGenomicVector`.
 
-### Overlap function
 ```@docs
+indexin
+findin
 overlap
+overlaps # Hmm
+hasoverlap
 overlapin
 overlapindex
 nearest

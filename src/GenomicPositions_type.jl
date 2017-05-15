@@ -93,7 +93,7 @@ function Base.convert(::Type{DataTable}, x::GenomicPositions)
         p[i] = pos - offsets[ ind ]
         i = i + 1
     end
-    return( DataTable( Chromosome=c, Position=p ) )
+    return( DataTable( [c,p], [:Chromosome, :Position] ) )
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicPositions)
@@ -144,7 +144,7 @@ Base.sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
 ## Querying Positions
 function Base.in(query::GenomicPositions, target::GenomicPositions)
     same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
-    [ in(x,target) for x in genostarts(query) ] # TODO: Make BitVector maybe via (generator)?
+    [ in(x,target) for x in genostarts(query) ] # TODO: Make BitVector
 end
 overlaps(query::GenomicPositions, target::GenomicPositions) = in(query, target) # Synonymous for a pair of gpos
 
@@ -152,7 +152,6 @@ function Base.indexin(query::GenomicPositions, target::GenomicPositions)
     same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
     indexin(genostarts(query), genostarts(target))
 end
-
 overlapin(x::GenomicPositions, y::GenomicPositions) = indexin(x, y)
 
 """

@@ -49,7 +49,7 @@ Base.setindex!(gt::GenomicTable,value,j) = setindex!(_table(gt),value,j)
 Base.setindex!(gt::GenomicTable,value,i,j) = setindex!(_table(gt),value,i,j)
 
 ## Getters that delegate to the genome info
-for op in [:chr_info, :starts, :ends, :widths, :strands, :genostarts, :genoends, :chromosomes, :each]
+for op in [:chr_info, :strands, :genostarts, :genoends, :_strands, :_genostarts, :_genoends]
     @eval ($op)(x::GenomicTable) = ($op)(_rowindex(x))
 end
 function Base.vcat(x::GenomicTable,y::GenomicTable)
