@@ -122,11 +122,11 @@ pos = Int64[3e5,1.8e5,1.9e5,1e4]
 x = GenomicPositions(pos,chrs,chrinfo)
 pos = Int64[2e5,1.8e5,1.8e5,1e4]
 y = GenomicPositions(pos,chrs,chrinfo)
-@test overlaps(x, y) == [false, true, false, true]
+#@test overlaps(x, y) == [false, true, false, true]
 @test in(x, y) == [false, true, false, true]
 z = GenomicPositions(Int64[1.8e5, 4, 1e4, 12], ["chr2", "chr2", "chrX", "chr2"], chrinfo)
 @test in(z, x) == [true, false, true, false]
-@test overlaps(z, x) == [true, false, true, false]
+@test in(z, x,false) == [true, false, true, false]
 
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr2","chr2","chr2","chrX"]
@@ -142,7 +142,6 @@ x = GenomicPositions([5,20,30,5],chrs,chrinfo)
 y = GenomicPositions([30,5,21,1000],chrs,chrinfo)
 @test indexin(x,y) == [2,0,1,0]
 @test findin(x,y) == [1,3]
-@test overlapin(x,y) == [2,0,1,0]
 
 ## Array operations
 # size, length, endof, empty!, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!, setdiff!, symdiff!, intersect!

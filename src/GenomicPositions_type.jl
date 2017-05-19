@@ -140,10 +140,7 @@ Base.sort(x::GenomicPositions; rev::Bool=false) = GenomicPositions( sort(genosta
 Base.sort!(x::GenomicPositions; rev::Bool=false) = sort!(x.genopos, rev=rev)
 Base.issorted(x::GenomicPositions; rev=false) = issorted(genostarts(x), rev=rev)
 Base.sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
-
-## Querying Positions, optimizations for GP
-hasoverlap(query::GenomicPositions, target::GenomicPositions) = in(query, target) # Synonymous for a pair of gpos
-indexoverlap(x::GenomicPositions, y::GenomicPositions) = indexin(x, y)
+Base.in(query::GenomicPositions, target::GenomicPositions, exact::Bool=true) = [in(v,target) for v in query]
 
 """
 For each `query` finds index in `target` that is nearest on the same chromosome.

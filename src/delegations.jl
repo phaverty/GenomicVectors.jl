@@ -17,7 +17,7 @@ end
 ### Operations that work on two GenomicPositions and return something else
 for op in [:issubset,:indexin,:findin] # max, min, etc. would go here if I decide that they make sense
     @eval begin
-        function (Base.$op)(x::GenomicPositions, y::GenomicPositions)
+        function (Base.$op)(x::GenomicPositions, y::GenomicPositions, exact::Bool=true)
             same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
             ($op)(x.genopos, y.genopos)
         end

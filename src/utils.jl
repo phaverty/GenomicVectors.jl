@@ -78,10 +78,11 @@ end
 
 ## GenoPos Interface
 # Requires genostarts, genoends, strands (and _genostarts, _genoends, and _strands non-copying versions) and GenomeInfo Interface
-starts(x) = chrpos(genostarts(x),chr_info(x))
-ends(x) = chrpos(genoends(x),chr_info(x))
+RLEVectors.starts(x) = chrpos(genostarts(x),chr_info(x))
+RLEVectors.ends(x) = chrpos(genoends(x),chr_info(x))
+RLEVectors.widths(x) = (genoends(x) - genostarts(x)) .+ 1
+RLEVectors.each(x) = zip(genostarts(x),genoends(x))
 chromosomes(x) = chromosomes(genostarts(x),chr_info(x))
-widths(x) = (genoends(x) - genostarts(x)) .+ 1
-each(x) = zip(genostarts(x),genoends(x))
+
 # Other candidates for GenoPos Interface or AbstractGenomicVector include iteration and scalar indexing as Vector{Interval}, issorted, sortperm, show, findin
 #  ... overlapin, hasoverlap, overlap, setdiff, intersect, in, convert(DataTable,x), slide (not slide!)
