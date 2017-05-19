@@ -81,7 +81,7 @@
         
             <li><a class="toctree-l3" href="#types">Types</a></li>
         
-            <li><a class="toctree-l3" href="#genome-location-api">Genome Location API</a></li>
+            <li><a class="toctree-l3" href="#interfaces">Interfaces</a></li>
         
             <li><a class="toctree-l3" href="#accessing-position-info">Accessing position info</a></li>
         
@@ -143,12 +143,12 @@
 <li><a href="./#GenomicVectors.GenomeInfo"><code>GenomicVectors.GenomeInfo</code></a></li>
 <li><a href="./#GenomicVectors.GenomicPositions"><code>GenomicVectors.GenomicPositions</code></a></li>
 <li><a href="./#GenomicVectors.GenomicRanges"><code>GenomicVectors.GenomicRanges</code></a></li>
+<li><a href="./#Base.findin"><code>Base.findin</code></a></li>
+<li><a href="./#Base.indexin"><code>Base.indexin</code></a></li>
 <li><a href="./#GenomicVectors.chromosomes"><code>GenomicVectors.chromosomes</code></a></li>
 <li><a href="./#GenomicVectors.chrpos"><code>GenomicVectors.chrpos</code></a></li>
 <li><a href="./#GenomicVectors.genopos"><code>GenomicVectors.genopos</code></a></li>
 <li><a href="./#GenomicVectors.nearest"><code>GenomicVectors.nearest</code></a></li>
-<li><a href="./#GenomicVectors.overlap"><code>GenomicVectors.overlap</code></a></li>
-<li><a href="./#GenomicVectors.overlapin"><code>GenomicVectors.overlapin</code></a></li>
 <li><a href="./#RLEVectors.ends"><code>RLEVectors.ends</code></a></li>
 <li><a href="./#RLEVectors.starts"><code>RLEVectors.starts</code></a></li>
 <li><a href="./#RLEVectors.widths"><code>RLEVectors.widths</code></a></li>
@@ -167,9 +167,29 @@ chr_lengths(chrinfo)
 chr_ends(chrinfo)
 chr_offsets(chrinfo)
 chrinfo[2] # 5e5
+
+## GenomeInfo Interface
+Much of the functionality of the types in the GenomicVectors.jl
+package via the GenomeInfo Interface, which provides
+access to the genome (name, chromosome lengths, etc.). This Interface requires
+the following methods:
+
+- chr_info
+which returns a GenomeInfo object, which then provides these methods:
+
+- chr_names
+- chr_lengths
+- chr_ends
+- chr_offsets
+- genome
+- same_genome
+
+The GenoPos Interface provides access to positional information in the linearized
+genome or in chromosome coordinate (e.g. chr4:1000-1020).
+
 </code></pre>
 
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4157225d66a7900d99ac8f4968dd85ea3d13f258/src/GenomeInfo_type.jl#L5-L21' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/17e79214403fba8ce8515f772d8297318e4bf4c6/src/GenomeInfo_type.jl#L5-L41' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.GenomicPositions' href='#GenomicVectors.GenomicPositions'>#</a>
 <strong><code>GenomicVectors.GenomicPositions</code></strong> &mdash; <em>Type</em>.</p>
 <pre><code>GenomicPositions(chrpos, chromosomes, genomeinfo)
@@ -190,10 +210,10 @@ GenomicPositions(genopos, genomeinfo)
     y = GenomicPositions(gpos,genomeinfo)
     same_genome(x, y)
     sort!(y)
-    convert(DataFrame, y)
+    convert(DataTable, y)
 </code></pre>
 
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4157225d66a7900d99ac8f4968dd85ea3d13f258/src/GenomicPositions_type.jl#L5-L33' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/17e79214403fba8ce8515f772d8297318e4bf4c6/src/GenomicPositions_type.jl#L5-L33' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.GenomicRanges' href='#GenomicVectors.GenomicRanges'>#</a>
 <strong><code>GenomicVectors.GenomicRanges</code></strong> &mdash; <em>Type</em>.</p>
 <p><strong><code>GenomicRanges</code></strong></p>
@@ -210,10 +230,12 @@ gr = GenomicRanges(chrs,starts,ends,chrinfo)
 <p>Indexing a <code>GenomicRanges</code> with an array produces a new <code>GenomicRanges</code>.</p>
 <p>Getting/setting by a scalar gives/takes a Bio.Intervals.Interval. The leftposition and rightposition in this Interval must be in genome location units and correspond to the same chromosome. The seqname must match the genome of the GenomicRanges. Outgoing Intervals will have the index <code>i</code> as their metadata. This makes it possible to obtain the original ordering if Intervals after conversion to, say, an IntervalCollection. Any metadata  for an incoming Interval is ignored.</p>
 <p>The <code>each</code> function produces an iterator of (start,end) two-tuples in genome location units. This is use for many internal functions, like sorting. This is intentionally similar to <code>RLEVectors.each</code>.</p>
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4157225d66a7900d99ac8f4968dd85ea3d13f258/src/GenomicRanges_type.jl#L5-L33' class='documenter-source'>source</a><br></p>
-<p><a id='Genome-Location-API-1'></a></p>
-<h2 id="genome-location-api">Genome Location API</h2>
-<p><code>GenomicVectors.jl</code> has ... All <code>AbstractGenomicVector</code>s implement the API for <code>GenomeInfo</code> for access to their genome descriptions.</p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/17e79214403fba8ce8515f772d8297318e4bf4c6/src/GenomicRanges_type.jl#L5-L33' class='documenter-source'>source</a><br></p>
+<p><a id='Interfaces-1'></a></p>
+<h2 id="interfaces">Interfaces</h2>
+<pre><code>AbstractGenomicVector
+</code></pre>
+
 <p><a id='Accessing-position-info-1'></a></p>
 <h2 id="accessing-position-info">Accessing position info</h2>
 <p><a id='RLEVectors.starts' href='#RLEVectors.starts'>#</a>
@@ -251,7 +273,7 @@ x = RLEVector([4,5,6],[3,6,9])
 <li><code>eltype(x)</code> Returns the element type of the runs</li>
 <li><code>endtype(x)</code> Returns the element type of the run ends</li>
 </ul>
-<p><a target='_blank' href='https://github.com/phaverty/RLEVectors.jl/tree/f617f9c699fe6527f4b605b0c49241fe709155bc/src/describe.jl#L71' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/RLEVectors.jl/tree/b57bcbc575f40b4b30b32dc43a208e67e68eddc4/src/describe.jl#L79' class='documenter-source'>source</a><br></p>
 <p><a id='RLEVectors.widths' href='#RLEVectors.widths'>#</a>
 <strong><code>RLEVectors.widths</code></strong> &mdash; <em>Function</em>.</p>
 <p><strong>RLEVectors</strong></p>
@@ -287,7 +309,7 @@ x = RLEVector([4,5,6],[3,6,9])
 <li><code>eltype(x)</code> Returns the element type of the runs</li>
 <li><code>endtype(x)</code> Returns the element type of the run ends</li>
 </ul>
-<p><a target='_blank' href='https://github.com/phaverty/RLEVectors.jl/tree/f617f9c699fe6527f4b605b0c49241fe709155bc/src/describe.jl#L71' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/RLEVectors.jl/tree/b57bcbc575f40b4b30b32dc43a208e67e68eddc4/src/describe.jl#L79' class='documenter-source'>source</a><br></p>
 <p><a id='RLEVectors.ends' href='#RLEVectors.ends'>#</a>
 <strong><code>RLEVectors.ends</code></strong> &mdash; <em>Function</em>.</p>
 <p><strong>RLEVectors</strong></p>
@@ -323,19 +345,19 @@ x = RLEVector([4,5,6],[3,6,9])
 <li><code>eltype(x)</code> Returns the element type of the runs</li>
 <li><code>endtype(x)</code> Returns the element type of the run ends</li>
 </ul>
-<p><a target='_blank' href='https://github.com/phaverty/RLEVectors.jl/tree/f617f9c699fe6527f4b605b0c49241fe709155bc/src/describe.jl#L71' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/RLEVectors.jl/tree/b57bcbc575f40b4b30b32dc43a208e67e68eddc4/src/describe.jl#L79' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.genopos' href='#GenomicVectors.genopos'>#</a>
 <strong><code>GenomicVectors.genopos</code></strong> &mdash; <em>Function</em>.</p>
 <p>Given chromosome and chromosome position information and a description of the chromosomes (a GenoPos object), calculate the corresponding positions in the linear genome.</p>
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4157225d66a7900d99ac8f4968dd85ea3d13f258/src/utils.jl#L5-L9' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/17e79214403fba8ce8515f772d8297318e4bf4c6/src/utils.jl#L5-L9' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.chrpos' href='#GenomicVectors.chrpos'>#</a>
 <strong><code>GenomicVectors.chrpos</code></strong> &mdash; <em>Function</em>.</p>
 <p>Given positions in the linear genome, calculate the position on the relevant chromosome.</p>
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4157225d66a7900d99ac8f4968dd85ea3d13f258/src/utils.jl#L33-L35' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/17e79214403fba8ce8515f772d8297318e4bf4c6/src/utils.jl#L33-L35' class='documenter-source'>source</a><br></p>
 <p><a id='GenomicVectors.chromosomes' href='#GenomicVectors.chromosomes'>#</a>
 <strong><code>GenomicVectors.chromosomes</code></strong> &mdash; <em>Function</em>.</p>
 <p>Given positions in the linear genome, calculate the position on the relevant chromosome.</p>
-<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/4157225d66a7900d99ac8f4968dd85ea3d13f258/src/utils.jl#L54-L56' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/17e79214403fba8ce8515f772d8297318e4bf4c6/src/utils.jl#L54-L56' class='documenter-source'>source</a><br></p>
 <p><a id='Modifying-positions-1'></a></p>
 <h2 id="modifying-positions">Modifying positions</h2>
 <pre><code>slide
@@ -345,9 +367,11 @@ slide!
 <p><a id='Querying-positions-1'></a></p>
 <h2 id="querying-positions">Querying positions</h2>
 <p>As in Bioconductor, location query operations discriminate between exact and overlapping matches. In addition to exact versus overlapping coordinates, exact matching includes strand, while overlap matching does not. In <code>GenomcVectors.jl</code>, the standard set operations use exact matching and custom overlap functions are defined for <code>AbstractGenomicVector</code>.</p>
-<p><a id='Overlap-function-1'></a></p>
-<h3 id="overlap-function">Overlap function</h3>
-<pre><code>overlap
+<pre><code>indexin
+findin
+overlap
+overlaps # Hmm
+hasoverlap
 overlapin
 overlapindex
 nearest
