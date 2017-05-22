@@ -52,6 +52,20 @@ Base.setindex!(gt::GenomicTable,value,i,j) = setindex!(_table(gt),value,i,j)
 for op in [:chr_info, :strands, :genostarts, :genoends, :_strands, :_genostarts, :_genoends]
     @eval ($op)(x::GenomicTable) = ($op)(_rowindex(x))
 end
+## Searches that delegate to the genome info
+for op in [:indexin, :findin, :in]
+    @eval (Base.$op)(x::GenomicTable,y::AbstractGenomicVector,exact::Bool=true) = ($op)(_rowindex(x),y,exact)
+    @eval (Base.$op)(x::AbstractGenomicVector,y::GenomicTable,exact::Bool=true) = ($op)(x,_rowindex(y),exact)
+    @eval (Base.$op)(x::GenomicTable,y::GenomicTable,exact::Bool=true) = ($op)(_rowindex(x),_rowindex(y),exact)
+end
+
+## Table ops that delegate to the table
+#for op in [:join]
+#
+#end
+
+
+
 function Base.vcat(x::GenomicTable,y::GenomicTable)
     same_genome(x,y) || throw(ArgumentError("x and y must be from the same genome"))
     GenomicTable( vcat(_rowindex(x),_rowindex(y)), vcat(_table(x),_table(y)) )

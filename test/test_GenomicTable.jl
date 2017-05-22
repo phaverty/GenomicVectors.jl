@@ -27,6 +27,26 @@ using DataTables
     @test convert(Vector,gt[2]) == [4,3,2,1]
     gt[2:3,[2]] = [7,6]
     @test convert(Vector,gt[2]) == [4,7,6,1]
+
+    ## Searches
+    chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+    gr1 = GenomicRanges( [30123,40456,40000],[30130,40500,40100],chrinfo )
+    gr2 = GenomicRanges( [100,30123,40000],[200,30130,40200],chrinfo )
+    dt = DataTable(a=1:3,b=6:8)
+    gr = GenomicTable(gr1,dt)
+    @test indexin(gr,gr2,true) == [2,0,0]
+    @test findin(gr,gr2,true) == [1]
+    @test in(gr,gr2,true) == BitArray([ true, false, false ])
+    @test indexin(gr,gr2,false) == [2,0,3]
+    @test findin(gr,gr2,false) == [1,3]
+    @test in(gr,gr2,false) == BitArray([ true, false, true ])
+    dt3 = DataTable(a=1:3,q=3:-1:1)
+    gr3 = GenomicTable(gr2,dt3)
+    @test indexin(gr,gr3,false) == [2,0,3]
+    @test findin(gr,gr3,false) == [1,3]
+    @test in(gr,gr3,false) == BitArray([ true, false, true ])
+    
+    ## Table ops
     
 end # testset
 
