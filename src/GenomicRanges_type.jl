@@ -67,9 +67,6 @@ chr_info(x::GenomicRanges) = x.chrinfo
 _genostarts(x::GenomicRanges) = x.starts # Pass by reference for internal use
 _genoends(x::GenomicRanges) = x.ends # Pass by reference for internal use
 _strands(x::GenomicRanges) = x.strands # Pass by reference for internal use
-genostarts(x::GenomicRanges) = copy(x.starts)
-genoends(x::GenomicRanges) = copy(x.ends)
-strands(x::GenomicRanges) = copy(x.strands)
 
 ## Indexing
 Base.getindex(x::GenomicRanges, i::Int) = Interval(genome(x),x.starts[i],x.ends[i],x.strands[i],i)

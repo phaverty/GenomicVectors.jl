@@ -6,6 +6,30 @@
 
 abstract AbstractGenomicVector{T} <: AbstractVector{T}
 
+## Required API for an AbstractGenomicVector
+## chr_info() must return a GenomeInfo object.
+##   This allows all of the methods on GenomeInfo to work.
+## _genostarts() must return a vector of start positions relative to the
+## GenomeInfo. May be direct access, so do not modify
+## Similarly, _genoends() and _strands()
+
+## Functions that work on the underlying GenomeInfo
+## Documented by GenomeInfo
+for op in [:chr_names, :chr_lengths, :chr_ends, :chr_offsets, :genome]
+    @eval $(op)(x::AbstractGenomicVector) = $(op)(chr_info(x))
+end
+same_genome(x::AbstractGenomicVector, y::AbstractGenomicVector) = chr_info(x) == chr_info(y)
+
+## General purpose getters
+starts(x::AbstractGenomicVector) = chrpos(_genostarts(x),chr_info(x))
+ends(x::AbstractGenomicVector) = chrpos(_genoends(x),chr_info(x))
+widths(x::AbstractGenomicVector) = (_genoends(x) - _genostarts(x)) .+ 1
+chromosomes(x::AbstractGenomicVector) = chromosomes(start(x),chr_info(x))
+genostarts(x::AbstractGenomicVector) = copy(_genostarts(x))
+genoends(x::AbstractGenomicVector) = copy(_genoends(x))
+strands(x::AbstractGenomicVector) = copy(_strands(x))
+each(x::AbstractGenomicVector) = zip(_genostarts(x),_genoends(x))
+
 """AbstractGenomicVector API
 
     findoverlaps(agv1, agv2)
