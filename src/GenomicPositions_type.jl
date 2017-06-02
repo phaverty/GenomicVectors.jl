@@ -41,13 +41,11 @@ end
 GenomicPositions{T1 <: Integer}(genopos::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicPositions{T1}(genopos, chrinfo)
 GenomicPositions{T1 <: Integer}(pos::Vector{T1}, chromosomes::Vector{String}, chrinfo::GenomeInfo{T1}) = GenomicPositions{T1}(genopos(pos, chromosomes, chrinfo),chrinfo)
 
-## For GenomeInfo Interface
+## GenomeInfo Interface
 chr_info(x::GenomicPositions) = x.chrinfo
 
-## For GenoPos Interface
-genostarts(x::GenomicPositions) = copy(x.genopos)
+## GenoPos Interface
 _genostarts(x::GenomicPositions) = x.genopos # Pass by reference for internal use
-genoends(x::GenomicPositions) = copy(x.genopos)
 _genoends(x::GenomicPositions) = x.genopos # Pass by reference for internal use
 widths(x::GenomicPositions) = RLEVector(1, length(x))
 strands(x::GenomicPositions) = RLEVector("+", length(x))
