@@ -34,20 +34,29 @@ This interface requires that the a type implement methods on the following gener
 - _genostarts: the starting nucleotide index for each range/position in the linearized genome
 - _genends: the ending nucleotide index for each range/position in the linearized genome
 - _strands: the DNA strand for each range/position
-- same_genome: tests two
+- same_genome: tests two objects to determine if they describe positions on the same
+genome (and thus can be compared).
 
 These internal functions are assumed to pass their values by reference. Calling functions
 are expected **not** to modify these values.
 
 In turn, the interface provides the following methods:
 
-- starts: the starting nucleotide index for each range/position relative to the chromosome on which they lie
-- ends: the ending nucleotide index for each range/position relative to the chromosome on which they lie
-- widths: the distance, between the start and end nucleotide of the range, 1 for positions
-- chromosomes: the name of the chromosome for each range/position
-- genostarts: the starting nucleotide index for each range/position in the linearized genome
-- genoends: the ending nucleotide index for each range/position in the linearized genome
-- strands: the DNA strand for each range/position, pass by copy
-- each: an iterator that returns tuples of genostart and genoend pairs
+```@docs
+starts(::AbstractGenomicVector)
+ends(::AbstractGenomicVector)
+widths(::AbstractGenomicVector)
+chromosomes
+genostarts
+genoends
+strands
+each(::AbstractGenomicVector)
+findoverlaps
+findin(::AbstractGenomicVector,::AbstractGenomicVector)
+indexin(::AbstractGenomicVector,::AbstractGenomicVector)
+in(::AbstractGenomicVector,::AbstractGenomicVector)
+intersect(::AbstractGenomicVector,::AbstractGenomicVector)
+setdiff(::AbstractGenomicVector,::AbstractGenomicVector)
+```
 
-All of these exported functions should be non-aliasing, or pass-by-copy.
+`starts` etc. are non-aliasing (return a copy of the values).

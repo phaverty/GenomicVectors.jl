@@ -23,7 +23,7 @@ export chr_ends, chr_lengths, chr_offsets, chr_names, same_genome
 # GenomicPositions and GenomicRanges
 import Base: size, length, empty!, intersect, findin
 import RLEVectors: starts, widths, ends, each
-export genome, chr_info, chromosomes, chrpos, genopos, slide!, slide, strands, nearest, genostarts, genoends, starts, ends, widths
+export genome, chr_info, chromosomes, chrpos, genopos, slide!, slide, strands, nearest, genostarts, genoends, starts, ends, widths, findoverlaps
 
 # Delegations
 import Base: similar, copy, unique, size, length, endof, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!

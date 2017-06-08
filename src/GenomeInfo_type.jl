@@ -3,12 +3,11 @@
 #######################
 
 """
-# GenomeInfo Type
-A GenomeInfo holds information about a genome including its name, chromosome names,
+The GenomeInfo type holds information about a genome including its name, chromosome names,
  chromosome lengths and chromosome offsets into a concatenated, linear genome (genopos).
 Indexing returns the genopos end of the indexed chromosome.
 
-## Examples
+# Examples
 ```julia
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 genome(chrinfo)
@@ -33,9 +32,6 @@ which returns a GenomeInfo object, which then provides these methods:
 - chr_offsets
 - genome
 - same_genome
-
-The GenoPos Interface provides access to positional information in the linearized
-genome or in chromosome coordinate (e.g. chr4:1000-1020).
 
 ```
 """

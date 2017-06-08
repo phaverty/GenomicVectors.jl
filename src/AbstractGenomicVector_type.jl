@@ -7,39 +7,49 @@
 abstract AbstractGenomicVector{T} <: AbstractVector{T}
 
 ## Required API for an AbstractGenomicVector
-## chr_info() must return a GenomeInfo object.
-##   This allows all of the methods on GenomeInfo to work.
+## chr_info() must return a GenomeInfo object. This then allows all of the methods on GenomeInfo to work.
 ## _genostarts() must return a vector of start positions relative to the
-## GenomeInfo. May be direct access, so do not modify
+## GenomeInfo. May be direct access, so do not modify values
 ## Similarly, _genoends() and _strands()
 
 ## Functions that work on the underlying GenomeInfo
-## Documented by GenomeInfo
 for op in [:chr_names, :chr_lengths, :chr_ends, :chr_offsets, :genome]
     @eval $(op)(x::AbstractGenomicVector) = $(op)(chr_info(x))
 end
+"Return a Bool indicating if two objects represent positions on the identical genome."
 same_genome(x::AbstractGenomicVector, y::AbstractGenomicVector) = chr_info(x) == chr_info(y)
 
 ## General purpose getters
+"Get the starting nucleotide index for each range/position relative to the chromosome on which they lie."
 starts(x::AbstractGenomicVector) = chrpos(_genostarts(x),chr_info(x))
+"Get the ending nucleotide index for each range/position relative to the chromosome on which they lie."
 ends(x::AbstractGenomicVector) = chrpos(_genoends(x),chr_info(x))
+"Get the distance, between the start and end nucleotide of the range, 1 for positions."
 widths(x::AbstractGenomicVector) = (_genoends(x) - _genostarts(x)) .+ 1
+"Get the name of the chromosome for each range/position."
 chromosomes(x::AbstractGenomicVector) = chromosomes(start(x),chr_info(x))
+"Get the starting nucleotide index for each range/position in the linearized genome."
 genostarts(x::AbstractGenomicVector) = copy(_genostarts(x))
+"Get the ending nucleotide index for each range/position in the linearized genome."
 genoends(x::AbstractGenomicVector) = copy(_genoends(x))
+"Get the DNA strand for each range/position, pass by copy."
 strands(x::AbstractGenomicVector) = copy(_strands(x))
+"Return an iterator that returns tuples of genostart and genoend pairs."
 each(x::AbstractGenomicVector) = zip(_genostarts(x),_genoends(x))
 
-"""AbstractGenomicVector API
+"""
+The GenoPos Interface provides access to positional information in the linearized
+genome or in chromosome coordinate (e.g. chr4:1000-1020).
+"""
+starts, ends, widths, chromosomes, genostarts, genoends, strands, each
 
-    findoverlaps(agv1, agv2)
+"""
+    findoverlaps(x::AbstractGenomicVector,y::AbstractGenomicVector)
+
 Creates a `Bio.Intervals.IntersectIterator` from two `AbstractGenomicVectors`, much like the BioConductor
 `findOverlaps`. `Bio.Intervals` calls this function `intersect`, but I would expect `intersect` to have the
-    same behavior as base, returning a subset copy of the first argument. `findoverlaps` is the kernel
-    of `findin`, `indexin` and `in`.
-
-The discussion in https://github.com/JuliaLang/Juleps/blob/master/Find.md#particular-cases is very relevant
-    to the naming issue.
+same behavior as base, returning a subset copy of the first argument. `findoverlaps` is the kernel
+of `findin`, `indexin` and `in`.
 """
 function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector)
     same_genome(x, y) || throw(ArgumentError("Both inputs must be from the same genome."))
@@ -49,6 +59,9 @@ function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector)
     ol
 end
 
+"""
+    findin(x::AbstractGenomicVector,y::AbstractGenomicVector,exact::Bool=true)
+"""
 function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y)
     inds = Vector{Int64}(0)
@@ -66,6 +79,9 @@ function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::
     sort(unique(inds))
 end
 
+"""
+    indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+"""
 function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y)
     inds = zeros(Int64,length(x))
@@ -85,3 +101,12 @@ end
 Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = indexin(x,y,exact) .!= 0
 Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ findin(x,y,exact) ]
 Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[!in(x,y,exact)]
+
+"""
+Matching functions in `GenomicVectors` can perform overlap matching, rather than exact
+matching when given the extra argument `exact=false`. In either case, the genome strand
+is never considered.
+"""
+findoverlaps, findin, indexin, in, intersect, setdiff
+
+# The discussion in https://github.com/JuliaLang/Juleps/blob/master/Find.md#particular-cases is very relevant choosing names for these functions.
