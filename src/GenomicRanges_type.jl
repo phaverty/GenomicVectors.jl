@@ -3,20 +3,22 @@
 ######################
 
 """
-# `GenomicRanges`
-`GenomicRanges` represent closed ranges in a genome. This type uses
+# GenomicRanges Type
+
+Represents closed ranges in a genome. This type uses
 its (immutable) `GenomeInfo` slot object to describe corresponding
 genome and positions can be expressed relative to this concatenated,
 linearized genome or relative to the chromosome containing a given position.
 
-## Examples
+# Examples
+```julia    
     chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
     chrs = ["chr1","chr2","chr2","chrX"]
     starts = [100, 200, 300, 400]
     ends = [120, 240, 350, 455]
     gr = GenomicRanges(chrs,starts,ends,chrinfo)
-
-## Indexing
+```
+# Indexing
 Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`.
 
 Getting/setting by a scalar gives/takes a Bio.Intervals.Interval. The leftposition and
@@ -165,8 +167,6 @@ function slide!(gr::GenomicRanges, x::Integer)
     end
     gr
 end
-
-slide(gr::GenomicRanges, x::Integer) = slide!( copy(gr), x )
 
 function Base.empty!(x::GenomicRanges)
     empty!(x.starts)

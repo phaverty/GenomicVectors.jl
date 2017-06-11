@@ -3,9 +3,12 @@
 #######################
 
 """
-The GenomeInfo type holds information about a genome including its name, chromosome names,
- chromosome lengths and chromosome offsets into a concatenated, linear genome (genopos).
-Indexing returns the genopos end of the indexed chromosome.
+# GenomeInfo Type
+
+Describes a genome as a collection of chromosomes arranged end-to-end in a specific order such
+that the index of a nucleotide in any chromosome may be described by as single integer.
+
+Indexing a `GenomeInfo` returns the genopos end of the indexed chromosome.
 
 # Examples
 ```julia
@@ -16,23 +19,6 @@ chr_lengths(chrinfo)
 chr_ends(chrinfo)
 chr_offsets(chrinfo)
 chrinfo[2] # 5e5
-
-## GenomeInfo Interface
-Much of the functionality of the types in the GenomicVectors.jl
-package via the GenomeInfo Interface, which provides
-access to the genome (name, chromosome lengths, etc.). This Interface requires
-the following methods:
-    
-- chr_info
-which returns a GenomeInfo object, which then provides these methods:
-
-- chr_names
-- chr_lengths
-- chr_ends
-- chr_offsets
-- genome
-- same_genome
-
 ```
 """
 immutable GenomeInfo{T1<:Integer}
@@ -85,8 +71,8 @@ Base.getindex(x::GenomeInfo, i::Union{String, Integer}) = x.chr_ends[i]
 for op in [:chr_names, :chr_lengths, :chr_ends, :chr_offsets, :genome]
     @eval $(op)(x) = $(op)(chr_info(x))
 end
-
 same_genome(x, y) = chr_info(x) == chr_info(y)
+
 function same_genome(x, y::Interval)
     seqname(y) != genome(x) && return false
     chrs = chromosomes( [leftposition(y),rightposition(y)], chr_info(x) )
@@ -94,5 +80,34 @@ function same_genome(x, y::Interval)
     return true
 end
 same_genome(x::Interval, y) = same_genome(y,x)
+
+"""
+# The GenomeInfo Interface
+
+Provides access to the name of the relevant genome
+for a collection of genome positions in addition to the names, order and size
+and names of the chromosomes that make up the genome. Implemented by `GenomeInfo`
+and any type that implements a method on `chr_info` that returns a `GenomeInfo`.
+
+    same_genome(x,y)
+Tests if two genomes are identical.
+    
+    genome(x)
+The name of the genome, e.g. hg19.
+    
+    chr_names(x)
+The names of the chromosomes in the genome, in order.
+    
+    chr_lengths(x)
+The lengths of the chromosomes in the genome, in order.
+    
+    chr_ends(x)
+The indices of the last nucleotides in each chromosome in the genome, in order.
+    
+    chr_offsets(x)
+The number of nucleotides in the preceding chromosomes in the genome, in order.
+   
+"""
+chr_info, same_genome, chr_names, chr_lengths, chr_ends, chr_offsets, genome
 
 @doc (@doc GenomeInfo), chr_info, chr_names, chr_lengths, chr_ends, chr_offsets, genome, same_genome

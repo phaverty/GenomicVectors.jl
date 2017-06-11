@@ -3,22 +3,22 @@
 #########################
 
 """
+# GenomicPositions Type
+
     GenomicPositions(chrpos, chromosomes, genomeinfo)
     GenomicPositions(genopos, genomeinfo)
 
 Represents single-nucleotide positions in a genome.
 
 This type uses its (immutable) `GenomeInfo` slot object to describe corresponding genome and
-    positions can be expressed relative to this concatenated, linearized genome or relative
-    to the chromosome containing a given position.
+positions can be expressed relative to this concatenated, linearized genome or relative
+to the chromosome containing a given position.
 
-Sorting is by chromosome, as ordered by chrinfo,
+Sorting is by chromosome, as ordered by chrinfo.
 
 By convention, all postions in a `GenomicPositions` are considered to be on the plus strand.
 
-##
-
-## Examples
+# Examples
 ```julia
     genomeinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
     chrs = ["chr2","chr1","chr2","chrX"]
@@ -116,7 +116,7 @@ function slide!(gpos::GenomicPositions, x::Integer)
     n_chrs = length(ends)
     chr_ind = 1
     i = 1
-    for g in gpos.genopos
+    for g in _genostarts(gpos)
         if g > ends[chr_ind] || g <= offsets[chr_ind] # Find new chr
             chr_ind = searchsortedfirst(ends, g, one(Int64), n_chrs, Base.Forward)
         end

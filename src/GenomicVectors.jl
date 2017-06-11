@@ -33,8 +33,8 @@ export GenomicTable, rowindex, table
 
 ### Includes
 include("GenomeInfo_type.jl")
-include("AbstractGenomicVector_type.jl")
 include("utils.jl")
+include("AbstractGenomicVector_type.jl")
 include("GenomicPositions_type.jl")
 include("GenomicRanges_type.jl")
 include("GenomicTable_type.jl")

@@ -1,8 +1,11 @@
 typealias ColumnIndex Union{Symbol,Integer}
 
-"""A DataTable-like class with a GenomicVector as an index
+"""
+# GenomicTable
 
-### Constructors
+A DataTable-like class with a GenomicVector as an index.
+
+# Examples
 ```julia
     genomeinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
     chrs = ["chr2","chr1","chr2","chrX"]

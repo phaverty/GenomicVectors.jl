@@ -14,6 +14,10 @@ abstract AbstractGenomicVector{T} <: AbstractVector{T}
 Base.sort(x::AbstractGenomicVector; rev::Bool=false) = sort!(copy(x))
 Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( each(x), rev=rev )
 Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(each(x)), rev=rev ) # No method for iterator
+_exact_match(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
+slide(x::AbstractGenomicVector, value::Integer) = slide!( copy(x), value )
+
+@doc (@doc chr_info) AbstractGenomicVector
 
 """
     findoverlaps(x::AbstractGenomicVector,y::AbstractGenomicVector)
@@ -33,7 +37,7 @@ end
 
 """
     findin(x::AbstractGenomicVector,y::AbstractGenomicVector,exact::Bool=true)
-    """
+"""
 function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y)
     inds = Vector{Int64}(0)
@@ -73,7 +77,6 @@ end
 Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = indexin(x,y,exact) .!= 0
 Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ findin(x,y,exact) ]
 Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[!in(x,y,exact)]
-_exact_match(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
 
 """
 Matching functions in `GenomicVectors` can perform overlap matching, rather than exact

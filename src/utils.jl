@@ -55,11 +55,6 @@ function chrpos(positions, chrinfo::GenomeInfo)
     res
 end
 
-"""
-    chromosomes(genopos, chrinfo)
-
-Given positions in the linear genome, calculate the position on the relevant chromosome.
-"""
 function chromosomes(positions, chrinfo::GenomeInfo)
     ends = chr_ends(chrinfo)
     offsets = chr_offsets(chrinfo)
@@ -78,43 +73,6 @@ function chromosomes(positions, chrinfo::GenomeInfo)
     end
     res
 end
-
-## GenomeInfo Interface
-for op in [:chr_names, :chr_lengths, :chr_ends, :chr_offsets, :genome]
-    @eval $(op)(x) = $(op)(chr_info(x))
-end
-same_genome(x, y) = chr_info(x) == chr_info(y)
-
-"""
-# The GenomeInfo Interface
-
-Provides access to the name of the relevant genome
-for a collection of genome positions in addition to the names, order and size
-and names of the chromosomes that make up the genome. Genomes are described
-as a collection of chromosomes arranged end-to-end in a specific order such
-that the index of a nucleotide in any chromosome may be described by as single
-integer. This interface requires a type to implement a method on `chr_info`.
-
-    same_genome(x,y)
-Tests if two genomes are identical.
-    
-    genome(x)
-The name of the genome, e.g. hg19.
-    
-    chr_names(x)
-The names of the chromosomes in the genome, in order.
-    
-    chr_lengths(x)
-The lengths of the chromosomes in the genome, in order.
-    
-    chr_ends(x)
-The indices of the last nucleotides in each chromosome in the genome, in order.
-    
-    chr_offsets(x)
-The number of nucleotides in the preceding chromosomes in the genome, in order.
-   
-"""
-chr_info, same_genome, chr_names, chr_lengths, chr_ends, chr_offsets, genome
 
 ## GenoPos Interface
 genostarts(x) = copy(_genostarts(x))
@@ -144,6 +102,7 @@ Get the ending nucleotide index for each range/position relative to the chromoso
 Get the distance, between the start and end nucleotide of the range, An `RleVector` of 1s for single-nucleotide positions.
 
     chromosomes(x)
+    chromosomes(genopos, chrinfo)
 Get the name of the chromosome for each range/position.
 
     genostarts(x)
