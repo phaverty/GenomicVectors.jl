@@ -49,7 +49,7 @@ starts, ends, widths, chromosomes, genostarts, genoends, strands, each
 Creates a `Bio.Intervals.IntersectIterator` from two `AbstractGenomicVectors`, much like the BioConductor
 `findOverlaps`. `Bio.Intervals` calls this function `intersect`, but I would expect `intersect` to have the
 same behavior as base, returning a subset copy of the first argument. `findoverlaps` is the kernel
-of `findin`, `indexin` and `in`.
+of `findin`, `indexin` and `in`. 
 """
 function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector)
     same_genome(x, y) || throw(ArgumentError("Both inputs must be from the same genome."))
@@ -61,19 +61,19 @@ end
 
 """
     findin(x::AbstractGenomicVector,y::AbstractGenomicVector,exact::Bool=true)
-"""
+    """
 function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y)
     inds = Vector{Int64}(0)
     if exact
         for (el_a,el_b) in ol
-            if first(el_a) == first(el_b) && last(el_a) == last(el_b) && strand(el_a) == strand(el_b)
+            if exact_match(el_a,el_b)
                 push!(inds,metadata(el_a))
             end
         end
     else
         for (el_a,el_b) in ol
-                push!(inds,metadata(el_a))
+            push!(inds,metadata(el_a))
         end
     end
     sort(unique(inds))
@@ -86,14 +86,14 @@ function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact:
     ol = findoverlaps(x,y)
     inds = zeros(Int64,length(x))
     if exact
-        for (i,(el_a,el_b)) in enumerate(ol)
-            if first(el_a) == first(el_b) && last(el_a) == last(el_b) && strand(el_a) == strand(el_b)
+        for (el_a,el_b) in ol
+            if exact_match(el_a,el_b)
                 inds[ metadata(el_a) ] = metadata(el_b)
             end
         end
     else
-        for (i,(el_a,el_b)) in enumerate(ol)
-                inds[ metadata(el_a) ] = metadata(el_b)
+        for (el_a,el_b) in ol
+            inds[ metadata(el_a) ] = metadata(el_b)
         end
     end
     inds
@@ -101,7 +101,7 @@ end
 Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = indexin(x,y,exact) .!= 0
 Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ findin(x,y,exact) ]
 Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[!in(x,y,exact)]
-
+exact_match(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
 """
 Matching functions in `GenomicVectors` can perform overlap matching, rather than exact
 matching when given the extra argument `exact=false`. In either case, the genome strand
