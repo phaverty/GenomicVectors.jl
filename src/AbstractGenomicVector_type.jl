@@ -11,6 +11,10 @@ the GenomeInfo and GenoPos Interfaces.
 """
 abstract AbstractGenomicVector{T} <: AbstractVector{T}
 
+Base.sort(x::AbstractGenomicVector; rev::Bool=false) = sort!(copy(x))
+Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( each(x), rev=rev )
+Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(each(x)), rev=rev ) # No method for iterator
+
 """
     findoverlaps(x::AbstractGenomicVector,y::AbstractGenomicVector)
 

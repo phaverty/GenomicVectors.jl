@@ -189,10 +189,6 @@ function Base.sort!(x::GenomicRanges; rev::Bool=false)
     x
 end
 
-Base.sort(x::GenomicRanges; rev::Bool=false) = sort!(copy(x))
-Base.issorted(x::GenomicRanges; rev::Bool=false) = issorted( each(x), rev=rev )
-Base.sortperm(x::GenomicRanges; rev=false) = sortperm( collect(each(x)), rev=rev ) # No method for iterator
-
 ## Querying Positions
 # Note that the standard set operations require exact matches and
 # a separate set of functions work on overlaps
