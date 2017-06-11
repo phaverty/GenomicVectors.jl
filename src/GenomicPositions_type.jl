@@ -5,16 +5,11 @@
 """
 # GenomicPositions Type
 
-    GenomicPositions(chrpos, chromosomes, genomeinfo)
-    GenomicPositions(genopos, genomeinfo)
-
 Represents single-nucleotide positions in a genome.
 
 This type uses its (immutable) `GenomeInfo` slot object to describe corresponding genome and
 positions can be expressed relative to this concatenated, linearized genome or relative
 to the chromosome containing a given position.
-
-Sorting is by chromosome, as ordered by chrinfo.
 
 By convention, all postions in a `GenomicPositions` are considered to be on the plus strand.
 

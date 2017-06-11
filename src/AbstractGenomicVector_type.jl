@@ -5,9 +5,10 @@
 ## FIXME: Checking exact match possibly be efficient. Get Bio.Intervals to discriminate exact and overlap matching.
 
 """
-An AbstractGenomicVector is a Vector that descrbes positions or ranges in a
+An AbstractGenomicVector is a Vector that describes positions or ranges in a
 single genome, in an arbitrary order. An AbstractGenomicVector must implement
-the GenomeInfo and GenoPos Interfaces.
+the GenomeInfo and GenoPos Interfaces. Sorting is by chromosome then by
+nucleotide position.
 """
 abstract AbstractGenomicVector{T} <: AbstractVector{T}
 
@@ -16,8 +17,6 @@ Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( each(x), re
 Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(each(x)), rev=rev ) # No method for iterator
 _exact_match(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
 slide(x::AbstractGenomicVector, value::Integer) = slide!( copy(x), value )
-
-@doc (@doc chr_info) AbstractGenomicVector
 
 """
     findoverlaps(x::AbstractGenomicVector,y::AbstractGenomicVector)
