@@ -27,7 +27,7 @@ ends(x::AbstractGenomicVector) = chrpos(_genoends(x),chr_info(x))
 "Get the distance, between the start and end nucleotide of the range, 1 for positions."
 widths(x::AbstractGenomicVector) = (_genoends(x) - _genostarts(x)) .+ 1
 "Get the name of the chromosome for each range/position."
-chromosomes(x::AbstractGenomicVector) = chromosomes(start(x),chr_info(x))
+chromosomes(x::AbstractGenomicVector) = chromosomes(_genostarts(x),chr_info(x))
 "Get the starting nucleotide index for each range/position in the linearized genome."
 genostarts(x::AbstractGenomicVector) = copy(_genostarts(x))
 "Get the ending nucleotide index for each range/position in the linearized genome."

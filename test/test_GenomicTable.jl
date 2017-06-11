@@ -28,6 +28,14 @@ using DataTables
     gt[2:3,[2]] = [7,6]
     @test convert(Vector,gt[2]) == [4,7,6,1]
 
+    ## Interfaces
+    @test starts(gt) == starts(gp)
+    @test ends(gt) == ends(gp)
+    @test strands(gt) == strands(gp)
+    @test chr_info(gt) == chr_info(gp)
+    @test genostarts(gt) == genostarts(gp)
+    @test genoends(gt) == genoends(gp)
+    
     ## Searches
     chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
     gr1 = GenomicRanges( [30123,40456,40000],[30130,40500,40100],chrinfo )
