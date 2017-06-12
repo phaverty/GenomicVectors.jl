@@ -18,14 +18,6 @@ Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(each(x)),
 _exact_match(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
 slide(x::AbstractGenomicVector, value::Integer) = slide!( copy(x), value )
 
-"""
-    findoverlaps(x::AbstractGenomicVector,y::AbstractGenomicVector)
-
-Creates a `Bio.Intervals.IntersectIterator` from two `AbstractGenomicVectors`, much like the BioConductor
-`findOverlaps`. `Bio.Intervals` calls this function `intersect`, but I would expect `intersect` to have the
-same behavior as base, returning a subset copy of the first argument. `findoverlaps` is the kernel
-of `findin`, `indexin` and `in`. 
-"""
 function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector)
     same_genome(x, y) || throw(ArgumentError("Both inputs must be from the same genome."))
     xit = convert(IntervalCollection,x)
@@ -34,9 +26,6 @@ function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector)
     ol
 end
 
-"""
-    findin(x::AbstractGenomicVector,y::AbstractGenomicVector,exact::Bool=true)
-"""
 function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y)
     inds = Vector{Int64}(0)
@@ -54,9 +43,6 @@ function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::
     sort(unique(inds))
 end
 
-"""
-    indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
-"""
 function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y)
     inds = zeros(Int64,length(x))
@@ -78,9 +64,31 @@ Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=t
 Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[!in(x,y,exact)]
 
 """
+# Searching GenomicVectors
+
 Matching functions in `GenomicVectors` can perform overlap matching, rather than exact
 matching when given the extra argument `exact=false`. In either case, the genome strand
 is never considered.
+
+    findoverlaps(x::AbstractGenomicVector,y::AbstractGenomicVector)
+
+Creates a `Bio.Intervals.IntersectIterator` from two `AbstractGenomicVectors`, much like the BioConductor
+`findOverlaps`. `Bio.Intervals` calls this function `intersect`, but I would expect `intersect` to have the
+same behavior as base, returning a subset copy of the first argument. `findoverlaps` is the kernel
+of the other search/set operations.
+
+    findin(x::AbstractGenomicVector,y::AbstractGenomicVector,exact::Bool=true)
+
+    indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+
+    in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+The `AbstractGenomicVector` method on `in` is vectorized and returns a `BitArray`
+that is `true` for each element of `x` that is in the set `y`.
+    
+    intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+
+    setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+    
 """
 findoverlaps, findin, indexin, in, intersect, setdiff
 
