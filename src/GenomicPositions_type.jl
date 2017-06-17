@@ -74,13 +74,14 @@ end
 function Base.convert(::Type{DataTable}, x::GenomicPositions)
     chrs = chr_names(x)
     n = length(x)
-    c = similar(chrs, n)
-    p = similar(_genostarts(x), n)
+    c_res = similar(chrs, n)
+    p_res = similar(_genostarts(x), n)
     ends = chr_ends(x)
     offsets = chr_offsets(x)
     i = r = 1
     e = ends[r]
     o = offsets[r]
+    c = chrs[r]
     @inbounds for g in _genostarts(x)
         if g > e || g <= o
             r = 1
@@ -89,12 +90,13 @@ function Base.convert(::Type{DataTable}, x::GenomicPositions)
             end
             e = ends[r]
             o = offsets[r]
+            c = chrs[r]
         end
-        c[i] = chrs[r]
-        p[i] = g - o
+        c_res[i] = c
+        p_res[i] = g - o
         i = i + 1
     end
-    return( DataTable( [c,p], [:Chromosome, :Position] ) )
+    return( DataTable( [c_res,p_res], [:Chromosome, :Position] ) )
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicPositions)

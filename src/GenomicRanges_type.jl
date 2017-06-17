@@ -111,22 +111,31 @@ end
 function Base.convert(::Type{DataTable}, x::GenomicRanges)
     n = length(x)
     chrs = chr_names(x)
-    n_chrs = length(chrs)
-    c = similar(chrs, n)
-    s = similar(x.starts, n)
-    e = similar(x.ends, n)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
     ends = chr_ends(x.chrinfo)
     offsets = chr_offsets(x.chrinfo)
-    i = 1
-    for (spos,epos) in each(x)
-        ind = searchsortedfirst(ends, spos, one(Int64), n_chrs, Base.Forward)
-        c[i] = chrs[ ind ]
-        o = offsets[ ind ]
-        s[i] = spos - o
-        e[i] = epos - o
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in each(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
         i = i + 1
     end
-    return( DataTable( [c,s,e,strands(x)],[:Chromosome, :Start, :End, :Strand] ) )
+    return( DataTable( [c_res,s_res,e_res,strands(x)],[:Chromosome, :Start, :End, :Strand] ) )
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicRanges)
