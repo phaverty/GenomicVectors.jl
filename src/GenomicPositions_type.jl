@@ -7,9 +7,9 @@
 
 Represents single-nucleotide positions in a genome.
 
-This type uses its (immutable) `GenomeInfo` slot object to describe corresponding genome and
-positions can be expressed relative to this concatenated, linearized genome or relative
-to the chromosome containing a given position.
+This type uses its (immutable) `GenomeInfo` slot object to describe corresponding
+genome. Therefore, positions can be expressed relative to this concatenated,
+linearized genome or relative to the chromosome containing a given position.
 
 By convention, all postions in a `GenomicPositions` are considered to be on the plus strand.
 
@@ -22,7 +22,6 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
     x = GenomicPositions(pos,chrs,genomeinfo)
     y = GenomicPositions(gpos,genomeinfo)
     same_genome(x, y)
-    sort!(y)
     convert(DataTable, y)
 ```
 """
@@ -73,18 +72,26 @@ end
 
 ## Conversions
 function Base.convert(::Type{DataTable}, x::GenomicPositions)
-    n = length(x)
     chrs = chr_names(x)
-    n_chrs = length(chrs)
+    n = length(x)
     c = similar(chrs, n)
-    p = similar(x.genopos, n)
-    ends = chr_ends(x.chrinfo)
-    offsets = chr_offsets(x.chrinfo)
-    i = 1
-    for pos in x.genopos
-        ind = searchsortedfirst(ends, pos, one(Int64), n_chrs, Base.Forward)
-        c[i] = chrs[ ind ]
-        p[i] = pos - offsets[ ind ]
+    p = similar(_genostarts(x), n)
+    ends = chr_ends(x)
+    offsets = chr_offsets(x)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    @inbounds for g in _genostarts(x)
+        if g > e || g <= o
+            r = 1
+            while g > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+        end
+        c[i] = chrs[r]
+        p[i] = g - o
         i = i + 1
     end
     return( DataTable( [c,p], [:Chromosome, :Position] ) )
@@ -137,6 +144,7 @@ Base.sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
 Base.in(query::GenomicPositions, target::GenomicPositions, exact::Bool=true) = [in(v,target) for v in query]
 
 """
+    function nearest(query::GenomicPositions, target::GenomicPositions)
 For each `query` finds index in `target` that is nearest on the same chromosome.
 If no match on the same chromosome exists, the index will be 0.
 """

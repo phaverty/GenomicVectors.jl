@@ -6,7 +6,7 @@ using Bio.Intervals
 
 @testset begin
     
-### GenomeInfo
+    ## GenomeInfo
     chrs = ["chr1","chr2","chrX"]
     x = GenomeInfo("hg19",chrs,Int64[3e5,2e5,1e4])
     @test genome(x) == "hg19"
@@ -29,7 +29,7 @@ using Bio.Intervals
     @test same_genome(gr,Interval("hg19",1,3,'.')) == true
     @test same_genome(Interval("hg19",1,3,'.'),gr) == true
     @test same_genome(Interval("hg18",1,3,'.'),gr) == false
-    @test same_genome(Interval("hg19",1,10000000,'.'),gr) == false
+    @test same_genome(Interval("hg19",1,310000,'.'),gr) == false
     
 end # testset
 

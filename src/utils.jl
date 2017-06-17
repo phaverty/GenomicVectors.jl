@@ -74,16 +74,20 @@ end
 function chrpos(positions, chrinfo::GenomeInfo)
     ends = chr_ends(chrinfo)
     offsets = chr_offsets(chrinfo)
-    nchr = length(ends)
     res = similar(positions,length(positions))
-    r = 1
-    i = 1
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
     @inbounds for g in positions
-        if g > ends[r] || g <= offsets[r]
-            r = searchsortedfirst(ends, g, 1, nchr, Base.Forward)
+        if g > e || g <= o
+            r = 1
+            while g > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
         end
-        r = min(r,nchr)
-        res[i] = positions[i] - offsets[ r ]
+        res[i] = g - o
         i = i + 1
     end
     res
@@ -93,15 +97,19 @@ function chromosomes(positions, chrinfo::GenomeInfo)
     ends = chr_ends(chrinfo)
     offsets = chr_offsets(chrinfo)
     chrs = chr_names(chrinfo)
-    nchr = length(ends)
-    res = similar(chr_names(chrinfo),length(positions))
-    r = 1
-    i = 1
+    res = similar(chrs,length(positions))
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
     @inbounds for g in positions
         if g > ends[r] || g <= offsets[r]
-            r = searchsortedfirst(ends, g, 1, nchr, Base.Forward)
+            r = 1
+            while g > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
         end
-        r = min(r,nchr)
         res[i] = chrs[r]
         i = i + 1
     end

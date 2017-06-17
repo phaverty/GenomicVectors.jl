@@ -25,7 +25,7 @@ io = IOBuffer()
 @test gr[2:3] == GenomicRanges(chrs[2:3],s[2:3],e[2:3],chrinfo)
 gr[2] = Interval("hg19",40123,40456,STRAND_POS)
 @test gr == GenomicRanges([100,40123,300300,500400],[120,40456,300350,500455],[STRAND_NA,STRAND_POS,STRAND_NA,STRAND_NA],chrinfo)
-@test_throws ArgumentError gr[1] = Interval("hg19",1,300000000,STRAND_NA)
+@test_throws ArgumentError gr[1] = Interval("hg19",1,310000,STRAND_NA)
     
 # Creating with strand
 gr = GenomicRanges(chrs,s,e,['.','.','.','.'],chrinfo)
