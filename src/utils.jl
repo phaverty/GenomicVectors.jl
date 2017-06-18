@@ -41,12 +41,15 @@ Much of this functionality is derived from a few utility functions:
     chrpos(genopos, chrinfo)
 Given positions in the linear genome, calculate the position on the relevant chromosome.
 
+    chrindex(genopos, chrinfo)
+Given positions in the linear genome, determine the corresponding chromosomes and return the indices of the chromosome in chrinfo.
+
     genopos(chrpos, chromosomes, chrinfo)
 Given chromosome and chromosome position information and a description of
 the chromosomes (a GenoPos object), calculate the corresponding positions
 in the linear genome.
 """
-starts, ends, widths, chromosomes, genostarts, genoends, strands, each, chrpos, genopos
+starts, ends, widths, chromosomes, genostarts, genoends, strands, each, chrpos, genopos, chrindex
 
 function genopos(positions, chromosomes, chrinfo::GenomeInfo)
     if length(positions) != length(chromosomes)
@@ -69,6 +72,28 @@ function genopos(positions, chromosomes, chrinfo::GenomeInfo)
         end
     end
     gpos
+end
+
+function chrindex(positions, chrinfo::GenomeInfo)
+    ends = chr_ends(chrinfo)
+    offsets = chr_offsets(chrinfo)
+    res = Vector{Int64}(length(positions))
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    @inbounds for g in positions
+        if g > e || g <= o
+            r = 1
+            while g > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+        end
+        res[i] = r
+        i = i + 1
+    end
+    res
 end
 
 function chrpos(positions, chrinfo::GenomeInfo)

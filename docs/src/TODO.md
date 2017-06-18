@@ -30,13 +30,14 @@ some useful stuff like rwidth and length for free.
 * [x] Should scalar indexing give a scalar? I guess so, but genpos
   value?  Dimension dropping is weird.
 * [x] Rename package to GenomicVectors?
-* [ ] Make things like chromosomes, chrpos, width generator functions?
+* [ ] Make things like chromosomes, chrpos, width generator functions or iterators?
 * [ ] does it make sense to take or return scalars in operations on GenomicVectors, e.g. pop! and push!  ?
 * [ ] Should starts and ends for GenomicRanges be a n x 2 matrix or two vectors? Matrix is nice for
-  sortrows. Also if I want to have a view, I can have just one.
+  sortrows. Also if I want to have a view, I can have just one. Also, doing genopos <-> chrpos could be simplified.
 * [ ] Should chromosome names be symbols rather than strings?
-* [ ] Should GenoPos Interface require genostarts, genoends, strands and then define
+* [x] Should GenoPos Interface require genostarts, genoends, strands and then define
 everything else in those terms?
+* [ ] when should vectors of character labels be Vector{String}, Vector{Symbol}, Categorical or RLEVector?
 
 # Improvements
 * [x] Swap GenomicPositions inner- and outer-constructors
