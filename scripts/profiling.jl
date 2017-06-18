@@ -69,3 +69,83 @@ end
 #Profile.clear(); @profile for i in 1:1e2 gp = genopos( p, c, info); end; ProfileView.view()
 #Profile.clear(); @profile for i in 1:1e2 gp = chrpos(x); end; ProfileView.view()
 #Profile.clear(); @profile for i in 1:1e2 gp = chr(x); end; ProfileView.view()
+
+function genopos2(positions, chromosomes, chrinfo::GenomeInfo)
+    if length(positions) != length(chromosomes)
+        throw(ArgumentError("Arguments positions and chromosomes must have the same length."))
+    end
+    offsets = chr_offsets(chrinfo)
+    lengths = chr_lengths(chrinfo)
+    gpos = similar(offsets, length(positions))
+    prev_chr = chromosomes[1]
+    len = lengths[prev_chr]
+    @inbounds for (i,x,chr) in zip(1:length(positions), positions, chromosomes)
+        if chr != prev_chr
+            prev_chr = chr
+            len = lengths[prev_chr]
+        end
+        if 1 <= x <= len
+            gpos[i] = x + offsets[prev_chr]
+        else
+            error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
+        end
+    end
+    gpos
+end
+
+function genopos3(positions, chromosomes, chrinfo::GenomeInfo)
+    if length(positions) != length(chromosomes)
+        throw(ArgumentError("Arguments positions and chromosomes must have the same length."))
+    end
+    offsets = chr_offsets(chrinfo)
+    lengths = chr_lengths(chrinfo)
+    chrnames = chr_names(chrinfo)
+    gpos = similar(offsets, length(positions))
+    prev_chr = chromosomes[1]
+    prev_chrind = findin([prev_chr],chrnames)[1]
+    len = lengths[prev_chrind]
+    o = offsets[prev_chrind]
+    @inbounds for (i,x,chr) in zip(1:length(positions), positions, chromosomes)
+        if chr != prev_chr
+            prev_chr = chr
+            prev_chrind = findin([prev_chr],chrnames)[1]
+            len = lengths[prev_chrind]
+            o = offsets[prev_chrind]
+        end
+        if 1 <= x <= lengths[prev_chrind]
+            gpos[i] = x + o
+        else
+            error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
+        end
+    end
+    gpos
+end
+
+function genopos4(positions, chromosomes, chrinfo::GenomeInfo)
+    if length(positions) != length(chromosomes)
+        throw(ArgumentError("Arguments positions and chromosomes must have the same length."))
+    end
+    offsets = chr_offsets(chrinfo)
+    lengths = chr_lengths(chrinfo)
+    gpos = similar(offsets, length(positions))
+    prev_chr = chromosomes[1]
+    len = lengths[prev_chr]
+    o = offsets[prev_chr]
+    @inbounds for (i,x,chr) in zip(1:length(positions), positions, chromosomes)
+        if chr != prev_chr
+            prev_chr = chr
+            len = lengths[prev_chr]
+            o = offsets[prev_chr]
+        end
+        if 1 <= x <= len
+            gpos[i] = x + o
+        else
+            error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
+        end
+    end
+    gpos
+end
+
+@time for i in 1:10 genopos2( p,c, info ); end
+@time for i in 1:10 genopos3( p,c, info ); end
+@time for i in 1:10 genopos4( p,c, info ); end

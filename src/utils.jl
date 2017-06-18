@@ -60,13 +60,15 @@ function genopos(positions, chromosomes, chrinfo::GenomeInfo)
     gpos = similar(offsets, length(positions))
     prev_chr = chromosomes[1]
     len = lengths[prev_chr]
+    o = offsets[prev_chr]
     @inbounds for (i,x,chr) in zip(1:length(positions), positions, chromosomes)
         if chr != prev_chr
             prev_chr = chr
             len = lengths[prev_chr]
+            o = offsets[prev_chr]
         end
         if 1 <= x <= len
-            gpos[i] = x + offsets[prev_chr]
+            gpos[i] = x + o
         else
             error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
         end
