@@ -7,7 +7,7 @@ Bioconductor's GenomicRanges package by P. Aboyoun, H. Pages and M. Lawrence. Th
 independently or as indices and/or annotation on other objects.
 
 These types are commonly used in conjuction with `RLEVectors` from the package of the same name, which
-also often contain data arrayed along a genome. For example `GenomicDataFrame` may use a `GPos` or `GenomicRanges` as a
+also often contain data arrayed along a genome. For example `GenomicTable` may use a `GPos` or `GenomicRanges` as a
 row index and use `RLEVector` objects for data columns. This is a common method of storing segmented DNA copy
 number for multiple samples in R's `genoset` package.
 
@@ -19,8 +19,13 @@ require that they contain identical `GenomeInfo` objects.
 The primary "innovation" of these types is that genome locations are stored as the 1-based index into the
 linear genome of concatenated chromosomes described by the immutable `GenomeInfo` object. The relevant
 chromosome for this `genopos` can be looked up efficiently as the `GenomeInfo` holds the `cumsum` of the
-chromosome lengths. Using binary search and the usual optimization for a sorted vector of queries, these
-lookups are O(numpositions * log(numchromosomes)) in the worst case and O(numpositions) in the best case.
+chromosome lengths.
+
+Considering that the typical ordering for chromosomes (1:22,X,Y,M) puts them in roughly
+decending size order (X would be 8th, Y > 22 > 21) and the first few chromsomes are each ~10% of the genome,
+linear search is very efficient for converting from "genopos" to "chrpos". (It's 1.5X faster than
+`searchsortedfirst` for randomly ordered data and 1.75X faster for data ordered by chromosome). We use an
+optimization that checks to see if the i-th data point is on the same chromosome as the previous data point.
 
 ### Creation
 `GenomeInfo` and `GenomicPositions` objects can be created as follows:

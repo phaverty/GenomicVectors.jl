@@ -19,12 +19,13 @@ AbstractGenomicVector
 
 ## Accessing position info
 ```@docs
-GenomicVectors.starts
-GenomicVectors.widths
-GenomicVectors.ends
+starts(AbstractGenomicVector)
+widths(AbstractGenomicVector)
+ends(AbstractGenomicVector)
+chromosomes(AbstractGenomicVector)
 genopos
 chrpos
-chromosomes
+chrindex
 ```
 
 ## Modifying positions
