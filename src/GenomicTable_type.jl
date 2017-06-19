@@ -16,7 +16,7 @@ A DataTable-like class with a GenomicVector as an index.
     gt[1:2,1:2]
 ```
 """
-type GenomicTable{T1 <: AbstractGenomicVector, T2 <: AbstractDataTable} <: AbstractDataTable
+immutable GenomicTable{T1 <: AbstractGenomicVector, T2 <: AbstractDataTable} <: AbstractDataTable
     rowindex::T1
     table::T2
     function GenomicTable(rowindex,table)

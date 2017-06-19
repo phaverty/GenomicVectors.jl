@@ -25,7 +25,7 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
     convert(DataTable, y)
 ```
 """
-type GenomicPositions{T1 <: Integer} <: AbstractGenomicVector{T1}
+immutable GenomicPositions{T1 <: Integer} <: AbstractGenomicVector{T1}
     genopos::Vector{T1}
     chrinfo::GenomeInfo{T1}
     function GenomicPositions(genopos, chrinfo)
