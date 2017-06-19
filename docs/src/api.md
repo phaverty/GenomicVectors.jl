@@ -40,12 +40,8 @@ does not. In `GenomcVectors.jl`, the standard set operations use exact matching 
 functions are defined for `AbstractGenomicVector`.
 
 ```@docs
+findoverlaps
 indexin
 findin
-overlap
-overlaps # Hmm
-hasoverlap
-overlapin
-overlapindex
 nearest
 ```
