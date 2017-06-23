@@ -2,7 +2,7 @@ module TestGenomicRanges
 
 using GenomicVectors
 using Base.Test
-using Bio.Intervals
+using GenomicFeatures
 using DataTables
 
 @testset begin

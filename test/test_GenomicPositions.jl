@@ -4,7 +4,7 @@ using GenomicVectors
 using Base.Test
 using RLEVectors
 using DataTables
-using Bio.Intervals
+using GenomicFeatures
 
 @testset begin
     

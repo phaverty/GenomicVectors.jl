@@ -2,8 +2,6 @@
 ### AbstractGenomicVector Type ###
 ##################################
 
-## FIXME: Checking exact match possibly be efficient. Get Bio.Intervals to discriminate exact and overlap matching.
-
 """
 An AbstractGenomicVector is a Vector that describes positions or ranges in a
 single genome, in an arbitrary order. An AbstractGenomicVector must implement
@@ -28,27 +26,23 @@ function Base.show(io::IO, ::MIME"text/plain", x::AbstractGenomicVector)
     show(io, convert(GenomicTable, x))
 end
 
-function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector)
+function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=false)
     same_genome(x, y) || throw(ArgumentError("Both inputs must be from the same genome."))
     xit = convert(IntervalCollection,x)
     yit = convert(IntervalCollection,y)
-    ol = intersect(xit,yit)
+    if exact
+        ol = eachoverlap(xit, yit, filter=_exact_match(u,v))
+    else
+        ol = eachoverlap(xit,yit)
+    end
     ol
 end
 
 function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y)
     inds = Vector{Int64}(0)
-    if exact
-        for (el_a,el_b) in ol
-            if _exact_match(el_a,el_b)
-                push!(inds,metadata(el_a))
-            end
-        end
-    else
-        for (el_a,el_b) in ol
-            push!(inds,metadata(el_a))
-        end
+    for (el_a,el_b) in ol
+        push!(inds,metadata(el_a))
     end
     sort(unique(inds))
 end
@@ -56,16 +50,8 @@ end
 function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y)
     inds = zeros(Int64,length(x))
-    if exact
-        for (el_a,el_b) in ol
-            if _exact_match(el_a,el_b)
-                inds[ metadata(el_a) ] = metadata(el_b)
-            end
-        end
-    else
-        for (el_a,el_b) in ol
-            inds[ metadata(el_a) ] = metadata(el_b)
-        end
+    for (el_a,el_b) in ol
+        inds[ metadata(el_a) ] = metadata(el_b)
     end
     inds
 end

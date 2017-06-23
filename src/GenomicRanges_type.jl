@@ -21,7 +21,7 @@ linearized genome or relative to the chromosome containing a given position.
 # Indexing
 Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`.
 
-Getting/setting by a scalar gives/takes a Bio.Intervals.Interval. The leftposition and
+Getting/setting by a scalar gives/takes a GenomicFeatures.Interval. The leftposition and
 rightposition in this Interval must be in genome location units and correspond to the
 same chromosome. The seqname must match the genome of the GenomicRanges. Outgoing Intervals
 will have the index `i` as their metadata. This makes it possible to obtain the original

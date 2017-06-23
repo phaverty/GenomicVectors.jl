@@ -6,7 +6,7 @@ module GenomicVectors
 
 using RLEVectors
 using AxisArrays
-using Bio.Intervals
+using GenomicFeatures
 using DataTables
 
 # utils
@@ -14,8 +14,8 @@ export genopos
 
 # types
 import Base: ==, getindex, setindex!
-import Bio.Intervals: StringField, Interval, IntervalCollection, Strand
-export GenomeInfo, AbstractGenomicVector, GenomicPositions, GenomicRanges
+import GenomicFeatures: Interval, IntervalCollection, Strand
+export GenomeInfo, AbstractGenomicVector, GenomicPositions, GenomicRanges, GenomicTable
 
 # GenomeInfo
 export chr_ends, chr_lengths, chr_offsets, chr_names, same_genome
@@ -29,7 +29,7 @@ export genome, chr_info, chromosomes, chrpos, chrindex, genopos, slide!, slide, 
 import Base: similar, copy, unique, size, length, endof, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!
 
 # GenomicTable
-export GenomicTable, rowindex, table
+export rowindex, table
 
 ### Includes
 include("GenomeInfo_type.jl")
