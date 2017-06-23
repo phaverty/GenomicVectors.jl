@@ -31,7 +31,7 @@ function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact:
     xit = convert(IntervalCollection,x)
     yit = convert(IntervalCollection,y)
     if exact
-        ol = eachoverlap(xit, yit, filter=_exact_match(u,v))
+        ol = eachoverlap(xit, yit, filter=_exact_match)
     else
         ol = eachoverlap(xit,yit)
     end
