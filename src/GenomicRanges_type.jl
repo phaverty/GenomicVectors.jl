@@ -91,22 +91,6 @@ end
 #
 #end
 
-## Show
-function Base.show(io::IO, x::GenomicRanges)
-    t = typeof(x)::DataType
-    show(io, t)
-    write(io, "\nGenome Metadata:\n  ")
-    show(io, x.chrinfo)
-    write(io, "\nChromosomes:\n ")
-    Base.show_vector(io, chromosomes(x),"[","]")
-    write(io, "\nChromosome Start Positions:\n ")
-    Base.show_vector(io, starts(x),"[","]")
-    write(io, "\nChromosome End Positions:\n ")
-    Base.show_vector(io, ends(x),"[","]")
-    write(io, "\nChromosome Strand:\n ")
-    Base.show_vector(io, strands(x),"[","]")
-end
-
 ## Conversions
 function Base.convert(::Type{DataTable}, x::GenomicRanges)
     n = length(x)

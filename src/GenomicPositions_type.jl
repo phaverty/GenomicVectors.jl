@@ -58,18 +58,6 @@ function Base.setindex!(x::GenomicPositions, value, i)
     return(x)
 end
 
-## Show
-function Base.show(io::IO, x::GenomicPositions)
-    t = typeof(x)::DataType
-    show(io, t)
-    write(io, "\nGenome Metadata:\n  ")
-    show(io, x.chrinfo)
-    write(io, "\nChromosomes:\n  ")
-    Base.show_vector(io, chromosomes(x),"[","]")
-    write(io, "\nChromosome Positions:\n  ")
-    Base.show_vector(io, starts(x),"[","]")
-end
-
 ## Conversions
 function Base.convert(::Type{DataTable}, x::GenomicPositions)
     chrs = chr_names(x)

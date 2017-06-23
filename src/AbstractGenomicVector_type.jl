@@ -18,6 +18,16 @@ Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(eachrange
 _exact_match(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
 slide(x::AbstractGenomicVector, value::Integer) = slide!( copy(x), value )
 
+function Base.show(io::IO, x::AbstractGenomicVector)
+    Base.show_vector(io,convert(Vector{String},x),"[", "]")
+end    
+
+function Base.show(io::IO, ::MIME"text/plain", x::AbstractGenomicVector)
+    t = typeof(x)::DataType
+    show(io, t)
+    show(io, convert(GenomicTable, x))
+end
+
 function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector)
     same_genome(x, y) || throw(ArgumentError("Both inputs must be from the same genome."))
     xit = convert(IntervalCollection,x)
