@@ -24,11 +24,12 @@ chromosome lengths.
 Considering that the typical ordering for chromosomes (1:22,X,Y,M) puts them in roughly
 decending size order (X would be 8th, Y > 22 > 21) and the first few chromsomes are each ~10% of the genome,
 linear search is very efficient for converting from "genopos" to "chrpos". (It's 1.5X faster than
-`searchsortedfirst` for randomly ordered data and 1.75X faster for data ordered by chromosome). We use an
-optimization that checks to see if the i-th data point is on the same chromosome as the previous data point.
+`searchsortedfirst` for randomly ordered data and 1.75X faster for data ordered by chromosome). For both implementations,
+we use an optimization that frequently skips the lookup by checking to see if the i-th data point is on the same chromosome as
+the previous data point.
 
 ### Creation
-`GenomeInfo` and `GenomicPositions` objects can be created as follows:
+`GenomeInfo`, `GenomicPositions` and `GenomicRanges` objects can be created as follows:
 
 ```julia
 using GenomicVectors

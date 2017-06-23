@@ -13,8 +13,8 @@ nucleotide position.
 abstract AbstractGenomicVector{T} <: AbstractVector{T}
 
 Base.sort(x::AbstractGenomicVector; rev::Bool=false) = sort!(copy(x))
-Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( each(x), rev=rev )
-Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(each(x)), rev=rev ) # No method for iterator
+Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( eachrange(x), rev=rev )
+Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(eachrange(x)), rev=rev ) # No method for iterator
 _exact_match(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
 slide(x::AbstractGenomicVector, value::Integer) = slide!( copy(x), value )
 

@@ -120,7 +120,7 @@ function Base.convert(::Type{DataTable}, x::GenomicRanges)
     e = ends[r]
     o = offsets[r]
     c = chrs[r]
-    @inbounds for (spos,epos) in each(x)
+    @inbounds for (spos,epos) in eachrange(x)
         if spos > e || spos <= o
             r = 1
             while spos > ends[r]
@@ -143,7 +143,7 @@ function Base.convert(::Type{Vector{String}}, x::GenomicRanges)
     String[ string(c, ":", s, "-", e) for (c,s,e) in zip(df[:Chromosome], df[:Start], df[:End]) ]
 end
 
-Base.convert(::Type{Vector}, x::GenomicRanges) = collect(each(x))
+Base.convert(::Type{Vector}, x::GenomicRanges) = collect(eachrange(x))
 Base.convert(::Type{GenomicPositions}, x::GenomicRanges) = GenomicPositions(genostarts(x), chr_info(x))
 
 """
@@ -161,7 +161,7 @@ function slide!(gr::GenomicRanges, x::Integer)
     n_chrs = length(ends)
     chr_ind = 1
     i = 1
-    for (s,e) in each(gr)
+    for (s,e) in eachrange(gr)
         if e > ends[chr_ind] || s <= offsets[chr_ind] # Find new chr
             chr_ind = searchsortedfirst(ends, s, one(Int64), n_chrs, Base.Forward)
         end

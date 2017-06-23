@@ -32,7 +32,7 @@ Get the ending nucleotide index for each range/position in the linearized genome
     strands(x)
 Get the DNA strand for each range/position, pass by copy.
 
-    each(x)
+    eachrange(x)
 Return an iterator that returns tuples of genostart and genoend pairs.
 
 ## Utility Functions
@@ -149,7 +149,7 @@ strands(x) = copy(_strands(x))
 RLEVectors.starts(x) = chrpos(_genostarts(x),chr_info(x))
 RLEVectors.ends(x) = chrpos(_genoends(x),chr_info(x))
 RLEVectors.widths(x) = (_genoends(x) - _genostarts(x)) + 1
-RLEVectors.each(x) = zip(_genostarts(x),_genoends(x))
+RLEVectors.eachrange(x) = zip(_genostarts(x),_genoends(x))
 chromosomes(x) = chromosomes(_genostarts(x),chr_info(x))
 
 # Other candidates for GenoPos Interface or AbstractGenomicVector include Vector{Interval}, issorted, sortperm, show, convert(DataTable,x)

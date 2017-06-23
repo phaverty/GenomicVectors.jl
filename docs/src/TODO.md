@@ -38,6 +38,7 @@ some useful stuff like rwidth and length for free.
 * [x] Should GenoPos Interface require genostarts, genoends, strands and then define
 everything else in those terms?
 * [ ] when should vectors of character labels be Vector{String}, Vector{Symbol}, Categorical or RLEVector?
+* [ ] `each` should probably be `eachrange`
 
 # Improvements
 * [x] Swap GenomicPositions inner- and outer-constructors
