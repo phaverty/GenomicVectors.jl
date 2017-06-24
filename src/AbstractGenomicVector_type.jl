@@ -13,7 +13,7 @@ abstract AbstractGenomicVector{T} <: AbstractVector{T}
 Base.sort(x::AbstractGenomicVector; rev::Bool=false) = sort!(copy(x))
 Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( eachrange(x), rev=rev )
 Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(eachrange(x)), rev=rev ) # No method for iterator
-_exact_match(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
+_exact_overlap(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
 slide(x::AbstractGenomicVector, value::Integer) = slide!( copy(x), value )
 
 function Base.show(io::IO, x::AbstractGenomicVector)
@@ -26,12 +26,18 @@ function Base.show(io::IO, ::MIME"text/plain", x::AbstractGenomicVector)
     show(io, convert(GenomicTable, x))
 end
 
+if VERSION >= v"0.6.0"
+    Base.IndexStyle(::Type{<:AbstractGenomicVector}) = IndexLinear()
+else
+    Base.linearindexing{T<:AbstractGenomicVector}(::Type{T}) = Base.LinearFast()
+end
+
 function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=false)
     same_genome(x, y) || throw(ArgumentError("Both inputs must be from the same genome."))
     xit = convert(IntervalCollection,x)
     yit = convert(IntervalCollection,y)
     if exact
-        ol = eachoverlap(xit, yit, filter=_exact_match)
+        ol = eachoverlap(xit, yit, filter=_exact_overlap)
     else
         ol = eachoverlap(xit,yit)
     end
