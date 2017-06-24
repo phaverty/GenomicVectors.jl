@@ -50,7 +50,7 @@ chromosomes
 genostarts
 genoends
 strands
-each(::AbstractGenomicVector)
+eachrange(::AbstractGenomicVector)
 findoverlaps
 findin(::AbstractGenomicVector,::AbstractGenomicVector)
 indexin(::AbstractGenomicVector,::AbstractGenomicVector)

@@ -8,7 +8,7 @@ single genome, in an arbitrary order. An AbstractGenomicVector must implement
 the GenomeInfo and GenoPos Interfaces. Sorting is by chromosome then by
 nucleotide position.
 """
-abstract AbstractGenomicVector{T} <: AbstractVector{T}
+abstract type AbstractGenomicVector{T} <: AbstractVector{T} end
 
 Base.sort(x::AbstractGenomicVector; rev::Bool=false) = sort!(copy(x))
 Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( eachrange(x), rev=rev )

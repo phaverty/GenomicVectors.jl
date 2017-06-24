@@ -26,6 +26,7 @@ chromosomes(AbstractGenomicVector)
 genopos
 chrpos
 chrindex
+eachrange(::AbstractGenomicVector)
 ```
 
 ## Modifying positions

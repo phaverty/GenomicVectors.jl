@@ -1,4 +1,4 @@
-typealias ColumnIndex Union{Symbol,Integer}
+const ColumnIndex = Union{Symbol,Integer}
 
 """
 # GenomicTable
