@@ -1,6 +1,6 @@
 julia 0.5
 GenomicFeatures
 AxisArrays
-RLEVectors
+RLEVectors 0.3.2
 DataTables
 Compat
