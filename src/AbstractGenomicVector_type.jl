@@ -23,7 +23,7 @@ end
 function Base.show(io::IO, ::MIME"text/plain", x::AbstractGenomicVector)
     t = typeof(x)::DataType
     show(io, t)
-    show(io, convert(GenomicTable, x))
+    show(io, convert(DataTable, x))
 end
 
 if VERSION >= v"0.6.0"
@@ -45,7 +45,7 @@ function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact:
 end
 
 function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
-    ol = findoverlaps(x,y)
+    ol = findoverlaps(x,y,exact)
     inds = Vector{Int64}(0)
     for (el_a,el_b) in ol
         push!(inds,metadata(el_a))
@@ -54,7 +54,7 @@ function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::
 end
 
 function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
-    ol = findoverlaps(x,y)
+    ol = findoverlaps(x,y,exact)
     inds = zeros(Int64,length(x))
     for (el_a,el_b) in ol
         inds[ metadata(el_a) ] = metadata(el_b)
@@ -63,7 +63,7 @@ function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact:
 end
 Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = indexin(x,y,exact) .!= 0
 Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ findin(x,y,exact) ]
-Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[!in(x,y,exact)]
+Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[in(x,y,exact) .== false]
 
 """
 # Searching GenomicVectors
