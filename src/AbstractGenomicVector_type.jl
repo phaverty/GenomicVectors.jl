@@ -8,7 +8,7 @@ single genome, in an arbitrary order. An AbstractGenomicVector must implement
 the GenomeInfo and GenoPos Interfaces. Sorting is by chromosome then by
 nucleotide position.
 """
-abstract type AbstractGenomicVector{T} <: AbstractVector{T} end
+abstract type AbstractGenomicVector <: AbstractVector end
 
 Base.sort(x::AbstractGenomicVector; rev::Bool=false) = sort!(copy(x))
 Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( eachrange(x), rev=rev )
@@ -70,14 +70,13 @@ Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=tru
 
 Matching functions in `GenomicVectors` can perform overlap matching, rather than exact
 matching when given the extra argument `exact=false`. In either case, the genome strand
-is never considered.
+is never considered. Other types of [overlaps](https://en.wikipedia.org/wiki/Allen%27s_interval_algebra) may
+be supported in the future.
 
     findoverlaps(x::AbstractGenomicVector,y::AbstractGenomicVector)
 
-Creates a `Bio.Intervals.IntersectIterator` from two `AbstractGenomicVectors`, much like the BioConductor
-`findOverlaps`. `Bio.Intervals` calls this function `intersect`, but I would expect `intersect` to have the
-same behavior as base, returning a subset copy of the first argument. `findoverlaps` is the kernel
-of the other search/set operations.
+Creates a `GenomicFeatures.IntersectIterator` from two `AbstractGenomicVectors`, much like the BioConductor
+`findOverlaps`. This is the kernel of the other search/set operations.
 
     findin(x::AbstractGenomicVector,y::AbstractGenomicVector,exact::Bool=true)
 
