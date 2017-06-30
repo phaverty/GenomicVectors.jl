@@ -2,7 +2,7 @@ module TestGenomeInfo
 
 using GenomicVectors
 using Base.Test
-using Bio.Intervals
+using GenomicFeatures
 
 @testset begin
     
