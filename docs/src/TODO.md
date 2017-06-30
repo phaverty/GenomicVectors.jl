@@ -1,24 +1,26 @@
-# Features
+# TODO
+
+## Features
 * [ ] `show` for GenomicRanges should covert genoPos to chrPos
 * [x] as.string for GenomicPositions
-* [ ] as.string for GenomicRanges
+* [x] as.string for GenomicRanges
 * [x] get both chr and pos for GenomicPositions
-* [ ] get both chr and pos for GenomicRanges
-* [ ] overlap(::GenomicRanges,::GenomicPositions)
-* [ ] overlap(::GenomicRanges,::GenomicRanges)
+* [x] get both chr and pos for GenomicRanges
+* [x] overlap(::GenomicRanges,::GenomicPositions)
+* [x] overlap(::GenomicRanges,::GenomicRanges)
 * [x] convert method: GenomicPositions to DataFrame
-* [ ] convert method: GenomicRanges to DataFrame
+* [x] convert method: GenomicRanges to DataFrame
 * [x] convert method: GenomicPositions to String via DataFrame
-* [ ] convert method: GenomicRanges to String via DataFrame
+* [x] convert method: GenomicRanges to String via DataFrame
 * [x] == for GenomicInfo
 * [ ] getter for GenomeInfo chr_names hash?
-* [ ] getindex for GenomicPositions should return a GenomicPositions
+* [x] getindex for GenomicPositions should return a GenomicPositions
 * [x] constructor for just genopos and chrinfo, needed for subsetting
 * [x] finish indexing
-* [ ] make convert to DataFrame more like chrpos and chr
+* [x] make convert to DataFrame more like chrpos and chr
 * [x] use DataStructures.OrderedDict or NamedArray for GenomeInfo
 
-# Decisions
+## Decisions
 * [x] GenomicInfo must store lengths or ends, offsets loses last length
 * [x] For converting genome position to chromosome position, some kind
   of search for pos + offset positions in vector of offsets. Linear
@@ -38,20 +40,20 @@ some useful stuff like rwidth and length for free.
 * [x] Should GenoPos Interface require genostarts, genoends, strands and then define
 everything else in those terms?
 * [ ] when should vectors of character labels be Vector{String}, Vector{Symbol}, Categorical or RLEVector?
-* [ ] `each` should probably be `eachrange`
+* [x] `each` should probably be `eachrange`
 
-# Improvements
+## Improvements
 * [x] Swap GenomicPositions inner- and outer-constructors
 * [ ] Genomic* constructors should do something about matching type of
 keys on GenomeInfo and type of chrs
-* [ ] show on GP should use convert(String,gp)
+* [x] show on GP should use convert(DataTable,gp)
 * [x] store [0 ; chr_ends] in GenomeInfo chr_ends, chr_offsets,
 chr_lengths then just x[2:end], x[1:end-1], diff(x)
-* [ ] Make sure my hash and == are what AutoHashEquals would say 
+* [ ] Make sure my hash and == are what AutoHashEquals would say
 * [ ] chrpos, chromosomes, genopos util functions so similar. What can I factor out?
 * [x] sort(GR) should use sortperm(each(GR))
 * [x] getindex and setindex for i::Int should use Interval not tuple
 
-# Bugs
+## Bugs
 * [x] chromosomes function contains type instability
 * [x] sortperm(x::GenomicRanges; rev=false) is inconsistent with sort(x::GenomicRanges; rev=false)

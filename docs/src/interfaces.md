@@ -42,21 +42,21 @@ are expected **not** to modify these values.
 
 In turn, the interface provides the following methods:
 
-```@docs
-starts(::AbstractGenomicVector)
-ends(::AbstractGenomicVector)
-widths(::AbstractGenomicVector)
-chromosomes
-genostarts
-genoends
-strands
-eachrange(::AbstractGenomicVector)
-findoverlaps
-findin(::AbstractGenomicVector,::AbstractGenomicVector)
-indexin(::AbstractGenomicVector,::AbstractGenomicVector)
-in(::AbstractGenomicVector,::AbstractGenomicVector)
-intersect(::AbstractGenomicVector,::AbstractGenomicVector)
-setdiff(::AbstractGenomicVector,::AbstractGenomicVector)
-```
+- starts
+- ends
+- widths
+- chromosomes
+- genostarts
+- genoends
+- strands
+- eachrange
+- findoverlaps
+- findin
+- indexin
+- in
+- intersect
+- setdiff
 
 `starts` etc. are non-aliasing (return a copy of the values).
+
+- See also: [API](api)

@@ -12,7 +12,32 @@
 `GenomicVectors` is an alternate implementation of the `GPos` and `GenomicRanges` types from Bioconductor's GenomicRanges package by P. Aboyoun, H. Pages and M. Lawrence. These `GenomicPositions` and `GenomicRanges` types are `Vectors` that serve as markers of locations on a given genome. They can be used independently or as indices and/or annotation on other objects.
 
 
-These types are commonly used in conjuction with `RLEVectors` from the package of the same name, which also often contain data arrayed along a genome. For example `GenomicDataFrame` may use a `GPos` or `GenomicRanges` as a row index and use `RLEVector` objects for data columns. This is a common method of storing segmented DNA copy number for multiple samples in R's `genoset` package.
+These types are commonly used in conjuction with `RLEVectors` from the package of the same name, which also often contain data arrayed along a genome. For example `GenomicTable` may use a `GPos` or `GenomicRanges` as a row index and use `RLEVector` objects for data columns. This is a common method of storing segmented DNA copy number for multiple samples in R's `genoset` package.
+
+- [The GenomicVectors API](api.md#The-GenomicVectors-API-1)
+    - [Types](api.md#Types-1)
+    - [Interfaces and Accessing position info](api.md#Interfaces-and-Accessing-position-info-1)
+    - [Modifying positions](api.md#Modifying-positions-1)
+    - [Querying positions](api.md#Querying-positions-1)
+    - [Interfaces](interfaces.md#Interfaces-1)
+- [Ideas for future development](future.md#Ideas-for-future-development-1)
+    - [Maintaining performance via sortedness and views](future.md#Maintaining-performance-via-sortedness-and-views-1)
+- [TODO](TODO.md#TODO-1)
+    - [Features](TODO.md#Features-1)
+    - [Decisions](TODO.md#Decisions-1)
+    - [Improvements](TODO.md#Improvements-1)
+    - [Bugs](TODO.md#Bugs-1)
+- [Release Notes](NEWS.md#Release-Notes-1)
+    - [Version 0.0.1: Initial Public Release](NEWS.md#Version-0.0.1:-Initial-Public-Release-1)
+    - [Version 0.0.2: changes to indexing a GenomicRanges](NEWS.md#Version-0.0.2:-changes-to-indexing-a-GenomicRanges-1)
+    - [Version 0.0.3: Update to scalar indexing, behaves like Vector{Interval}](NEWS.md#Version-0.0.3:-Update-to-scalar-indexing,-behaves-like-Vector{Interval}-1)
+    - [Version 0.1.0: Introducing `GenomicTable`](NEWS.md#Version-0.1.0:-Introducing-GenomicTable-1)
+- [GenomicVectors](index.md#GenomicVectors-1)
+    - [Introduction](index.md#Introduction-1)
+    - [Implementation](index.md#Implementation-1)
+    - [Working with locations](index.md#Working-with-locations-1)
+    - [Ordering](index.md#Ordering-1)
+    - [Intersection / overlap operations](index.md#Intersection-/-overlap-operations-1)
 
 
 <a id='Implementation-1'></a>
@@ -23,7 +48,10 @@ These types are commonly used in conjuction with `RLEVectors` from the package o
 These `Vector` types each contain a `GenomicInfo` object, which annotates the names of the relevant genome and its chromosomes as well as the lengths of each chromosome. Operations on two or more of these genomic vectors require that they contain identical `GenomeInfo` objects.
 
 
-The primary "innovation" of these types is that genome locations are stored as the 1-based index into the linear genome of concatenated chromosomes described by the immutable `GenomeInfo` object. The relevant chromosome for this `genopos` can be looked up efficiently as the `GenomeInfo` holds the `cumsum` of the chromosome lengths. Using binary search and the usual optimization for a sorted vector of queries, these lookups are O(numpositions * log(numchromosomes)) in the worst case and O(numpositions) in the best case.
+The primary "innovation" of these types is that genome locations are stored as the 1-based index into the linear genome of concatenated chromosomes described by the immutable `GenomeInfo` object. The relevant chromosome for this `genopos` can be looked up efficiently as the `GenomeInfo` holds the `cumsum` of the chromosome lengths.
+
+
+Considering that the typical ordering for chromosomes (1:22,X,Y,M) puts them in roughly decending size order (X would be 8th, Y > 22 > 21) and the first few chromsomes are each ~10% of the genome, linear search is very efficient for converting from "genopos" to "chrpos". (It's 1.5X faster than `searchsortedfirst` for randomly ordered data and 1.75X faster for data ordered by chromosome). For both implementations, we use an optimization that frequently skips the lookup by checking to see if the i-th data point is on the same chromosome as the previous data point.
 
 
 <a id='Creation-1'></a>
@@ -31,7 +59,7 @@ The primary "innovation" of these types is that genome locations are stored as t
 ### Creation
 
 
-`GenomeInfo` and `GenomicPositions` objects can be created as follows:
+`GenomeInfo`, `GenomicPositions` and `GenomicRanges` objects can be created as follows:
 
 
 ```julia

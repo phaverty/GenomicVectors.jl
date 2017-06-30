@@ -11,6 +11,9 @@ also often contain data arrayed along a genome. For example `GenomicTable` may u
 row index and use `RLEVector` objects for data columns. This is a common method of storing segmented DNA copy
 number for multiple samples in R's `genoset` package.
 
+```@contents
+```
+
 ## Implementation
 These `Vector` types each contain a `GenomicInfo` object, which annotates the names of the relevant genome and
 its chromosomes as well as the lengths of each chromosome. Operations on two or more of these genomic vectors

@@ -1,4 +1,9 @@
 
+<a id='Release-Notes-1'></a>
+
+# Release Notes
+
+
 <a id='Version-0.0.1:-Initial-Public-Release-1'></a>
 
 ## Version 0.0.1: Initial Public Release
@@ -30,4 +35,24 @@ This version changes the value received or returned by setindex and getindex on 
 
 
 The each method on GenomicRanges still returns an iterator of (start,end) tuples, in units of genomic position, which is useful for sorting and some other internal operations.
+
+
+<a id='Version-0.1.0:-Introducing-GenomicTable-1'></a>
+
+## Version 0.1.0: Introducing `GenomicTable`
+
+
+A GenomicTable is a [DataTable](https://github.com/JuliaData/DataTables.jl) with one of the concrete AbstractGenomicVector subtypes as a row index. It is similar, in spirit, to Bioconductor's GenomicRanges, but a GenomicTable isa DataTable, while Bioconductor's GenomicRanges is always a vector of ranges that may, or may not, also have an associated DataFrame of metadata. GenomicTable is experimental and is not yet fully-featured.
+
+
+This version includes more range overlap features including discrimination between exact- and overlap-matches using an `exact` argument to `findoverlaps`, `in`, etc..
+
+
+There are a number of internal changes including faster `genopos`, `chrpos`, `chromosomes`, etc. functions and a re-organization of the range search functions as methods on `AbstractGenomicVector`.
+
+
+The names of range-related functions have changed. The `each` function for iterating over tuples of (genostart, genoend) pairs is now called `eachrange` mirroring the change in `RLEVectors`. Range searching functions are built on the `findoverlaps` kernel function. Rather than using separate vocabularies for exact- and overlap-matches, the usual search functions (`indexin`, `findin`, `in`, etc.) gain an `exact` argument.
+
+
+This version is fully compatible with julia 0.6. (There are a few deprecation warnings about the new "where" syntax that will eventually be fixed by Compat.jl).
 

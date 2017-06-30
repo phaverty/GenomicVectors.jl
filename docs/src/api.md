@@ -1,32 +1,19 @@
-# The GenomicVectors Types and Methods
+# The GenomicVectors API
 
-## Index
-
-```@index
+```@contents
 ```
 
 ## Types
 ```@docs
+AbstractGenomicVector
 GenomeInfo
 GenomicPositions
 GenomicRanges
 ```
 
-## Interfaces
+## Interfaces and Accessing position info
 ```@docs
-AbstractGenomicVector
-```
-
-## Accessing position info
-```@docs
-starts(AbstractGenomicVector)
-widths(AbstractGenomicVector)
-ends(AbstractGenomicVector)
-chromosomes(AbstractGenomicVector)
-genopos
-chrpos
-chrindex
-eachrange(::AbstractGenomicVector)
+chromosomes
 ```
 
 ## Modifying positions
@@ -38,12 +25,8 @@ slide!
 ## Querying positions
 As in Bioconductor, location query operations discriminate between exact and overlapping matches. In
 addition to exact versus overlapping coordinates, exact matching includes strand, while overlap matching
-does not. In `GenomcVectors.jl`, the standard set operations use exact matching and custom overlap
-functions are defined for `AbstractGenomicVector`.
+does not. In `GenomicVectors.jl`, the standard set operations use exact matching and custom overlap functions are defined for `AbstractGenomicVector`.
 
 ```@docs
 findoverlaps
-indexin
-findin
-nearest
 ```
