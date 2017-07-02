@@ -10,12 +10,77 @@ nucleotide position.
 """
 @compat abstract type AbstractGenomicVector{T} <: AbstractVector{T} end
 
+## Describing
+genostarts(x::AbstractVector) = copy(_genostarts(x))
+genoends(x::AbstractVector) = copy(_genoends(x))
+strands(x::AbstractVector) = copy(_strands(x))
+RLEVectors.starts(x::AbstractVector) = chrpos(_genostarts(x),chr_info(x))
+RLEVectors.ends(x::AbstractVector) = chrpos(_genoends(x),chr_info(x))
+RLEVectors.widths(x::AbstractVector) = (_genoends(x) - _genostarts(x)) + 1
+RLEVectors.eachrange(x::AbstractVector) = zip(_genostarts(x),_genoends(x))
+chromosomes(x::AbstractVector) = chromosomes(_genostarts(x),chr_info(x))
+
+### Other candidates for GenoPos Interface or AbstractGenomicVector include convert(Vector{Interval},), convert(DataTable,x)
+
+"""
+# The GenoPos Interface
+
+Provides access to positional information in the linearized
+genome or in chromosome coordinate (e.g. chr4:1000-1020). This interface requires
+a type to implement the a method on the non-copying accessors `_genostarts`,
+`_genoends` and `_strands` as well as the GenomeInfo Interface.
+
+    starts(x)
+Get the starting nucleotide index for each range/position relative to the chromosome on which they lie.
+
+    ends(x)
+Get the ending nucleotide index for each range/position relative to the chromosome on which they lie.
+
+    widths(x)
+Get the distance, between the start and end nucleotide of the range, An `RleVector` of 1s for single-nucleotide positions.
+
+    chromosomes(x)
+    chromosomes(genopos, chrinfo)
+Get the name of the chromosome for each range/position.
+
+    genostarts(x)
+Get the starting nucleotide index for each range/position in the linearized genome.
+    
+    genoends(x)
+Get the ending nucleotide index for each range/position in the linearized genome.
+
+    strands(x)
+Get the DNA strand for each range/position, pass by copy.
+
+    eachrange(x)
+Return an iterator that returns tuples of genostart and genoend pairs.
+
+## Utility Functions
+Much of this functionality is derived from a few utility functions:
+
+    chrpos(genopos, chrinfo)
+Given positions in the linear genome, calculate the position on the relevant chromosome.
+
+    chrindex(genopos, chrinfo)
+Given positions in the linear genome, determine the corresponding chromosomes and return the indices of the chromosome in chrinfo.
+
+    genopos(chrpos, chromosomes, chrinfo)
+Given chromosome and chromosome position information and a description of
+the chromosomes (a GenoPos object), calculate the corresponding positions
+in the linear genome.
+"""
+starts, ends, widths, chromosomes, genostarts, genoends, strands, each, chrpos, genopos, chrindex
+
+
+## Sorting
 Base.sort(x::AbstractGenomicVector; rev::Bool=false) = sort!(copy(x))
 Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( eachrange(x), rev=rev )
 Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(eachrange(x)), rev=rev ) # No method for iterator
-_exact_overlap(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
+
+## Modifying
 slide(x::AbstractGenomicVector, value::Integer) = slide!( copy(x), value )
 
+## Show
 function Base.show(io::IO, x::AbstractGenomicVector)
     Base.show_vector(io,convert(Vector{String},x),"[", "]")
 end    
@@ -26,11 +91,15 @@ function Base.show(io::IO, ::MIME"text/plain", x::AbstractGenomicVector)
     show(io, convert(DataTable, x))
 end
 
+## Indexing
 if VERSION >= v"0.6.0"
     Base.IndexStyle(::Type{<:AbstractGenomicVector}) = IndexLinear()
 else
     Base.linearindexing{T<:AbstractGenomicVector}(::Type{T}) = Base.LinearFast()
 end
+
+## Searching
+_exact_overlap(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
 
 function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=false)
     same_genome(x, y) || throw(ArgumentError("Both inputs must be from the same genome."))

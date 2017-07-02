@@ -51,8 +51,8 @@ Base.getindex(gt::GenomicTable,j::ColumnIndex) = table(gt)[j]
 Base.setindex!(gt::GenomicTable,value,j) = setindex!(_table(gt),value,j)
 Base.setindex!(gt::GenomicTable,value,i,j) = setindex!(_table(gt),value,i,j)
 
-## Getters that delegate to the genome info
-for op in [:chr_info, :_strands, :_genostarts, :_genoends]
+## Getters that delegate to the AbstractDataTable row index
+for op in [:chr_info, :_strands, :_genostarts, :_genoends, :starts, :ends, :widths, :chromosomes, :genostarts, :genoends, :strands, :each, :chrpos, :genopos, :chrindex]
     @eval ($op)(x::GenomicTable) = ($op)(_rowindex(x))
 end
 ## Searches that delegate to the genome info
