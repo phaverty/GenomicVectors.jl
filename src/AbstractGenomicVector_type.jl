@@ -11,14 +11,14 @@ nucleotide position.
 @compat abstract type AbstractGenomicVector{T} <: AbstractVector{T} end
 
 ## Describing
-genostarts(x::AbstractVector) = copy(_genostarts(x))
-genoends(x::AbstractVector) = copy(_genoends(x))
-strands(x::AbstractVector) = copy(_strands(x))
-RLEVectors.starts(x::AbstractVector) = chrpos(_genostarts(x),chr_info(x))
-RLEVectors.ends(x::AbstractVector) = chrpos(_genoends(x),chr_info(x))
-RLEVectors.widths(x::AbstractVector) = (_genoends(x) - _genostarts(x)) + 1
-RLEVectors.eachrange(x::AbstractVector) = zip(_genostarts(x),_genoends(x))
-chromosomes(x::AbstractVector) = chromosomes(_genostarts(x),chr_info(x))
+genostarts(x::AbstractGenomicVector) = copy(_genostarts(x))
+genoends(x::AbstractGenomicVector) = copy(_genoends(x))
+strands(x::AbstractGenomicVector) = copy(_strands(x))
+RLEVectors.starts(x::AbstractGenomicVector) = chrpos(_genostarts(x),chr_info(x))
+RLEVectors.ends(x::AbstractGenomicVector) = chrpos(_genoends(x),chr_info(x))
+RLEVectors.widths(x::AbstractGenomicVector) = (_genoends(x) - _genostarts(x)) + 1
+RLEVectors.eachrange(x::AbstractGenomicVector) = zip(_genostarts(x),_genoends(x))
+chromosomes(x::AbstractGenomicVector) = chromosomes(_genostarts(x),chr_info(x))
 
 ### Other candidates for GenoPos Interface or AbstractGenomicVector include convert(Vector{Interval},), convert(DataTable,x)
 
