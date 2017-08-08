@@ -33,7 +33,7 @@ units. This is use for many internal functions, like sorting. This is intentiona
 similar to `RLEVectors.each`.
 
 """
-immutable GenomicRanges{T1 <: Integer} <: AbstractGenomicVector{T1}
+struct GenomicRanges{T1 <: Integer} <: AbstractGenomicVector{T1}
     starts::Vector{T1}
     ends::Vector{T1}
     strands::Vector{Strand}

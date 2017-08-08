@@ -90,3 +90,5 @@ x[findin(gr1,gr2)] = true
 findin(gr1,gr2)
 zeros(3)
 exit()
+using GenomicVectors
+exit()

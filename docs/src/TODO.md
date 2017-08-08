@@ -41,6 +41,7 @@ some useful stuff like rwidth and length for free.
 everything else in those terms?
 * [ ] when should vectors of character labels be Vector{String}, Vector{Symbol}, Categorical or RLEVector?
 * [x] `each` should probably be `eachrange`
+* [ ] is it necessary to set the indexing type for these Vector types?
 
 ## Improvements
 * [x] Swap GenomicPositions inner- and outer-constructors

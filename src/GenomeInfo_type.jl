@@ -21,7 +21,7 @@ chr_offsets(chrinfo)
 chrinfo[2] # 5e5
 ```
 """
-immutable GenomeInfo{T1<:Integer}
+struct GenomeInfo{T1<:Integer}
     name::String
     chr_ends::AxisArray{T1,1,Vector{Int64},Tuple{AxisArrays.Axis{:chromosome,Array{String,1}}}}
     function GenomeInfo{T1}(name::String, chromosomes::Vector{String}, lengths::Vector{T1})

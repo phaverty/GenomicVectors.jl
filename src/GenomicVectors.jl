@@ -8,7 +8,6 @@ using RLEVectors
 using AxisArrays
 using GenomicFeatures
 using DataTables
-using Compat
 
 # utils
 export genopos

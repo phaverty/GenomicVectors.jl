@@ -16,7 +16,7 @@ A DataTable-like class with a GenomicVector as an index.
     gt[1:2,1:2]
 ```
 """
-immutable GenomicTable{T1 <: AbstractGenomicVector, T2 <: AbstractDataTable} <: AbstractDataTable
+struct GenomicTable{T1 <: AbstractGenomicVector, T2 <: AbstractDataTable} <: AbstractDataTable
     rowindex::T1
     table::T2
     function GenomicTable(rowindex,table)
@@ -66,8 +66,6 @@ end
 #for op in [:join]
 #
 #end
-
-
 
 function Base.vcat(x::GenomicTable,y::GenomicTable)
     same_genome(x,y) || throw(ArgumentError("x and y must be from the same genome"))
