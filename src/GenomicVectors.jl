@@ -1,4 +1,4 @@
-VERSION >= v"0.5.0" && __precompile__(true)
+__precompile__(true)
 
 module GenomicVectors
 
@@ -40,11 +40,6 @@ include("GenomicPositions_type.jl")
 include("GenomicRanges_type.jl")
 include("GenomicTable_type.jl")
 include("delegations.jl")
-
-if VERSION >= v"0.5.0"
-    include("precompile.jl")
-    _precompile_()
-end
-
+include("precompile.jl")
 
 end # module
