@@ -19,7 +19,7 @@ A DataTable-like class with a GenomicVector as an index.
 struct GenomicTable{T1 <: AbstractGenomicVector, T2 <: AbstractDataTable} <: AbstractDataTable
     rowindex::T1
     table::T2
-    function GenomicTable(rowindex,table)
+    function GenomicTable{T1,T2}(rowindex,table) where {T1 <: AbstractGenomicVector,T2 <: AbstractDataTable}
         if length(rowindex) != nrow(table)
             throw(ArgumentError("GenomicTable requires that `length(rowindex) == nrow(table)`"))
         end
@@ -44,7 +44,7 @@ function Base.show(io::IO, x::GenomicTable)
     println("\n\nTable:")
     show(io,_table(x))
 end
-         
+
 Base.getindex(gt::GenomicTable,i,j) = GenomicTable(rowindex(gt)[i], table(gt)[i,j])
 Base.getindex(gt::GenomicTable,j) = GenomicTable(rowindex(gt), table(gt)[j])
 Base.getindex(gt::GenomicTable,j::ColumnIndex) = table(gt)[j]

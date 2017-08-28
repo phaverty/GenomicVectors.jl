@@ -5,7 +5,7 @@ using Base.Test
 using GenomicFeatures
 
 @testset begin
-    
+
     ## GenomeInfo
     chrs = ["chr1","chr2","chrX"]
     x = GenomeInfo("hg19",chrs,Int64[3e5,2e5,1e4])
@@ -30,7 +30,7 @@ using GenomicFeatures
     @test same_genome(Interval("hg19",1,3,'.'),gr) == true
     @test same_genome(Interval("hg18",1,3,'.'),gr) == false
     @test same_genome(Interval("hg19",1,310000,'.'),gr) == false
-    
+
 end # testset
 
 end # module

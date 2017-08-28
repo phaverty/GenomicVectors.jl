@@ -11,7 +11,7 @@ genome and positions can be expressed relative to this concatenated,
 linearized genome or relative to the chromosome containing a given position.
 
 # Examples
-```julia    
+```julia
     chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
     chrs = ["chr1","chr2","chr2","chrX"]
     starts = [100, 200, 300, 400]
@@ -25,7 +25,7 @@ Getting/setting by a scalar gives/takes a GenomicFeatures.Interval. The leftposi
 rightposition in this Interval must be in genome location units and correspond to the
 same chromosome. The seqname must match the genome of the GenomicRanges. Outgoing Intervals
 will have the index `i` as their metadata. This makes it possible to obtain the original
-ordering if Intervals after conversion to, say, an IntervalCollection. Any metadata 
+ordering if Intervals after conversion to, say, an IntervalCollection. Any metadata
 for an incoming Interval is ignored.
 
 The `each` function produces an iterator of (start,end) two-tuples in genome location

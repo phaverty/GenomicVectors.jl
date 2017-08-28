@@ -24,7 +24,7 @@ chrinfo[2] # 5e5
 struct GenomeInfo{T1<:Integer}
     name::String
     chr_ends::AxisArray{T1,1,Vector{Int64},Tuple{AxisArrays.Axis{:chromosome,Array{String,1}}}}
-    function GenomeInfo{T1}(name::String, chromosomes::Vector{String}, lengths::Vector{T1})
+    function GenomeInfo{T1}(name::String, chromosomes::Vector{String}, lengths::Vector{T1}) where T1 <: Integer
         length(chromosomes) != length(lengths) && throw(ArgumentError("'chromosomes' and 'lengths' must be the same length."))
         ends = AxisArray(cumsum(lengths), Axis{:chromosome}(chromosomes))
         new(name, ends)
@@ -91,22 +91,22 @@ and any type that implements a method on `chr_info` that returns a `GenomeInfo`.
 
     same_genome(x,y)
 Tests if two genomes are identical.
-    
+
     genome(x)
 The name of the genome, e.g. hg19.
-    
+
     chr_names(x)
 The names of the chromosomes in the genome, in order.
-    
+
     chr_lengths(x)
 The lengths of the chromosomes in the genome, in order.
-    
+
     chr_ends(x)
 The indices of the last nucleotides in each chromosome in the genome, in order.
-    
+
     chr_offsets(x)
 The number of nucleotides in the preceding chromosomes in the genome, in order.
-   
+
 """
 chr_info, same_genome, chr_names, chr_lengths, chr_ends, chr_offsets, genome
 
