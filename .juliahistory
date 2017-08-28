@@ -92,3 +92,5 @@ zeros(3)
 exit()
 using GenomicVectors
 exit()
+using GenomicVectors
+exit()

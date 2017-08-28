@@ -28,7 +28,7 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
 struct GenomicPositions{T1 <: Integer} <: AbstractGenomicVector{T1}
     genopos::Vector{T1}
     chrinfo::GenomeInfo{T1}
-    function GenomicPositions(genopos, chrinfo)
+    function GenomicPositions{T1}(genopos, chrinfo) where T1 <: Integer
         new(genopos,chrinfo)
     end
 end
