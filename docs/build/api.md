@@ -8,6 +8,7 @@
     - [Interfaces and Accessing position info](api.md#Interfaces-and-Accessing-position-info-1)
     - [Modifying positions](api.md#Modifying-positions-1)
     - [Querying positions](api.md#Querying-positions-1)
+    - [A round trip to R](api.md#A-round-trip-to-R-1)
     - [Interfaces](interfaces.md#Interfaces-1)
 - [Ideas for future development](future.md#Ideas-for-future-development-1)
     - [Maintaining performance via sortedness and views](future.md#Maintaining-performance-via-sortedness-and-views-1)
@@ -41,7 +42,7 @@
 An AbstractGenomicVector is a Vector that describes positions or ranges in a single genome, in an arbitrary order. An AbstractGenomicVector must implement the GenomeInfo and GenoPos Interfaces. Sorting is by chromosome then by nucleotide position.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/bc4d311571f27c868b680e986018f31466704dcc/src/AbstractGenomicVector_type.jl#L5-L10' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/AbstractGenomicVector_type.jl#L5-L10' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomeInfo' href='#GenomicVectors.GenomeInfo'>#</a>
 **`GenomicVectors.GenomeInfo`** &mdash; *Type*.
@@ -67,7 +68,7 @@ chrinfo[2] # 5e5
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/bc4d311571f27c868b680e986018f31466704dcc/src/GenomeInfo_type.jl#L5-L23' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/GenomeInfo_type.jl#L5-L23' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomicPositions' href='#GenomicVectors.GenomicPositions'>#</a>
 **`GenomicVectors.GenomicPositions`** &mdash; *Type*.
@@ -96,7 +97,7 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/bc4d311571f27c868b680e986018f31466704dcc/src/GenomicPositions_type.jl#L5-L27' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/GenomicPositions_type.jl#L5-L27' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomicRanges' href='#GenomicVectors.GenomicRanges'>#</a>
 **`GenomicVectors.GenomicRanges`** &mdash; *Type*.
@@ -121,12 +122,12 @@ Represents closed ranges in a genome. This type uses its (immutable) `GenomeInfo
 
 Indexing a `GenomicRanges` with an array produces a new `GenomicRanges`.
 
-Getting/setting by a scalar gives/takes a GenomicFeatures.Interval. The leftposition and rightposition in this Interval must be in genome location units and correspond to the same chromosome. The seqname must match the genome of the GenomicRanges. Outgoing Intervals will have the index `i` as their metadata. This makes it possible to obtain the original ordering if Intervals after conversion to, say, an IntervalCollection. Any metadata  for an incoming Interval is ignored.
+Getting/setting by a scalar gives/takes a GenomicFeatures.Interval. The leftposition and rightposition in this Interval must be in genome location units and correspond to the same chromosome. The seqname must match the genome of the GenomicRanges. Outgoing Intervals will have the index `i` as their metadata. This makes it possible to obtain the original ordering if Intervals after conversion to, say, an IntervalCollection. Any metadata for an incoming Interval is ignored.
 
 The `each` function produces an iterator of (start,end) two-tuples in genome location units. This is use for many internal functions, like sorting. This is intentionally similar to `RLEVectors.each`.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/bc4d311571f27c868b680e986018f31466704dcc/src/GenomicRanges_type.jl#L5-L35' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/GenomicRanges_type.jl#L5-L35' class='documenter-source'>source</a><br>
 
 
 <a id='Interfaces-and-Accessing-position-info-1'></a>
@@ -214,7 +215,7 @@ genopos(chrpos, chromosomes, chrinfo)
 Given chromosome and chromosome position information and a description of the chromosomes (a GenoPos object), calculate the corresponding positions in the linear genome.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/bc4d311571f27c868b680e986018f31466704dcc/src/utils.jl#L5-L51' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/AbstractGenomicVector_type.jl#L25-L71' class='documenter-source'>source</a><br>
 
 
 <a id='Modifying-positions-1'></a>
@@ -267,5 +268,24 @@ setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/tree/bc4d311571f27c868b680e986018f31466704dcc/src/AbstractGenomicVector_type.jl#L68-L93' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/AbstractGenomicVector_type.jl#L141-L166' class='documenter-source'>source</a><br>
+
+
+<a id='A-round-trip-to-R-1'></a>
+
+## A round trip to R
+
+
+```julia
+using RCall
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+chrs = ["chr1","chr2","chr2","chrX"]
+s = [100, 200, 300, 400]
+e = [120, 240, 350, 455]
+x = GenomicRanges(chrs,s,e,chrinfo)
+y = RObject(x)
+@rput y
+R"z = y + 2L"
+@rget z
+```
 

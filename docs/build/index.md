@@ -19,6 +19,7 @@ These types are commonly used in conjuction with `RLEVectors` from the package o
     - [Interfaces and Accessing position info](api.md#Interfaces-and-Accessing-position-info-1)
     - [Modifying positions](api.md#Modifying-positions-1)
     - [Querying positions](api.md#Querying-positions-1)
+    - [A round trip to R](api.md#A-round-trip-to-R-1)
     - [Interfaces](interfaces.md#Interfaces-1)
 - [Ideas for future development](future.md#Ideas-for-future-development-1)
     - [Maintaining performance via sortedness and views](future.md#Maintaining-performance-via-sortedness-and-views-1)
