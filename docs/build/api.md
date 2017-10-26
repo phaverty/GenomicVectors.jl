@@ -42,7 +42,7 @@
 An AbstractGenomicVector is a Vector that describes positions or ranges in a single genome, in an arbitrary order. An AbstractGenomicVector must implement the GenomeInfo and GenoPos Interfaces. Sorting is by chromosome then by nucleotide position.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/AbstractGenomicVector_type.jl#L5-L10' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/1526bcab977ff07eca752c696a1c645e8c689074/src/AbstractGenomicVector_type.jl#L5-L10' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomeInfo' href='#GenomicVectors.GenomeInfo'>#</a>
 **`GenomicVectors.GenomeInfo`** &mdash; *Type*.
@@ -68,7 +68,7 @@ chrinfo[2] # 5e5
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/GenomeInfo_type.jl#L5-L23' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/1526bcab977ff07eca752c696a1c645e8c689074/src/GenomeInfo_type.jl#L5-L23' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomicPositions' href='#GenomicVectors.GenomicPositions'>#</a>
 **`GenomicVectors.GenomicPositions`** &mdash; *Type*.
@@ -93,11 +93,11 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
     x = GenomicPositions(pos,chrs,genomeinfo)
     y = GenomicPositions(gpos,genomeinfo)
     same_genome(x, y)
-    convert(DataTable, y)
+    convert(DataFrame, y)
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/GenomicPositions_type.jl#L5-L27' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/1526bcab977ff07eca752c696a1c645e8c689074/src/GenomicPositions_type.jl#L5-L27' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomicRanges' href='#GenomicVectors.GenomicRanges'>#</a>
 **`GenomicVectors.GenomicRanges`** &mdash; *Type*.
@@ -127,7 +127,7 @@ Getting/setting by a scalar gives/takes a GenomicFeatures.Interval. The leftposi
 The `each` function produces an iterator of (start,end) two-tuples in genome location units. This is use for many internal functions, like sorting. This is intentionally similar to `RLEVectors.each`.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/GenomicRanges_type.jl#L5-L35' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/1526bcab977ff07eca752c696a1c645e8c689074/src/GenomicRanges_type.jl#L5-L35' class='documenter-source'>source</a><br>
 
 
 <a id='Interfaces-and-Accessing-position-info-1'></a>
@@ -215,7 +215,7 @@ genopos(chrpos, chromosomes, chrinfo)
 Given chromosome and chromosome position information and a description of the chromosomes (a GenoPos object), calculate the corresponding positions in the linear genome.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/AbstractGenomicVector_type.jl#L25-L71' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/1526bcab977ff07eca752c696a1c645e8c689074/src/AbstractGenomicVector_type.jl#L25-L71' class='documenter-source'>source</a><br>
 
 
 <a id='Modifying-positions-1'></a>
@@ -268,7 +268,7 @@ setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/628938ed1ab73f29409697ad954b60020d4054ae/src/AbstractGenomicVector_type.jl#L141-L166' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/1526bcab977ff07eca752c696a1c645e8c689074/src/AbstractGenomicVector_type.jl#L141-L166' class='documenter-source'>source</a><br>
 
 
 <a id='A-round-trip-to-R-1'></a>

@@ -7,7 +7,7 @@ Bioconductor's GenomicRanges package by P. Aboyoun, H. Pages and M. Lawrence. Th
 independently or as indices and/or annotation on other objects.
 
 These types are commonly used in conjuction with `RLEVectors` from the package of the same name, which
-also often contain data arrayed along a genome. For example `GenomicTable` may use a `GPos` or `GenomicRanges` as a
+also often contain data arrayed along a genome. For example `GenomicDataFrame` may use a `GPos` or `GenomicRanges` as a
 row index and use `RLEVector` objects for data columns. This is a common method of storing segmented DNA copy
 number for multiple samples in R's `genoset` package.
 
