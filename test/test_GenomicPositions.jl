@@ -3,11 +3,11 @@ module TestGenomicPositions
 using GenomicVectors
 using Base.Test
 using RLEVectors
-using DataTables
+using DataFrames
 using GenomicFeatures
 
 @testset begin
-    
+
 ### GenomicPositions
 
 ## Creating
@@ -61,7 +61,7 @@ x = GenomicPositions(pos,chrs,chrinfo)
 @test chr_names(x) == ["chr1", "chr2", "chrX"]
 @test isa(strands(x), RLEVector)
 @test chromosomes(x) == chrs
-    
+
 ## Indexing
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]
@@ -85,7 +85,7 @@ pos = Int64[3e5,1.8e5,1.9e5,1e4]
 gpos = genopos(pos,chrs,chrinfo)
 gp = GenomicPositions( gpos, chrinfo )
 @test convert(Vector,gp) == gpos
-@test convert(DataTable,gp) == DataTable([chrs,pos],[:Chromosome,:Position])
+@test convert(DataFrame,gp) == DataFrame([chrs,pos],[:Chromosome,:Position])
 @test convert(Vector{String},gp) == [ "$(c):$(p)-$(p)" for (c,p) in zip(chrs,pos) ]
 ic = IntervalCollection([
                           Interval("hg19",300000,300000,STRAND_POS,1),
@@ -94,7 +94,7 @@ ic = IntervalCollection([
                           Interval("hg19",510000,510000,STRAND_POS,4)
                          ])
 @test convert(IntervalCollection,gp) == ic
-    
+
 ## Altering
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]

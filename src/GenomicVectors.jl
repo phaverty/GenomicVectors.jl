@@ -7,7 +7,7 @@ module GenomicVectors
 using RLEVectors
 using AxisArrays
 using GenomicFeatures
-using DataTables
+using DataFrames
 
 # utils
 export genopos
@@ -15,7 +15,7 @@ export genopos
 # types
 import Base: ==, getindex, setindex!
 import GenomicFeatures: Interval, IntervalCollection, Strand
-export GenomeInfo, AbstractGenomicVector, GenomicPositions, GenomicRanges, GenomicTable
+export GenomeInfo, AbstractGenomicVector, GenomicPositions, GenomicRanges, GenomicDataFrame
 
 # GenomeInfo
 export chr_ends, chr_lengths, chr_offsets, chr_names, same_genome
@@ -37,8 +37,9 @@ include("utils.jl")
 include("AbstractGenomicVector_type.jl")
 include("GenomicPositions_type.jl")
 include("GenomicRanges_type.jl")
-include("GenomicTable_type.jl")
+include("GenomicDataFrame_type.jl")
 include("delegations.jl")
+include("rcall.jl")
 include("precompile.jl")
 
 end # module

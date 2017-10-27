@@ -20,7 +20,7 @@ RLEVectors.widths(x::AbstractGenomicVector) = (_genoends(x) - _genostarts(x)) + 
 RLEVectors.eachrange(x::AbstractGenomicVector) = zip(_genostarts(x),_genoends(x))
 chromosomes(x::AbstractGenomicVector) = chromosomes(_genostarts(x),chr_info(x))
 
-### Other candidates for GenoPos Interface or AbstractGenomicVector include convert(Vector{Interval},), convert(DataTable,x)
+### Other candidates for GenoPos Interface or AbstractGenomicVector include convert(Vector{Interval},), convert(DataFrame,x)
 
 """
 # The GenoPos Interface
@@ -45,7 +45,7 @@ Get the name of the chromosome for each range/position.
 
     genostarts(x)
 Get the starting nucleotide index for each range/position in the linearized genome.
-    
+
     genoends(x)
 Get the ending nucleotide index for each range/position in the linearized genome.
 
@@ -82,18 +82,19 @@ slide(x::AbstractGenomicVector, value::Integer) = slide!( copy(x), value )
 ## Show
 function Base.show(io::IO, x::AbstractGenomicVector)
     Base.show_vector(io,convert(Vector{String},x),"[", "]")
-end    
+end
 
 function Base.show(io::IO, ::MIME"text/plain", x::AbstractGenomicVector)
     t = typeof(x)::DataType
     show(io, t)
-    show(io, convert(DataTable, x))
+    println()
+    show(io, convert(DataFrame, x))
 end
 
 ## Indexing
 Base.IndexStyle(::Type{<:AbstractGenomicVector}) = IndexLinear()
 Base.getindex(x::AbstractGenomicVector,i::AbstractGenomicVector) = getindex(x, findin(y,x))
-              
+
 ## Searching
 _exact_overlap(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
 
@@ -158,11 +159,11 @@ Creates a `GenomicFeatures.IntersectIterator` from two `AbstractGenomicVectors`,
     in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 The `AbstractGenomicVector` method on `in` is vectorized and returns a `BitArray`
 that is `true` for each element of `x` that is in the set `y`.
-    
+
     intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 
     setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
-    
+
 """
 findoverlaps, findin, indexin, in, intersect, setdiff, nearest
 

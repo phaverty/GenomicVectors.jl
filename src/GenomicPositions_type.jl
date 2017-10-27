@@ -22,7 +22,7 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
     x = GenomicPositions(pos,chrs,genomeinfo)
     y = GenomicPositions(gpos,genomeinfo)
     same_genome(x, y)
-    convert(DataTable, y)
+    convert(DataFrame, y)
 ```
 """
 struct GenomicPositions{T1 <: Integer} <: AbstractGenomicVector{T1}
@@ -59,7 +59,7 @@ function Base.setindex!(x::GenomicPositions, value, i)
 end
 
 ## Conversions
-function Base.convert(::Type{DataTable}, x::GenomicPositions)
+function Base.convert(::Type{DataFrame}, x::GenomicPositions)
     chrs = chr_names(x)
     n = length(x)
     c_res = similar(chrs, n)
@@ -84,11 +84,11 @@ function Base.convert(::Type{DataTable}, x::GenomicPositions)
         p_res[i] = g - o
         i = i + 1
     end
-    return( DataTable( [c_res,p_res], [:Chromosome, :Position] ) )
+    return( DataFrame( [c_res,p_res], [:Chromosome, :Position] ) )
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicPositions)
-    df = convert(DataTable,x)
+    df = convert(DataFrame,x)
     eltype(chr_names(x))[ string(chr, ":", pos, "-", pos) for (chr,pos) in zip(df[:Chromosome], df[:Position]) ]
 end
 Base.convert(::Type{Vector}, x::GenomicPositions) = genostarts(x)

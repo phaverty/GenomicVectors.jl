@@ -20,25 +20,39 @@ function sexp(f::GenomicRanges)
     c = chromosomes(f)
     r = convert(Vector{String}, strands(f))
     i = rcopy(chr_info(f))
-    R"GRanges($c,IRanges($s, $e), $r, seqinfo = $i)"
+    R"GRanges($c, IRanges($s, $e), $r, seqinfo = $i)"
 end
 
-function rcopy(::Type{GenomicRanges}, s::Ptr{S4Sxp})
-    GenomicRanges(
-        rcopy(R"as.character(seqnames($s))"),
-        rcopy(Vector{Int64},R"start($s)"),
-        rcopy(Vector{Int64},R"end($s)"),
-        rcopy(GenomeInfo, s[:seqinfo])
+function sexp(f::GenomicDataFrame)
+    R"library(GenomicRanges)"
+    s = starts(f)
+    e = ends(f)
+    c = chromosomes(f)
+    r = convert(Vector{String}, strands(f))
+    i = rcopy(chr_info(f))
+    m = table(f)
+    R"GRanges($c, IRanges($s, $e), $r, seqinfo = $i, mcols = DataFrame($m))"
+end
+
+function rcopy(::Type{GenomicDataFrame}, s::Ptr{S4Sxp})
+    GenomicDataFrame(
+        GenomicRanges(
+            rcopy(Vector{String}, R"as.character(seqnames($s))"),
+            rcopy(Vector{Int64}, R"start($s)"),
+            rcopy(Vector{Int64}, R"end($s)"),
+            rcopy(GenomeInfo, s[:seqinfo])
+        ),
+        rcopy(DataFrame, R"as.data.frame(mcols($s))")
     )
 end
 
 function rcopy(::Type{GenomeInfo}, s::Ptr{S4Sxp})
     GenomeInfo(
         rcopy(String, s[:genome][1]),
-        rcopy(Vector{String},s[:seqnames]),
-        rcopy(Vector{Int64},s[:seqlengths])
+        rcopy(Vector{String}, s[:seqnames]),
+        rcopy(Vector{Int64}, s[:seqlengths])
     )
 end
 
 rcopytype(::Type{RClass{:Seqinfo}}, s::Ptr{S4Sxp}) = GenomeInfo
-rcopytype(::Type{RClass{:GRanges}}, s::Ptr{S4Sxp}) = GenomicRanges
+rcopytype(::Type{RClass{:GRanges}}, s::Ptr{S4Sxp}) = GenomicDataFrame

@@ -92,7 +92,7 @@ end
 #end
 
 ## Conversions
-function Base.convert(::Type{DataTable}, x::GenomicRanges)
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
     n = length(x)
     chrs = chr_names(x)
     c_res = similar(chrs, n)
@@ -119,11 +119,11 @@ function Base.convert(::Type{DataTable}, x::GenomicRanges)
         e_res[i] = epos - o
         i = i + 1
     end
-    return( DataTable( [c_res,s_res,e_res,strands(x)],[:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( [c_res,s_res,e_res,strands(x)],[:Chromosome, :Start, :End, :Strand] ) )
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicRanges)
-    df = convert(DataTable,x)
+    df = convert(DataFrame,x)
     String[ string(c, ":", s, "-", e) for (c,s,e) in zip(df[:Chromosome], df[:Start], df[:End]) ]
 end
 

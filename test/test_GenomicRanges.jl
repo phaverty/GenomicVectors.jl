@@ -3,7 +3,7 @@ module TestGenomicRanges
 using GenomicVectors
 using Base.Test
 using GenomicFeatures
-using DataTables
+using DataFrames
 
 @testset begin
 
@@ -16,7 +16,7 @@ gr = GenomicRanges(chrs,s,e,chrinfo)
 @test isa(gr,GenomicRanges)
 io = IOBuffer()
 @test typeof(show(io,gr)) == Void # At least test that show does not give error
-    
+
 @test_throws ArgumentError GenomicRanges(chrs,s,e[1:2],chrinfo)
 @test_throws ArgumentError GenomicRanges(chrs,s,e,['.','.'],chrinfo)
 
@@ -26,7 +26,7 @@ io = IOBuffer()
 gr[2] = Interval("hg19",40123,40456,STRAND_POS)
 @test gr == GenomicRanges([100,40123,300300,500400],[120,40456,300350,500455],[STRAND_NA,STRAND_POS,STRAND_NA,STRAND_NA],chrinfo)
 @test_throws ArgumentError gr[1] = Interval("hg19",1,310000,STRAND_NA)
-    
+
 # Creating with strand
 gr = GenomicRanges(chrs,s,e,['.','.','.','.'],chrinfo)
 @test isa(gr,GenomicRanges)
@@ -40,7 +40,7 @@ gr = GenomicRanges(gs,ge,[STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,],chrinfo)
 @test isa(gr,GenomicRanges)
 gr2 = GenomicRanges(gs,ge,[STRAND_POS,STRAND_NEG,STRAND_NA,STRAND_POS,],chrinfo)
 @test copy(gr2) == gr2
-    
+
 # Describing
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]
@@ -65,7 +65,7 @@ chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]
 s = [400, 300, 200, 150]
 e = s + 20
-strand = ['.','+','-','+']   
+strand = ['.','+','-','+']
 gr = GenomicRanges(chrs,s,e,strand,chrinfo)
 @test issorted(gr) == false
 gr2 = sort(gr)
@@ -83,7 +83,7 @@ chrs = ["chr1","chr2","chr2","chrX"]
 s = [400, 300, 200, 150]
 e = s + 20
 gr = GenomicRanges(chrs,s,e,chrinfo)
-@test convert(DataTable,gr) == DataTable([chrs,s,e,[STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]],[:Chromosome,:Start,:End,:Strand])
+@test convert(DataFrame,gr) == DataFrame([chrs,s,e,[STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]],[:Chromosome,:Start,:End,:Strand])
 @test convert(Vector{String},gr) == ["chr1:400-420","chr2:300-320","chr2:200-220","chrX:150-170"]
 ic = IntervalCollection([
                         Interval("hg19",400,420,'?',1),
