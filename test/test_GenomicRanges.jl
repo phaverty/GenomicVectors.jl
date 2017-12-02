@@ -21,9 +21,9 @@ io = IOBuffer()
 @test_throws ArgumentError GenomicRanges(chrs,s,e,['.','.'],chrinfo)
 
 # Indexing
-@test gr[2] == Interval("hg19",300000 + 200, 300000 + 240, STRAND_NA,2)
-@test gr[2:3] == GenomicRanges(chrs[2:3],s[2:3],e[2:3],chrinfo)
-gr[2] = Interval("hg19",40123,40456,STRAND_POS)
+@test gr[2] == Interval("hg19", 300000 + 200, 300000 + 240, STRAND_NA, 2)
+@test gr[2:3] == GenomicRanges(chrs[2:3], s[2:3], e[2:3], chrinfo)
+gr[2] = Interval("hg19", 40123, 40456, STRAND_POS)
 @test gr == GenomicRanges([100,40123,300300,500400],[120,40456,300350,500455],[STRAND_NA,STRAND_POS,STRAND_NA,STRAND_NA],chrinfo)
 @test_throws ArgumentError gr[1] = Interval("hg19",1,310000,STRAND_NA)
 
@@ -147,6 +147,10 @@ append!(gr2,gr3)
 gr2 = GenomicRanges(chrs[1:2],s[1:2],e[1:2],chrinfo)
 prepend!(gr2,gr3)
 @test gr2 == gr[ [3,4,1,2] ]
+@test typeof(gr) == typeof(similar(gr))
+@test typeof(gr) == typeof(similar(gr,2))
+@test length(similar(gr,2)) == 2
+
 # Other
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]
