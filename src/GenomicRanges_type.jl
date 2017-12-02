@@ -200,6 +200,8 @@ function Base.union(x::GenomicRanges, y::GenomicRanges)
 end
 
 # Overlap ops
+## FIXME: What should these ops do about strand?
+
 """
 Finds sorted, unique indexes of `x` that are in `y`. In other words, it i like
 findin, but by range overlap.
@@ -210,4 +212,66 @@ function indexoverlap(x::GenomicRanges, y::GenomicRanges)
     yit = convert(IntervalCollection,y)
     ol = intersect(xit,yit)
     sort( unique( [ metadata(el_a) for (el_a,el_b) in ol ] ) )
+end
+
+"""
+Returns an edited version of `x` where ranges or parts of ranges overlapping
+a range in `y` are removed.
+"""
+function remove_overlaps(x::GenomicRanges, y::GenomicRanges)
+
+end
+
+"""
+Returns an edited version of `x` where only ranges or parts of ranges overlapping
+a range in `y` are kept. BioConductor calls this operation `reduce`.
+"""
+function select_overlaps(x::GenomicRanges, y::GenomicRanges)
+
+end
+
+"""
+Merges overlapping ranges
+"""
+function disjoin(gr::GenomicRanges)
+    out = similar(gr)
+    out.strands[:] = STRAND_NA # move me to GenomicFeatures.similar
+    x = sort(gr)
+    current_end = 0
+    i = 0
+    for (s,e) in eachrange(x)
+        if s > current_end
+            i = i + 1
+            _genostarts(out)[i] = s
+        end
+        if e > current_end
+            _genoends(out)[i] = current_end = e
+        end
+    end
+    resize!(out, i)
+    out
+end
+
+"""
+Returns GenomicRanges of regions between disjoint input ranges, e.g. introns
+"""
+function GenomicVectors.gaps(gr::GenomicRanges)
+    x = disjoin(gr)
+    out = similar(gr, length(x) - 1)
+    out.strands[:] = STRAND_NA # move me to GenomicFeatures.similar
+    for i in 1:length(out)
+        _genostarts(out)[i] = _genoends(x)[i] + 1
+        _genoends(out)[i] = _genostarts(x)[i + 1] - 1
+    end
+    out
+end
+
+"""
+Returns RLE giving counts of ranges in `gr` overlapping each index spanned by the full
+set of ranges in `gr`.
+"""
+function coverage(gr::GenomicRanges)
+    xit = convert(IntervalCollection,gr)
+    # FIXME: convert to GenomeRLE
+    coverage(xit)
 end

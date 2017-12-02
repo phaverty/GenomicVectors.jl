@@ -134,7 +134,7 @@ Base.sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
 Base.in(query::GenomicPositions, target::GenomicPositions, exact::Bool=true) = [in(v,target) for v in query]
 
 """
-    function nearest(query::GenomicPositions, target::GenomicPositions)
+    nearest(query::GenomicPositions, target::GenomicPositions)
 For each `query` finds index in `target` that is nearest on the same chromosome.
 If no match on the same chromosome exists, the index will be 0.
 """
@@ -161,4 +161,20 @@ function nearest{T}(query::GenomicPositions{T}, target::GenomicPositions{T})
         i = i + 1
     end
     res
+end
+
+function reduce(x::GenomicPositions)
+
+end
+
+function disjoin(x::GenomicPositions)
+
+end
+
+function gaps(x::GenomicPositions)
+
+end
+
+function coverage(x::GenomicPositions)
+
 end

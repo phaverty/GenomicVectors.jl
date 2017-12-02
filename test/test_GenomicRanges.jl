@@ -166,6 +166,23 @@ gr = GenomicRanges(chrs,s,e,d,chrinfo)
 empty!(gr)
 @test gr == GenomicRanges(Int64[],Int64[],Strand[],chrinfo)
 
+# Range ops
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[1e3,2e3,2e4])
+chrs = ["chr1","chr1","chr1","chrX"]
+s = [100, 200, 220, 500]
+e = [150, 250, 300, 600]
+d = [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
+gr = GenomicRanges(chrs,s,e,d,chrinfo)
+out = disjoin(gr)
+@test genostarts(out) == [100,200,3500]
+@test genoends(out) == [150,300,3600]
+@test strands(out) == [STRAND_NA, STRAND_NA, STRAND_NA]
+
+out = gaps(gr)
+@test genostarts(out) == [151,301]
+@test genoends(out) == [199,3499]
+@test strands(out) == [STRAND_NA, STRAND_NA]
+
 end # testset
 
 end # module

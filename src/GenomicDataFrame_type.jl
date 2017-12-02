@@ -53,9 +53,10 @@ Base.setindex!(gt::GenomicDataFrame,value,j) = setindex!(_table(gt),value,j)
 Base.setindex!(gt::GenomicDataFrame,value,i,j) = setindex!(_table(gt),value,i,j)
 
 ## Getters that delegate to the AbstractDataFrame row index
-for op in [:chr_info, :_strands, :_genostarts, :_genoends, :starts, :ends, :widths, :chromosomes, :genostarts, :genoends, :strands, :each, :chrpos, :genopos, :chrindex]
+for op in [:chr_info, :_strands, :_genostarts, :_genoends, :starts, :ends, :widths, :chromosomes, :genostarts, :genoends, :strands, :each, :chrpos, :genopos, :chrindex, :reduce, :disjoin, :gaps, :coverage]
     @eval ($op)(x::GenomicDataFrame) = ($op)(_rowindex(x))
 end
+
 ## Searches that delegate to the genome info
 for op in [:indexin, :findin, :in]
     @eval (Base.$op)(x::GenomicDataFrame,y::AbstractGenomicVector,exact::Bool=true) = ($op)(_rowindex(x),y,exact)
