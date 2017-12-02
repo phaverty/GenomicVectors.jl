@@ -2,10 +2,16 @@
 
 ## Basic vector operations
 
-### Operations on, and return, GenomicPostions
+### Operations that take and return GenomicVectors
 for op in [:similar, :copy, :unique]
     @eval (Base.$op)(x::GenomicPositions) = GenomicPositions(($op)(_genostarts(x)), chr_info(x))
     @eval (Base.$op)(x::GenomicRanges) = GenomicRanges(($op)(_genostarts(x)), ($op)(_genoends(x)), ($op)(_strands(x)), chr_info(x))
+end
+
+### Operations that take a GenomicVector and a Integer and return a GenomicVector
+for op in [:similar, :resize!]
+    @eval (Base.$op)(x::GenomicPositions, n::Integer) = GenomicPositions(($op)(_genostarts(x),n), chr_info(x))
+    @eval (Base.$op)(x::GenomicRanges, n::Integer) = GenomicRanges(($op)(_genostarts(x),n), ($op)(_genoends(x),n), ($op)(_strands(x),n), chr_info(x))
 end
 
 ### Operations that operate directly on the internal genopos, not mutating
@@ -56,5 +62,4 @@ end
 ### maximum, maximum!, minimum, minimum!, extrema, findmax, findmin, maxabs, maxabs!, minabs, minabs!, sum, count, foreach, map, etc.
 ### filter(function, x::GenomicPositions, filter!(function, x::GenomicPositions)
 ### push!, pop!
-### resize!, splice!, deleteat!, insert!, shift!, unshift!, pop!, push!, intersect!, setdiff!
-
+### splice!, deleteat!, insert!, shift!, unshift!, pop!, push!, intersect!, setdiff!

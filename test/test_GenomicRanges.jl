@@ -151,6 +151,11 @@ prepend!(gr2,gr3)
 @test typeof(gr) == typeof(similar(gr,2))
 @test length(similar(gr,2)) == 2
 
+# resize!
+x = GenomicRanges(chrs,s,e,chrinfo)
+y = x
+@test resize!(x,2) == y[1:2]
+
 # Other
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]

@@ -34,13 +34,17 @@ x = GenomicPositions( pos, chrs, seqinfo )
 @test typeof(similar(x)) == typeof(x)
 @test typeof(similar(x,2)) == typeof(x)
 @test length(similar(x,2)) == 2
-
 y = copy(x)
 @test y == x
 slide!(y, 5)
 @test !(y == x)
 io = IOBuffer()
 @test typeof(show(io,x)) == Void # At least test that show does not give error
+
+# resize!
+x = GenomicPositions(pos,chrs,chrinfo)
+y = x
+@test resize!(x,2) == y[1:2]
 
 # Regression test, second half of duped positions had wrong chrpos
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
