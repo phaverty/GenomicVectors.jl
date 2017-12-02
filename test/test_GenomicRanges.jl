@@ -183,6 +183,10 @@ out = gaps(gr)
 @test genoends(out) == [199,3499]
 @test strands(out) == [STRAND_NA, STRAND_NA]
 
+out = coverage(gr)
+@test values(out) == [0,1,0,1,2,1,0,1,0]
+@test ends(out) == [99,150,199,219,250,300,3499,3600,23000]
+
 end # testset
 
 end # module

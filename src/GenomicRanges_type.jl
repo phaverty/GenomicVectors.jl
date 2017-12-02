@@ -271,7 +271,9 @@ Returns RLE giving counts of ranges in `gr` overlapping each index spanned by th
 set of ranges in `gr`.
 """
 function coverage(gr::GenomicRanges)
-    xit = convert(IntervalCollection,gr)
-    # FIXME: convert to GenomeRLE
-    coverage(xit)
+    out = RLEVector(0, last(chr_ends(gr)))
+    for (s,e) in eachrange(gr)
+        out[s:e] += 1
+    end
+    out
 end
