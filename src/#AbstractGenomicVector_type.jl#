@@ -169,7 +169,7 @@ findoverlaps, findin, indexin, in, intersect, setdiff, nearest
 
 # The discussion in https://github.com/JuliaLang/Juleps/blob/master/Find.md#particular-cases is very relevant choosing names for these functions.
 
-# Describing Ranges
+# Summarizing Ranges
 """
 Returns RLE giving counts of ranges in `gr` overlapping each index spanned by the full
 set of ranges in `gr`.

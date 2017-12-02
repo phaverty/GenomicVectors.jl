@@ -265,15 +265,3 @@ function GenomicVectors.gaps(gr::GenomicRanges)
     end
     out
 end
-
-"""
-Returns RLE giving counts of ranges in `gr` overlapping each index spanned by the full
-set of ranges in `gr`.
-"""
-function coverage(gr::GenomicRanges)
-    out = RLEVector(0, last(chr_ends(gr)))
-    for (s,e) in eachrange(gr)
-        out[s:e] += 1
-    end
-    out
-end

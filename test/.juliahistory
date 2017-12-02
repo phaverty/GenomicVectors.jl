@@ -168,3 +168,58 @@ gaps(gr)
 gaps(gr)
 gr
 gaps(gr)
+gr
+gaps(gr)
+gr
+gaps(gr)
+gr
+length(chr_info(x))
+chr_info(x)
+chr_ends(x)
+last(chr_ends(x))
+coverage(gr)
+coverage(gr)
+coverage(gr)
+coverage(gr)
+coverage(gr)
+coverage(gr)
+coverage(gr)
+methods(GenomicRanges)
+ones(typof(genopos(gr)),2)
+ones(typeof(genopos(gr)),2)
+ones(genopos(gr),2)
+?ones
+coverage(gr)
+coverage(gr)
+using RLEVectors
+coverage(gr)
+coverage(gr)
+gr
+coverage(gr)
+x = coverage(gr)
+ranges(x)
+collect(eachrange(x))
+gr
+chr_info(gr)
+chr_ends(gr)
+eachrange(x)
+eachrange(gr)
+collect(eachrange(gr))
+out
+x
+gr
+gr
+runvalues(out)
+values(out)
+ends(out)
+@test ends(out) == [99,150,199,219,250,300,3499,2600,23000]
+[99,150,199,219,250,300,3499,2600,23000]
+ends(out)
+ends(out)
+
+[99, 150, 199, 219, 250, 300, 3499, 3600, 23000] == [99, 150, 199, 219, 250, 300, 3499, 2600, 23000]
+exit()
+using RLEVectors
+exit()
+using GenomicVectors
+exit()

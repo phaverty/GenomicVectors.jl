@@ -4,6 +4,7 @@ using GenomicVectors
 using Base.Test
 using GenomicFeatures
 using DataFrames
+using RLEVectors
 
 @testset begin
 
