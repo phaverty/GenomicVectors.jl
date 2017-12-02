@@ -32,6 +32,9 @@ x = GenomicPositions( pos, chrs, seqinfo )
 @test_throws BoundsError x[0] = 4
 @test_throws BoundsError x[9] = 4
 @test typeof(similar(x)) == typeof(x)
+@test typeof(similar(x,2)) == typeof(x)
+@test length(similar(x,2)) == 2
+
 y = copy(x)
 @test y == x
 slide!(y, 5)
