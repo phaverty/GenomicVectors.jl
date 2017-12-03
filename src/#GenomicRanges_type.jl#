@@ -266,7 +266,7 @@ function disjoin(gr::GenomicRanges)
         if s < current_end
             # Split current
             println("splitting ...")
-            insert!(_genostarts(out),out_i, current_end + 1)
+            insert!(_genostarts(out),out_i + 2, current_end + 1)
             insert!(_genoends(out),out_i, s - 1)
             insert!(_strands(out),out_i,STRAND_NA)
             out_i = out_i + 1

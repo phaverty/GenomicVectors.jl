@@ -1,0 +1,40 @@
+?merge
+?combine
+gr
+combine(gr)
+gr
+GenomicVectors.combine(gr)
+exit()
+exit()
+function combine(gr::GenomicRanges)
+    out = similar(gr)
+    out.strands[:] = STRAND_NA # move me to GenomicFeatures.similar
+    x = sort(gr)
+    current_end = 0
+    i = 0
+    for (s,e) in eachrange(x)
+        if s > current_end
+            i = i + 1
+            _genostarts(out)[i] = s
+        end
+        if e > current_end
+            _genoends(out)[i] = current_end = e
+        end
+    end
+    resize!(out, i)
+    out
+end
+
+out = combine(gr)
+function GenomicVectors.gaps(gr::GenomicRanges)
+    x = combine(gr)
+    out = similar(gr, length(x) - 1)
+    out.strands[:] = STRAND_NA # move me to GenomicFeatures.similar
+    for i in 1:length(out)
+        _genostarts(out)[i] = _genoends(x)[i] + 1
+        _genoends(out)[i] = _genostarts(x)[i + 1] - 1
+    end
+    out
+end
+
+exit()
