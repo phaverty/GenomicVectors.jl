@@ -218,7 +218,7 @@ end
 Returns an edited version of `x` where ranges or parts of ranges overlapping
 a range in `y` are removed.
 """
-function remove_overlaps(x::GenomicRanges, y::GenomicRanges)
+function remove_overlaps(x::GenomicRanges, y::AbstractGenomicVector)
 
 end
 
@@ -226,7 +226,7 @@ end
 Returns an edited version of `x` where only ranges or parts of ranges overlapping
 a range in `y` are kept. BioConductor calls this operation `reduce`.
 """
-function select_overlaps(x::GenomicRanges, y::GenomicRanges)
+function select_overlaps(x::GenomicRanges, y::AbstractGenomicVector)
 
 end
 
