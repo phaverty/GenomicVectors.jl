@@ -193,6 +193,17 @@ out = coverage(gr)
 @test values(out) == [0,1,0,1,2,1,0,1,0]
 @test ends(out) == [99,150,199,219,250,300,3499,3600,23000]
 
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[1e3,2e3,2e4])
+chrs = ["chr1","chr1","chr1","chr1","chr1","chr1","chr1"]
+s = [100, 200, 300, 450, 700, 750, 800]
+e = [500, 250, 400, 550, 775, 825, 850]
+d = [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
+gr = GenomicRanges(chrs,s,e,d,chrinfo)
+out = disjoin(gr)
+@test genostarts(out) == [100,200,3500]
+@test genoends(out) == [150,300,3600]
+@test strands(out) == [STRAND_NA, STRAND_NA, STRAND_NA]
+
 end # testset
 
 end # module
