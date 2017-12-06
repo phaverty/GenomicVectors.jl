@@ -256,24 +256,24 @@ end
 Splits overlapping ranges to create a disjoint set of ranges
 """
 function disjoin(gr::GenomicRanges)
-    out = sort(gr)
-    out.strands[:] = STRAND_NA # move me to GenomicFeatures.similar
-    x = sort(gr)
-    current_end = 0
-    x_i = 0
-    out_i = 0
-    for (s,e) in eachrange(x)
-        if s < current_end
-            # Split current
+    out = GenomicRanges( sort(_genostarts(gr)), sort(_genoends(gr)), chr_info(gr))
+    n = length(out)
+    current_end = next_start = 0
+    i = 1
+    while i < n
+        println("i is ", i, " and n is ", n)
+        next_start = _genostarts(out)[i + 1]
+        current_end = _genoends(out)[i]
+        if next_start <= current_end
             println("splitting ...")
-            insert!(_genostarts(out),out_i, current_end + 1)
-            insert!(_genoends(out),out_i, s - 1)
-            insert!(_strands(out),out_i,STRAND_NA)
-            out_i = out_i + 1
+            insert!(_genoends(out), i, next_start - 1)
+            insert!(_genostarts(out), i + 2, current_end + 1)
+            insert!(_strands(out), i, STRAND_NA)
+            n = n + 1
+        else
+            println("NOT splitting ...")
         end
-        x_i = x_i + 1
-        out_i = out_i + 1
-        current_end = e
+        i = i + 1
     end
     out
 end

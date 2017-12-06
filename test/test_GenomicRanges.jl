@@ -200,9 +200,9 @@ e = [500, 250, 400, 550, 775, 825, 850]
 d = [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
 gr = GenomicRanges(chrs,s,e,d,chrinfo)
 out = disjoin(gr)
-@test genostarts(out) == [100,200,3500]
-@test genoends(out) == [150,300,3600]
-@test strands(out) == [STRAND_NA, STRAND_NA, STRAND_NA]
+@test genostarts(out) == [100,200,251,300,401,450,501,700,750,776,800,826]
+@test genoends(out) == [199,250,299,400,449,500,550,749,775,799,825,850]
+@test strands(out) == [STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA]
 
 end # testset
 
