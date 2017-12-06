@@ -124,8 +124,23 @@ issorted(y)
 convert(DataFrame, y)
 ```
 
-## Intersection / overlap operations
-Currently we depend on Bio.jl and the `IntervalCollection` for overlap queries. We provide `convert` methods to
+## Overlaps within one set of ranges
+`GenomicVectors` offers three functions that work on overlaps among one set of ranges:
+
+ * `collapse`
+Combines overlapping ranges into larger, contiguous ranges
+
+ * `disjoin`
+Splits overlapping ranges to create a disjoint set of ranges
+
+ * `gaps`
+Returns GenomicRanges of regions between collapsed input ranges, e.g. introns
+
+ * `coverage`
+Counts the number of ranges covering each portion of the genome, from base 1 to n
+
+## Intersection / overlap between two sets of ranges operations
+Currently we depend on Bio.jl and the `IntervalCollection` for these overlap queries. We provide `convert` methods to
 make `IntervalCollection`s. These collections store the genome-scale positions put the genome string in the
 chromosome string field, resulting in a single tree. We add the index of each interval in the
 `AbstractGenomicVector` in the metadata slot of each `Interval` which can be used to relate the

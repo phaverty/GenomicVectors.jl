@@ -38,7 +38,8 @@ These types are commonly used in conjuction with `RLEVectors` from the package o
     - [Implementation](index.md#Implementation-1)
     - [Working with locations](index.md#Working-with-locations-1)
     - [Ordering](index.md#Ordering-1)
-    - [Intersection / overlap operations](index.md#Intersection-/-overlap-operations-1)
+    - [Overlaps within one set of ranges](index.md#Overlaps-within-one-set-of-ranges-1)
+    - [Intersection / overlap between two sets of ranges operations](index.md#Intersection-/-overlap-between-two-sets-of-ranges-operations-1)
 
 
 <a id='Implementation-1'></a>
@@ -166,10 +167,42 @@ convert(DataFrame, y)
 ```
 
 
-<a id='Intersection-/-overlap-operations-1'></a>
+<a id='Overlaps-within-one-set-of-ranges-1'></a>
 
-## Intersection / overlap operations
+## Overlaps within one set of ranges
 
 
-Currently we depend on Bio.jl and the `IntervalCollection` for overlap queries. We provide `convert` methods to make `IntervalCollection`s. These collections store the genome-scale positions put the genome string in the chromosome string field, resulting in a single tree. We add the index of each interval in the `AbstractGenomicVector` in the metadata slot of each `Interval` which can be used to relate the `IntervalCollection` back to our original object.
+`GenomicVectors` offers three functions that work on overlaps among one set of ranges:
+
+
+  * `collapse`
+
+
+Combines overlapping ranges into larger, contiguous ranges
+
+
+  * `disjoin`
+
+
+Splits overlapping ranges to create a disjoint set of ranges
+
+
+  * `gaps`
+
+
+Returns GenomicRanges of regions between collapsed input ranges, e.g. introns
+
+
+  * `coverage`
+
+
+Counts the number of ranges covering each portion of the genome, from base 1 to n
+
+
+<a id='Intersection-/-overlap-between-two-sets-of-ranges-operations-1'></a>
+
+## Intersection / overlap between two sets of ranges operations
+
+
+Currently we depend on Bio.jl and the `IntervalCollection` for these overlap queries. We provide `convert` methods to make `IntervalCollection`s. These collections store the genome-scale positions put the genome string in the chromosome string field, resulting in a single tree. We add the index of each interval in the `AbstractGenomicVector` in the metadata slot of each `Interval` which can be used to relate the `IntervalCollection` back to our original object.
 
