@@ -204,6 +204,29 @@ out = disjoin(gr)
 @test genoends(out) == [199,250,299,400,449,500,550,749,775,799,825,850]
 @test strands(out) == [STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA]
 
+# overlap_table
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+
+chrs = ["chr1","chr1","chr1","chrX"]
+s = [100, 200, 220, 500]
+e = [150, 250, 300, 600]
+d = [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
+x = GenomicRanges(chrs,s,e,d,chrinfo)
+
+
+chrs = ["chr1","chr1","chr1","chr1","chr1","chr1","chr1"]
+s = [100, 200, 300, 450, 700, 750, 800]
+e = [500, 250, 400, 550, 775, 825, 850]
+d = [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
+y = GenomicRanges(chrs,s,e,d,chrinfo)
+
+out = overlap_table(x,y,true)
+@test out == [2 2]
+out = overlap_table(x,y,false)
+@test out == [1 1; 2 1; 2 2; 3 1; 3 2; 3 3]
+
+
+
 end # testset
 
 end # module

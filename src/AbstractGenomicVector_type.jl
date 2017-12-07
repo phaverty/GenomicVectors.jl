@@ -20,6 +20,8 @@ RLEVectors.widths(x::AbstractGenomicVector) = (_genoends(x) - _genostarts(x)) + 
 RLEVectors.eachrange(x::AbstractGenomicVector) = zip(_genostarts(x),_genoends(x))
 chromosomes(x::AbstractGenomicVector) = chromosomes(_genostarts(x),chr_info(x))
 
+## FIXME: add RLEVector creation from AbstractGenomicVector and a Vector of data
+
 ### Other candidates for GenoPos Interface or AbstractGenomicVector include convert(Vector{Interval},), convert(DataFrame,x)
 
 """
@@ -127,6 +129,13 @@ function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact:
     end
     inds
 end
+
+function overlap_table(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+    ol = findoverlaps(x,y,exact)
+    olap_pairs = [ [metadata(el_a), metadata(el_b)]' for (el_a,el_b) in ol ]
+    vcat(olap_pairs...)
+end
+
 Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = indexin(x,y,exact) .!= 0
 Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ findin(x,y,exact) ]
 Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[in(x,y,exact) .== false]
@@ -152,13 +161,18 @@ be supported in the future.
 Creates a `GenomicFeatures.IntersectIterator` from two `AbstractGenomicVectors`, much like the BioConductor
 `findOverlaps`. This is the kernel of the other search/set operations.
 
-    findin(x::AbstractGenomicVector,y::AbstractGenomicVector,exact::Bool=true)
+    overlap_table(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+
+Creates a two column table listing the pairs of indices of x and y that overlap.
+
+    findin(x::AbstractGenomicVector,y::AbstractGenomicVector, exact::Bool=true)
 
     indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 
-    in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 The `AbstractGenomicVector` method on `in` is vectorized and returns a `BitArray`
 that is `true` for each element of `x` that is in the set `y`.
+
+    in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 
     intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 
