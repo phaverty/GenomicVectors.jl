@@ -200,20 +200,6 @@ function Base.union(x::GenomicRanges, y::GenomicRanges)
 end
 
 # Overlap ops
-## FIXME: What should these ops do about strand?
-
-"""
-Finds sorted, unique indexes of `x` that are in `y`. In other words, it is like
-findin, but by range overlap.
-"""
-function indexoverlap(x::GenomicRanges, y::GenomicRanges)
-    same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
-    xit = convert(IntervalCollection,x)
-    yit = convert(IntervalCollection,y)
-    ol = intersect(xit,yit)
-    sort( unique( [ metadata(el_a) for (el_a,el_b) in ol ] ) )
-end
-
 """
 Returns an edited version of `x` where ranges or parts of ranges overlapping
 a range in `y` are removed.

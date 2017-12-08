@@ -53,23 +53,72 @@ Base.setindex!(gt::GenomicDataFrame,value,j) = setindex!(_table(gt),value,j)
 Base.setindex!(gt::GenomicDataFrame,value,i,j) = setindex!(_table(gt),value,i,j)
 
 ## Getters that delegate to the AbstractDataFrame row index
-for op in [:chr_info, :_strands, :_genostarts, :_genoends, :starts, :ends, :widths, :chromosomes, :genostarts, :genoends, :strands, :each, :chrpos, :genopos, :chrindex, :reduce, :disjoin, :gaps, :coverage]
+for op in [:chr_info, :_strands, :_genostarts, :_genoends, :(RLEVectors.starts), :(RLEVectors.ends), :(RLEVectors.widths), :chromosomes, :genostarts, :genoends, :strands, :(RLEVectors.each), :chrpos, :genopos, :chrindex, :reduce, :gaps, :coverage, :disjoin, :collapse]
     @eval ($op)(x::GenomicDataFrame) = ($op)(_rowindex(x))
 end
 
-## Searches that delegate to the genome info
-for op in [:indexin, :findin, :in]
-    @eval (Base.$op)(x::GenomicDataFrame,y::AbstractGenomicVector,exact::Bool=true) = ($op)(_rowindex(x),y,exact)
-    @eval (Base.$op)(x::AbstractGenomicVector,y::GenomicDataFrame,exact::Bool=true) = ($op)(x,_rowindex(y),exact)
-    @eval (Base.$op)(x::GenomicDataFrame,y::GenomicDataFrame,exact::Bool=true) = ($op)(_rowindex(x),_rowindex(y),exact)
+## two-arg functions that delegate to the genome info if one is a GenomicDataFrame
+for op in [:overlap_table, :(Base.indexin), :(Base.findin), :(Base.in)]
+    @eval ($op)(x::GenomicDataFrame,y::AbstractGenomicVector,exact::Bool=true) = ($op)(_rowindex(x),y,exact)
+    @eval ($op)(x::AbstractGenomicVector,y::GenomicDataFrame,exact::Bool=true) = ($op)(x,_rowindex(y),exact)
+    @eval ($op)(x::GenomicDataFrame,y::GenomicDataFrame,exact::Bool=true) = ($op)(_rowindex(x),_rowindex(y),exact)
 end
-
-## Table ops that delegate to the table
-#for op in [:join]
-#
-#end
 
 function Base.vcat(x::GenomicDataFrame,y::GenomicDataFrame)
     same_genome(x,y) || throw(ArgumentError("x and y must be from the same genome"))
     GenomicDataFrame( vcat(_rowindex(x),_rowindex(y)), vcat(_table(x),_table(y)) )
+end
+
+## Joins
+"""
+    Base.join(gt1::GenomicDataFrame, gt2::GenomicDataFrame, on::Union{Symbol, Vector{Symbol}} = Symbol[], kind::Symbol = :inner, exact::Bool=false)
+    Base.join(gt1::GenomicDataFrame, t2::DataFrame, on::Union{Symbol, Vector{Symbol}} = Symbol[], kind::Symbol = :inner)
+    Base.join(t1::DataFrame, gt2::GenomicDataFrame, on::Union{Symbol, Vector{Symbol}} = Symbol[], kind::Symbol = :inner)
+
+join on `GenomicDataFrame` is like a regular `DataFrame` join except that with the default value of `on`, the row matching is done
+using the row indices (ranges) from the two tables. Like other range comparison operations, the `exact` argument controls whether or not
+a range match must be exact, or if an overlap is sufficient. When `exact == false` the `join` operation is not entirely symmetric: the
+row indices (ranges) in the resulting GenomicDataFrame will be those from the 'left' GenomicDataFrame.
+
+GenomicDataFrames and standard DataFrames can also be joined using columns in the table portion of the GenomicDataFrame.
+
+Columns in the table portion of the returned object will be DataArrays in order to accomodate missing values.
+"""
+function Base.join(gt1::GenomicDataFrame, gt2::GenomicDataFrame; on::Union{Symbol, Vector{Symbol}} = Symbol[], kind::Symbol = :inner, exact::Bool=false)
+    if typeof(on) == Vector{Symbol} && length(on) == 0
+        # join GDFs on ranges
+        inds = overlap_table(gt1, gt2, exact)
+        if kind == :inner
+            out = GenomicDataFrame(
+                                   rowindex(gt1)[inds[:,1]],
+                                   hcat(
+                                        table(gt1)[inds[:,1],:],
+                                        table(gt2)[inds[:,2],:]
+                                        )
+                                   )
+        elseif kind == :left
+            error("left-join of GenomicDataFrames by rowindex is not supported at this time.")
+        elseif kind == :right
+            error("right-join of GenomicDataFrames by rowindex is not supported at this time.")
+        elseif kind == :outer
+            error("outer-join of GenomicDataFrames by rowindex is not supported at this time.")
+        elseif kind == :cross
+            error("cross-join of GenomicDataFrames by rowindex is not supported at this time.")
+        elseif kind == :semi
+            out = GenomicDataFrame( rowindex(gt1)[inds[:,1]], table(gt1)[inds[:,1],:] )
+        elseif kind == :anti
+            xinds = setdiff(1:nrow(gt1), inds[:,1])
+            out = GenomicDataFrame( rowindex(gt1)[xinds], table(gt1)[xinds,:] )
+        end
+    else
+        # join DataFrames in the usual way
+        out = join(table(gr1), table(gr2), on = on, kind = kind)
+    end
+    out
+end
+function Base.join(t1::GenomicDataFrame, t2::DataFrame; on::Union{Symbol, Vector{Symbol}} = Symbol[], kind::Symbol = :inner)
+
+end
+function Base.join(t1::DataFrame, t2::GenomicDataFrame; on::Union{Symbol, Vector{Symbol}} = Symbol[], kind::Symbol = :inner)
+    out = join(table(t1), table(t2), on = on, kind = kind)
 end

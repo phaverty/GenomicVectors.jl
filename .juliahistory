@@ -1,0 +1,183 @@
+using RLEVectors
+RLEVector([1,5], [2,8], [1,2])
+using DataFrames
+?join
+on = Symbol[]
+on === Symbol[]
+typeof(on) == Vector{Symbol} && length(on) == 0
+gpos
+gp
+using GenomicVectors
+using GenomicVectors
+    xit = convert(IntervalCollection,x)
+?match
+?matchall
+gr
+y = x = gr
+exact = true
+vcat(olap_pairs...)
+hcat(olap_pairs...)
+vcat(olap_pairs...)
+vcat(olap_pairs)
+x = gr
+y = gr
+overlap_table(x,y)
+function overlap_table(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+    ol = findoverlaps(x,y,exact)
+    olap_pairs = [ [metadata(el_a), metadata(el_b)]' for (el_a,el_b) in ol ]
+    vcat(olap_pairs...)
+end
+
+overlap_table(x,y)
+overlap_table(x,y,false)
+x = gr
+y = gr
+overlap_table(x,y,false)
+[1 2 3 ; 4 5 6]
+x
+y
+x
+y
+[2 2]
+out
+[2 2]
+out
+x
+y
+x
+gr1 = x
+gr2 = y
+exact = false
+inds
+?join
+gr
+rowindex(gr)
+rowindex(gt)
+rowindex(gt)[1:3]
+rowindex(gt)[ [1,1,2,3,2] ]
+table(gt)
+gr1
+gt1 = gt
+gt2 = gt
+inds
+                             rowindex(gr1)[inds[:,1]]
+gr1
+inds
+rowindex(gr1)[inds[:,1]]
+gt1
+                             rowindex(gt1)[inds[:,1]]
+                                  table(gt1)[inds[:,1]]
+table(gt1)[inds[:,1],:]
+x = table(gt1)
+x[[1,2,null]]
+x[[1,2,Null]]
+x[[1,2,NA]]
+x[[1,2,nothing]]
+x[[1,2,missing]]
+x[[1,2,NULL]]
+x[1:10,:]
+using Missings
+using Missing
+elseif
+if true
+if true
+if false
+println("FOO")
+elseif true
+prinln("BOB")
+end
+if false
+println("FOO")
+elseif true
+println("bob")
+end
+import GenomicRanges.rowindex
+import GenomicVectors.rowindex
+import GenomicVectors.table
+function Base.join(gt1::GenomicDataFrame, gt2::GenomicDataFrame, on::Union{Symbol, Vector{Symbol}} = Symbol[], kind::Symbol = :inner, exact::Bool=false)
+    if typeof(on) == Vector{Symbol} && length(on) == 0
+        # join GDFs on ranges
+        inds = overlap_table(gt1, gt2, exact)
+        if kind == :left
+            # Not quite, need ranges from gt1 that do not match
+        elseif kind == :right
+
+        elseif kind == :outer
+
+        elseif kind == :inner
+            out = GenomicDataFrame(
+                                   rowindex(gt1)[inds[:,1]],
+                                   hcat(
+                                        table(gt1)[inds[:,1],:],
+                                        table(gt2)[inds[:,2],:]
+                                        )
+                                   )
+            )
+        elseif kind == :cross
+            error("cross-join of GenomicDataFrames is not supported at this time.")
+        end
+    else
+        # join DataFrames in the usual way
+        out = join(table(gr1), table(gr2), on = on, kind = kind)
+    end
+    out
+end
+function Base.join(t1::GenomicDataFrame, t2::DataFrame, on::Union{Symbol, Vector{Symbol}} = Symbol[], kind::Symbol = :inner)
+
+end
+function Base.join(t1::DataFrame, t2::GenomicDataFrame, on::Union{Symbol, Vector{Symbol}} = Symbol[], kind::Symbol = :inner)
+    out = join(table(t1), table(t2), on = on, kind = kind)
+end
+
+gt
+join(gt,gt)
+gt
+join(gt,gt,Symbol[])
+gt
+gt1
+gt2
+overlap_table
+exit()
+using GenomicVectors
+gt1 = gt2 = gt
+gt1 = gt2 = gt
+using GenomicVectors
+exit()
+exit()
+using GenomicVectors
+gt1 = gt2 = gt
+exact = false
+exit()
+gt1 = gt2 = gt
+exit()
+using GenomicVectors
+exit()
+using AxisArrays
+using GenomicFeatures
+using RLEVectors
+using DataFrames
+import RLEVectors.starts
+import RLEVectors.ends
+import RLEVectors.widths
+import RLEVectors.each
+overlap_table
+methods(overlap_table)
+exit()
+using GenomicVectors
+    out = join(gt1, gt2)
+    out = join(gt1, gt2, false)
+    out = join(gt1, gt2, true)
+    out = join(gt1, gt2, exact = true)
+    out = join(gt1, gt2; exact = true)
+    out = join(gt1, gt2, Symbol[], :inner, exact = true)
+    out = join(gt1, gt2, Symbol[], :inner, true)
+    out = join(gt1, gt2, Symbol[], :semi, true)
+    out = join(gt1, gt2, Symbol[], :anti, true)
+gt1
+gt2
+    out = join(gt1, gt2, Symbol[], :anti, false)
+    out = join(gt1, gt2, Symbol[], :inner, false)
+    out = join(gt1, gt2, Symbol[], :semi, false)
+colnames(out)
+names(out)
+exit()

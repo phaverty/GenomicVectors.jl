@@ -179,7 +179,7 @@ that is `true` for each element of `x` that is in the set `y`.
     setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 
 """
-findoverlaps, findin, indexin, in, intersect, setdiff, nearest
+findoverlaps, findin, indexin, in, intersect, setdiff, nearest, overlap_table
 
 # The discussion in https://github.com/JuliaLang/Juleps/blob/master/Find.md#particular-cases is very relevant choosing names for these functions.
 

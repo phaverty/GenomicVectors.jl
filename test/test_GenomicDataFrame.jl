@@ -55,6 +55,26 @@ using DataFrames
     @test in(gr,gr3,false) == BitArray([ true, false, true ])
 
     ## Table ops
+    chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+    gr1 = GenomicRanges( [30123,40456,40000],[30130,40500,40100],chrinfo )
+    gr2 = GenomicRanges( [100,30123,40000],[200,30130,40200],chrinfo )
+    dt1 = DataFrame(a=1:3,b=6:8)
+    dt2 = DataFrame(a=4:6,c=9:11)
+    gt1 = GenomicDataFrame(gr1,dt1)
+    gt2 = GenomicDataFrame(gr2,dt2)
+    out = join(gt1, gt2, exact = false)
+    @test names(out) == [:a,:b,:a_1,:c]
+    @test out[:a] == [1,3]
+    out = join(gt1, gt2, exact = true)
+    @test names(out) == [:a,:b,:a_1,:c]
+    @test out[:a] == [1]
+    out = join(gt1, gt2, kind = :semi, exact = false)
+    @test names(out) == [:a,:b]
+    @test out[:a] == [1,3]
+    out = join(gt1, gt2, kind = :anti, exact = false)
+    @test names(out) == [:a,:b]
+    @test out[:a] == [2]
+
 
 end # testset
 

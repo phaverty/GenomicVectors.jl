@@ -43,7 +43,7 @@ _genostarts(x::GenomicPositions) = x.genopos # Pass by reference for internal us
 _genoends(x::GenomicPositions) = x.genopos # Pass by reference for internal use
 _strands(x::GenomicPositions) = RLEVector("+", length(x))
 strands(x::GenomicPositions) = _strands(x)
-widths(x::GenomicPositions) = RLEVector(1, length(x))
+RLEVectors.widths(x::GenomicPositions) = RLEVector(1, length(x))
 
 ## Indexing
 Base.getindex(x::GenomicPositions, i::Int) = x.genopos[i]

@@ -27,7 +27,8 @@ import GenomicFeatures: coverage
 export genome, chr_info, chromosomes, chrpos, chrindex, genopos, slide!, slide
 export strands, nearest, genostarts, genoends, starts, ends, widths
 export _genostarts, _genoends, _strands
-export findoverlaps, eachrange, remove_overlaps, select_overlaps
+export findoverlaps, overlap_table, eachrange
+#export remove_overlaps, select_overlaps
 export disjoin, gaps, coverage, collapse
 
 # Delegations
