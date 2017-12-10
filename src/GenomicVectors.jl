@@ -15,7 +15,8 @@ export genopos
 # types
 import Base: ==, getindex, setindex!
 import GenomicFeatures: Interval, IntervalCollection, Strand
-export GenomeInfo, AbstractGenomicVector, GenomicPositions, GenomicRanges, GenomicDataFrame
+export GenomeInfo, AbstractGenomicVector, GenomicPositions, GenomicRanges
+export GenomicDataFrame, GenomicVectorIterator
 
 # GenomeInfo
 export chr_ends, chr_lengths, chr_offsets, chr_names, same_genome

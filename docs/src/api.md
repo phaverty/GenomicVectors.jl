@@ -9,6 +9,7 @@ AbstractGenomicVector
 GenomeInfo
 GenomicPositions
 GenomicRanges
+GenomicDataFrame
 ```
 
 ## Interfaces and Accessing position info
@@ -43,4 +44,26 @@ y = RObject(x)
 @rput y
 R"z = y + 2L"
 @rget z
+```
+
+## Summarize genomic data by ranges
+
+It is often useful to summarize data along the genome by region. For example, one
+might wish to summarize DNA copy number by gene or the number of point mutations per
+transcript.
+
+Subsetting a vector with an AbstractGenomicVector returns an iterator over sections
+of the vector indexed by the genostarts and genoends of the AbstractGenomicVector.
+To make this a safe operation, the vector must span the full length of the genome
+specified by the chr_info of the AbstractGenomicVector. This is particularly useful
+when the cector is an RLEVector.
+
+```julia
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[10,10,10])
+s = [2,4,6,15,7]
+e = s + 2
+gr = GenomicRanges(s,e,chrinfo)
+rle = RLEVector([2,3,9,1,0],cumsum([6,6,6,6,6]))
+collect(rle[gr])
+map(mean, rle[gr])
 ```

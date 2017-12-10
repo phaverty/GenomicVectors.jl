@@ -195,3 +195,48 @@ function coverage(gr::AbstractGenomicVector)
     end
     out
 end
+
+## Iterators
+"""
+Iterates over sections of a vector indexed by the genostarts and genoends of an
+AbstractGenomicVector. The vector must span the full length of the genome
+specified by the chr_info of the AbstractGenomicVector. This is useful for summarizing
+an RLEVector of data (say DNA copy number) by genome regions (e.g. genes).
+"""
+immutable GenomicVectorIterator{T1<:Integer,T2<:AbstractVector}
+    genostarts::Vector{T1}
+    genoends::Vector{T1}
+    v::T2
+end
+"""
+    vector[ AbstractGenomicVector ]
+
+Returns an iterator over sections of a vector indexed by the genostarts and genoends of an
+AbstractGenomicVector. The vector must span the full length of the genome
+specified by the chr_info of the AbstractGenomicVector. This is useful for summarizing
+an RLEVector of data (say DNA copy number) by genome regions (e.g. genes).
+"""
+function Base.getindex(v::T1, g::T2) where T2 <: AbstractGenomicVector where T1 <: RLEVector
+    if length(v) != chr_ends(g)[end]
+        error("When subsetting an Vector with a GenomicVector, the Vector must span the entire genome.")
+    end
+    GenomicVectorIterator(_genostarts(g), _genoends(g), v)
+end
+
+function Base.start(x::GenomicVectorIterator)
+    1
+end
+
+function Base.next(x::GenomicVectorIterator, state)
+    first = x.genostarts[state]
+    last = x.genoends[state]
+    ( x.v[first:last], state + 1)
+end
+
+function Base.done(x::GenomicVectorIterator, state)
+    state > size(x.genostarts,1)
+end
+
+function Base.length(x::GenomicVectorIterator)
+    size(x.genostarts,1)
+end

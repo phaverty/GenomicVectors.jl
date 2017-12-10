@@ -51,7 +51,6 @@ y = GenomicPositions(gpos,chrinfo)
 `GenomeInfo` objects have various accessors that describe the chomosomes and their boundaries in the
 concatenated, linear genome. They are also immutable so that the meaning of indices into a concatenated
 genome cannot change unexpectedly. Objects that contain a `GenomeInfo` implement the same methods.
-
 ```julia
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 genome(chrinfo)
