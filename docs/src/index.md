@@ -31,6 +31,12 @@ linear search is very efficient for converting from "genopos" to "chrpos". (It's
 we use an optimization that frequently skips the lookup by checking to see if the i-th data point is on the same chromosome as
 the previous data point.
 
+Currently we depend on GenomicFeatures.jl and the `IntervalCollection` for comparisons of two sets of intervals. We provide
+`convert` methods to make `IntervalCollection`s. These collections store the genome-scale positions put the genome string in the
+chromosome string field, resulting in a single tree. We add the index of each interval in the
+`AbstractGenomicVector` in the metadata slot of each `Interval` which can be used to relate the
+`IntervalCollection` back to our original object.
+
 ### Creation
 `GenomeInfo`, `GenomicPositions` and `GenomicRanges` objects can be created as follows:
 
@@ -122,25 +128,3 @@ y = sort(x)
 issorted(y)
 convert(DataFrame, y)
 ```
-
-## Overlaps within one set of ranges
-`GenomicVectors` offers three functions that work on overlaps among one set of ranges:
-
- * `collapse`
-Combines overlapping ranges into larger, contiguous ranges
-
- * `disjoin`
-Splits overlapping ranges to create a disjoint set of ranges
-
- * `gaps`
-Returns GenomicRanges of regions between collapsed input ranges, e.g. introns
-
- * `coverage`
-Counts the number of ranges covering each portion of the genome, from base 1 to n
-
-## Intersection / overlap between two sets of ranges operations
-Currently we depend on Bio.jl and the `IntervalCollection` for these overlap queries. We provide `convert` methods to
-make `IntervalCollection`s. These collections store the genome-scale positions put the genome string in the
-chromosome string field, resulting in a single tree. We add the index of each interval in the
-`AbstractGenomicVector` in the metadata slot of each `Interval` which can be used to relate the
-`IntervalCollection` back to our original object.
