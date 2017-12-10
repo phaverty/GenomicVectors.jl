@@ -225,7 +225,14 @@ out = overlap_table(x,y,true)
 out = overlap_table(x,y,false)
 @test out == [1 1; 2 1; 2 2; 3 1; 3 2; 3 3]
 
-
+## Iterators
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[10,10,10])
+s = [2,4,6,15,7]
+e = s + 2
+gr = GenomicRanges(s,e,chrinfo)
+rle = RLEVector([2,3,9,1,0],cumsum([6,6,6,6,6]))
+@test collect(rle[gr]) == [ [2,2,2], [2,2,2], [2,3,3,], [9,9,9], [3,3,3] ]
+@test map(mean, rle[gr]) == [2.0, 2.0, 2 + (2 / 3), 9.0, 3.0]
 
 end # testset
 
