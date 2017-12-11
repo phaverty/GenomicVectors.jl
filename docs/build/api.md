@@ -9,6 +9,7 @@
     - [Modifying positions](api.md#Modifying-positions-1)
     - [Querying positions](api.md#Querying-positions-1)
     - [A round trip to R](api.md#A-round-trip-to-R-1)
+    - [Summarize genomic data by ranges](api.md#Summarize-genomic-data-by-ranges-1)
     - [Interfaces](interfaces.md#Interfaces-1)
 - [Ideas for future development](future.md#Ideas-for-future-development-1)
     - [Maintaining performance via sortedness and views](future.md#Maintaining-performance-via-sortedness-and-views-1)
@@ -27,8 +28,6 @@
     - [Implementation](index.md#Implementation-1)
     - [Working with locations](index.md#Working-with-locations-1)
     - [Ordering](index.md#Ordering-1)
-    - [Overlaps within one set of ranges](index.md#Overlaps-within-one-set-of-ranges-1)
-    - [Intersection / overlap between two sets of ranges operations](index.md#Intersection-/-overlap-between-two-sets-of-ranges-operations-1)
 
 
 <a id='Types-1'></a>
@@ -43,7 +42,7 @@
 An AbstractGenomicVector is a Vector that describes positions or ranges in a single genome, in an arbitrary order. An AbstractGenomicVector must implement the GenomeInfo and GenoPos Interfaces. Sorting is by chromosome then by nucleotide position.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/0dce7c8212b90964362c9b6dad6d48fc81465046/src/AbstractGenomicVector_type.jl#L5-L10' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/AbstractGenomicVector_type.jl#L5-L10' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomeInfo' href='#GenomicVectors.GenomeInfo'>#</a>
 **`GenomicVectors.GenomeInfo`** &mdash; *Type*.
@@ -69,7 +68,7 @@ chrinfo[2] # 5e5
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/0dce7c8212b90964362c9b6dad6d48fc81465046/src/GenomeInfo_type.jl#L5-L23' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/GenomeInfo_type.jl#L5-L23' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomicPositions' href='#GenomicVectors.GenomicPositions'>#</a>
 **`GenomicVectors.GenomicPositions`** &mdash; *Type*.
@@ -98,7 +97,7 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/0dce7c8212b90964362c9b6dad6d48fc81465046/src/GenomicPositions_type.jl#L5-L27' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/GenomicPositions_type.jl#L5-L27' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomicRanges' href='#GenomicVectors.GenomicRanges'>#</a>
 **`GenomicVectors.GenomicRanges`** &mdash; *Type*.
@@ -128,7 +127,31 @@ Getting/setting by a scalar gives/takes a GenomicFeatures.Interval. The leftposi
 The `each` function produces an iterator of (start,end) two-tuples in genome location units. This is use for many internal functions, like sorting. This is intentionally similar to `RLEVectors.each`.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/0dce7c8212b90964362c9b6dad6d48fc81465046/src/GenomicRanges_type.jl#L5-L35' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/GenomicRanges_type.jl#L5-L35' class='documenter-source'>source</a><br>
+
+<a id='GenomicVectors.GenomicDataFrame' href='#GenomicVectors.GenomicDataFrame'>#</a>
+**`GenomicVectors.GenomicDataFrame`** &mdash; *Type*.
+
+
+
+**GenomicDataFrame**
+
+A DataFrame-like class with a GenomicVector as an index.
+
+**Examples**
+
+```julia
+    genomeinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+    chrs = ["chr2","chr1","chr2","chrX"]
+    pos = Int64[3e4,4.2e3,1.9e5,1e4]
+    gp = GenomicPositions(pos,chrs,genomeinfo)
+    dt = DataFrame(a=1:4,b=5:8)
+    gt = GenomicDataFrame(gp,dt)
+    gt[1:2,1:2]
+```
+
+
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/GenomicDataFrame_type.jl#L3-L18' class='documenter-source'>source</a><br>
 
 
 <a id='Interfaces-and-Accessing-position-info-1'></a>
@@ -216,7 +239,7 @@ genopos(chrpos, chromosomes, chrinfo)
 Given chromosome and chromosome position information and a description of the chromosomes (a GenoPos object), calculate the corresponding positions in the linear genome.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/0dce7c8212b90964362c9b6dad6d48fc81465046/src/AbstractGenomicVector_type.jl#L25-L71' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/AbstractGenomicVector_type.jl#L27-L73' class='documenter-source'>source</a><br>
 
 
 <a id='Modifying-positions-1'></a>
@@ -224,10 +247,65 @@ Given chromosome and chromosome position information and a description of the ch
 ## Modifying positions
 
 
+Several functions are offered for altering locations or creating related locations.
+
+<a id='GenomicVectors.slide' href='#GenomicVectors.slide'>#</a>
+**`GenomicVectors.slide`** &mdash; *Function*.
+
+
+
+**Altering genomic locations**
+
 ```
-slide
-slide!
+slide!(gpos::GenomicPositions, x::Integer)
+slide!(gr::GenomicPositions, x::Integer)
+slide(g::AbstractGenomicVector, x::Integer)
 ```
+
+Slide locations to the left or right on the genome. (Use a negative `x` to go left.) Locations may not be slid off the end of a chromosome (an error is generated).
+
+
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/GenomicPositions_type.jl#L105-L114' class='documenter-source'>source</a><br>
+
+<a id='GenomicVectors.collapse' href='#GenomicVectors.collapse'>#</a>
+**`GenomicVectors.collapse`** &mdash; *Function*.
+
+
+
+Merges overlapping ranges
+
+
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/GenomicRanges_type.jl#L222-L224' class='documenter-source'>source</a><br>
+
+<a id='RLEVectors.disjoin' href='#RLEVectors.disjoin'>#</a>
+**`RLEVectors.disjoin`** &mdash; *Function*.
+
+
+
+Splits overlapping ranges to create a disjoint set of ranges
+
+
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/GenomicRanges_type.jl#L244-L246' class='documenter-source'>source</a><br>
+
+<a id='GenomicVectors.gaps' href='#GenomicVectors.gaps'>#</a>
+**`GenomicVectors.gaps`** &mdash; *Function*.
+
+
+
+Returns GenomicRanges of regions between collapsed input ranges, e.g. introns
+
+
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/GenomicRanges_type.jl#L270-L272' class='documenter-source'>source</a><br>
+
+<a id='GenomicFeatures.coverage' href='#GenomicFeatures.coverage'>#</a>
+**`GenomicFeatures.coverage`** &mdash; *Function*.
+
+
+
+Returns RLE giving counts of ranges in `gr` overlapping each index spanned by the full set of ranges in `gr`.
+
+
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/AbstractGenomicVector_type.jl#L187-L190' class='documenter-source'>source</a><br>
 
 
 <a id='Querying-positions-1'></a>
@@ -253,23 +331,29 @@ findoverlaps(x::AbstractGenomicVector,y::AbstractGenomicVector)
 Creates a `GenomicFeatures.IntersectIterator` from two `AbstractGenomicVectors`, much like the BioConductor `findOverlaps`. This is the kernel of the other search/set operations.
 
 ```
-findin(x::AbstractGenomicVector,y::AbstractGenomicVector,exact::Bool=true)
+overlap_table(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+```
+
+Creates a two column table listing the pairs of indices of x and y that overlap.
+
+```
+findin(x::AbstractGenomicVector,y::AbstractGenomicVector, exact::Bool=true)
 
 indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
-
-in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 ```
 
 The `AbstractGenomicVector` method on `in` is vectorized and returns a `BitArray` that is `true` for each element of `x` that is in the set `y`.
 
 ```
+in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+
 intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 
 setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/0dce7c8212b90964362c9b6dad6d48fc81465046/src/AbstractGenomicVector_type.jl#L142-L167' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/053a70cae3cc73851260b1b7475fae343def35a3/src/AbstractGenomicVector_type.jl#L151-L181' class='documenter-source'>source</a><br>
 
 
 <a id='A-round-trip-to-R-1'></a>
@@ -288,5 +372,27 @@ y = RObject(x)
 @rput y
 R"z = y + 2L"
 @rget z
+```
+
+
+<a id='Summarize-genomic-data-by-ranges-1'></a>
+
+## Summarize genomic data by ranges
+
+
+It is often useful to summarize data along the genome by region. For example, one might wish to summarize DNA copy number by gene or the number of point mutations per transcript.
+
+
+Subsetting a vector with an AbstractGenomicVector returns an iterator over sections of the vector indexed by the genostarts and genoends of the AbstractGenomicVector. To make this a safe operation, the vector must span the full length of the genome specified by the chr_info of the AbstractGenomicVector. This is particularly useful when the vector is an RLEVector.
+
+
+```julia
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[10,10,10])
+s = [2,4,6,15,7]
+e = s + 2
+gr = GenomicRanges(s,e,chrinfo)
+rle = RLEVector([2,3,9,1,0],cumsum([6,6,6,6,6]))
+collect(rle[gr])
+map(mean, rle[gr])
 ```
 

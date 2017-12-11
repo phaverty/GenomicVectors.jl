@@ -102,6 +102,18 @@ function Base.convert(::Type{IntervalCollection}, x::GenomicPositions)
 end
 
 ## Altering Positions
+"""
+# Altering genomic locations
+
+    slide!(gpos::GenomicPositions, x::Integer)
+    slide!(gr::GenomicPositions, x::Integer)
+    slide(g::AbstractGenomicVector, x::Integer)
+
+Slide locations to the left or right on the genome. (Use a negative `x` to go left.)
+Locations may not be slid off the end of a chromosome (an error is generated).
+"""
+slide, slide!
+
 function slide!(gpos::GenomicPositions, x::Integer)
     offsets = chr_offsets(gpos)
     ends = chr_ends(gpos)
@@ -133,8 +145,10 @@ Base.issorted(x::GenomicPositions; rev=false) = issorted(genostarts(x), rev=rev)
 Base.sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
 Base.in(query::GenomicPositions, target::GenomicPositions, exact::Bool=true) = [in(v,target) for v in query]
 
+## Searching
 """
     nearest(query::GenomicPositions, target::GenomicPositions)
+
 For each `query` finds index in `target` that is nearest on the same chromosome.
 If no match on the same chromosome exists, the index will be 0.
 """
@@ -161,20 +175,4 @@ function nearest{T}(query::GenomicPositions{T}, target::GenomicPositions{T})
         i = i + 1
     end
     res
-end
-
-function reduce(x::GenomicPositions)
-
-end
-
-function disjoin(x::GenomicPositions)
-
-end
-
-function gaps(x::GenomicPositions)
-
-end
-
-function coverage(x::GenomicPositions)
-
 end

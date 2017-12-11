@@ -79,7 +79,7 @@ Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( eachrange(x
 Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(eachrange(x)), rev=rev ) # No method for iterator
 
 ## Modifying
-slide(x::AbstractGenomicVector, value::Integer) = slide!( copy(x), value )
+slide(g::AbstractGenomicVector, x::Integer) = slide!( copy(g), x )
 
 ## Show
 function Base.show(io::IO, x::AbstractGenomicVector)

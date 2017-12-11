@@ -20,6 +20,7 @@ These types are commonly used in conjuction with `RLEVectors` from the package o
     - [Modifying positions](api.md#Modifying-positions-1)
     - [Querying positions](api.md#Querying-positions-1)
     - [A round trip to R](api.md#A-round-trip-to-R-1)
+    - [Summarize genomic data by ranges](api.md#Summarize-genomic-data-by-ranges-1)
     - [Interfaces](interfaces.md#Interfaces-1)
 - [Ideas for future development](future.md#Ideas-for-future-development-1)
     - [Maintaining performance via sortedness and views](future.md#Maintaining-performance-via-sortedness-and-views-1)
@@ -38,8 +39,6 @@ These types are commonly used in conjuction with `RLEVectors` from the package o
     - [Implementation](index.md#Implementation-1)
     - [Working with locations](index.md#Working-with-locations-1)
     - [Ordering](index.md#Ordering-1)
-    - [Overlaps within one set of ranges](index.md#Overlaps-within-one-set-of-ranges-1)
-    - [Intersection / overlap between two sets of ranges operations](index.md#Intersection-/-overlap-between-two-sets-of-ranges-operations-1)
 
 
 <a id='Implementation-1'></a>
@@ -54,6 +53,9 @@ The primary "innovation" of these types is that genome locations are stored as t
 
 
 Considering that the typical ordering for chromosomes (1:22,X,Y,M) puts them in roughly decending size order (X would be 8th, Y > 22 > 21) and the first few chromsomes are each ~10% of the genome, linear search is very efficient for converting from "genopos" to "chrpos". (It's 1.5X faster than `searchsortedfirst` for randomly ordered data and 1.75X faster for data ordered by chromosome). For both implementations, we use an optimization that frequently skips the lookup by checking to see if the i-th data point is on the same chromosome as the previous data point.
+
+
+Currently we depend on GenomicFeatures.jl and the `IntervalCollection` for comparisons of two sets of intervals. We provide `convert` methods to make `IntervalCollection`s. These collections store the genome-scale positions put the genome string in the chromosome string field, resulting in a single tree. We add the index of each interval in the `AbstractGenomicVector` in the metadata slot of each `Interval` which can be used to relate the `IntervalCollection` back to our original object.
 
 
 <a id='Creation-1'></a>
@@ -165,44 +167,4 @@ y = sort(x)
 issorted(y)
 convert(DataFrame, y)
 ```
-
-
-<a id='Overlaps-within-one-set-of-ranges-1'></a>
-
-## Overlaps within one set of ranges
-
-
-`GenomicVectors` offers three functions that work on overlaps among one set of ranges:
-
-
-  * `collapse`
-
-
-Combines overlapping ranges into larger, contiguous ranges
-
-
-  * `disjoin`
-
-
-Splits overlapping ranges to create a disjoint set of ranges
-
-
-  * `gaps`
-
-
-Returns GenomicRanges of regions between collapsed input ranges, e.g. introns
-
-
-  * `coverage`
-
-
-Counts the number of ranges covering each portion of the genome, from base 1 to n
-
-
-<a id='Intersection-/-overlap-between-two-sets-of-ranges-operations-1'></a>
-
-## Intersection / overlap between two sets of ranges operations
-
-
-Currently we depend on Bio.jl and the `IntervalCollection` for these overlap queries. We provide `convert` methods to make `IntervalCollection`s. These collections store the genome-scale positions put the genome string in the chromosome string field, resulting in a single tree. We add the index of each interval in the `AbstractGenomicVector` in the metadata slot of each `Interval` which can be used to relate the `IntervalCollection` back to our original object.
 

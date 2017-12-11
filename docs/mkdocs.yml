@@ -24,4 +24,5 @@ pages:
     - Changelog: NEWS.md
     - TODO: TODO.md
   - API: api.md
+  - Interfaces: interfaces.md
   - The Future: future.md

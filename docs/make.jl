@@ -1,6 +1,8 @@
 using Documenter, GenomicVectors
 
-makedocs()
+makedocs(
+         modules = [GenomicVectors]
+         )
 
 deploydocs(
            repo = "github.com/phaverty/GenomicVectors.jl.git",

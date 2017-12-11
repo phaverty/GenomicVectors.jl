@@ -18,9 +18,13 @@ chromosomes
 ```
 
 ## Modifying positions
+Several functions are offered for altering locations or creating related locations.
 ```@docs
 slide
-slide!
+collapse
+disjoin
+gaps
+coverage
 ```
 
 ## Querying positions
@@ -56,7 +60,7 @@ Subsetting a vector with an AbstractGenomicVector returns an iterator over secti
 of the vector indexed by the genostarts and genoends of the AbstractGenomicVector.
 To make this a safe operation, the vector must span the full length of the genome
 specified by the chr_info of the AbstractGenomicVector. This is particularly useful
-when the cector is an RLEVector.
+when the vector is an RLEVector.
 
 ```julia
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[10,10,10])

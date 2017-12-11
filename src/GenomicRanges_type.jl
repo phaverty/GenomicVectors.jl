@@ -139,6 +139,9 @@ function Base.convert(::Type{IntervalCollection}, x::GenomicRanges)
 end
 
 ## Altering Positions
+"""
+    slide!(gr::GenomicRanges, x::Integer)
+"""
 function slide!(gr::GenomicRanges, x::Integer)
     offsets = chr_offsets(gr)
     ends = chr_ends(gr)
