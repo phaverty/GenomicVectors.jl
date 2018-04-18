@@ -1,5 +1,3 @@
-import RCall: sexp, rcopy, RClass, rcopytype, @R_str, S4Sxp
-
 function Base.convert(::Type{Vector{String}}, strands::Vector{Strand})
     d = Dict(STRAND_POS => "+", STRAND_NEG => "-", STRAND_BOTH => "*", STRAND_NA => "*")
     [ d[x] for x in strands ]

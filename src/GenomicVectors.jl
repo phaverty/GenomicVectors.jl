@@ -9,6 +9,7 @@ using AxisArrays
 using GenomicFeatures
 using DataFrames
 using BioAlignments
+using RCall
 
 # utils
 export genopos
@@ -38,6 +39,9 @@ import Base: similar, copy, unique, size, length, endof, issubset, vcat, union, 
 
 # GenomicTable
 export rowindex, table
+
+# RCall
+import RCall: sexp, rcopy, RClass, rcopytype, @R_str, S4Sxp
 
 ### Includes
 include("GenomeInfo_type.jl")
