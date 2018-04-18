@@ -8,6 +8,7 @@ using RLEVectors
 using AxisArrays
 using GenomicFeatures
 using DataFrames
+using BioAlignments
 
 # utils
 export genopos
@@ -47,6 +48,7 @@ include("GenomicRanges_type.jl")
 include("GenomicDataFrame_type.jl")
 include("delegations.jl")
 include("rcall.jl")
+include("bam.jl")
 include("precompile.jl")
 
 end # module
