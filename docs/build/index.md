@@ -33,7 +33,7 @@ These types are commonly used in conjuction with `RLEVectors` from the package o
     - [Version 0.0.1: Initial Public Release](NEWS.md#Version-0.0.1:-Initial-Public-Release-1)
     - [Version 0.0.2: changes to indexing a GenomicRanges](NEWS.md#Version-0.0.2:-changes-to-indexing-a-GenomicRanges-1)
     - [Version 0.0.3: Update to scalar indexing, behaves like Vector{Interval}](NEWS.md#Version-0.0.3:-Update-to-scalar-indexing,-behaves-like-Vector{Interval}-1)
-    - [Version 0.1.0: Introducing `GenomicTable`](NEWS.md#Version-0.1.0:-Introducing-GenomicTable-1)
+    - [Version 0.1.0: Introducing `GenomicDataFrame`](NEWS.md#Version-0.1.0:-Introducing-GenomicDataFrame-1)
 - [GenomicVectors](index.md#GenomicVectors-1)
     - [Introduction](index.md#Introduction-1)
     - [Implementation](index.md#Implementation-1)

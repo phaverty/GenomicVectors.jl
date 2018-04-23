@@ -37,12 +37,12 @@ This version changes the value received or returned by setindex and getindex on 
 The each method on GenomicRanges still returns an iterator of (start,end) tuples, in units of genomic position, which is useful for sorting and some other internal operations.
 
 
-<a id='Version-0.1.0:-Introducing-GenomicTable-1'></a>
+<a id='Version-0.1.0:-Introducing-GenomicDataFrame-1'></a>
 
-## Version 0.1.0: Introducing `GenomicTable`
+## Version 0.1.0: Introducing `GenomicDataFrame`
 
 
-A GenomicTable is a [DataTable](https://github.com/JuliaData/DataTables.jl) with one of the concrete AbstractGenomicVector subtypes as a row index. It is similar, in spirit, to Bioconductor's GenomicRanges, but a GenomicTable isa DataTable, while Bioconductor's GenomicRanges is always a vector of ranges that may, or may not, also have an associated DataFrame of metadata. GenomicTable is experimental and is not yet fully-featured.
+A GenomicDataFrame is a [DataFrame](https://github.com/JuliaData/DataFrames.jl) with one of the concrete AbstractGenomicVector subtypes as a row index. It is similar, in spirit, to Bioconductor's GenomicRanges, but a GenomicDataFrame isa DataFrame, while Bioconductor's GenomicRanges is always a vector of ranges that may, or may not, also have an associated DataFrame of metadata. GenomicDataFrame is experimental and is not yet fully-featured.
 
 
 This version includes more range overlap features including discrimination between exact- and overlap-matches using an `exact` argument to `findoverlaps`, `in`, etc..
