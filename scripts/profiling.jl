@@ -1,8 +1,8 @@
 using GenomicVectors
 using JLD
-using DataTables
 using RLEVectors
 using AxisArrays
+using DataFrames
 
 ordered_chrnames = vcat(["$i" for i in 1:22], ["X","Y"] )
 
@@ -11,7 +11,7 @@ ds = load("/Users/phaverty/.julia/v0.4/GenomicRanges.bak/test/testData/pinfo.jld
 p = ds["pos"]
 c = convert(Vector{String},ds["chr"])
 
-dt = DataTable([ c,p ],[:chr,:pos])
+dt = DataFrame([ c,p ],[:chr,:pos])
 dt = sort(dt,cols=[:chr,:pos])
 chr_rle = RLEVector(dt[:chr])
 cn = convert(Vector{String},values(chr_rle))

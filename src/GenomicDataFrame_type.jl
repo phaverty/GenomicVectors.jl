@@ -1,5 +1,7 @@
 const ColumnIndex = Union{Symbol,Integer}
 
+## Note: DataFrame([Int, Float64, String], [:A, :B, :C], 0) is the recipe for a zero row DF
+
 """
 # GenomicDataFrame
 
