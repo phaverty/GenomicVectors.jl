@@ -54,5 +54,6 @@ include("delegations.jl")
 include("rcall.jl")
 include("bam.jl")
 include("precompile.jl")
+_precompile_()
 
 end # module
