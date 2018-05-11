@@ -84,6 +84,7 @@ function Base.convert(::Type{DataFrame}, x::GenomicPositions)
         p_res[i] = g - o
         i = i + 1
     end
+
     DataFrame( Chromosome = c_res, Position = p_res )
 end
 
