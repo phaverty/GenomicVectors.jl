@@ -1,6 +1,7 @@
 using GenomicVectors
 using BioAlignments
 using DataFrames
+using CSV
 
 macro timeit(ex)
 # like @time, but returning the timing rather than the computed value
@@ -38,7 +39,7 @@ timings[:disjoin] = @timeit disjoin(gr)
 timings[:collapse] = @timeit collapse(gr)
 timings[:setting] = @timeit gr[2] = Interval("hg19", 40123, 40456, STRAND_POS)
 timings[:genostarts] = @timeit genostarts(gr)
-timings[:issorted] = @timeit isssorted(gr)
+timings[:issorted] = @timeit issorted(gr)
 timings[:sort] = @timeit sort(gr)
 timings[:as_df] = @timeit convert(DataFrame,gr)
 
@@ -52,8 +53,8 @@ end
 
 bdf = vcat(bdf,timings)
 
-writetable( "/Users/phaverty/.julia/v0.6/GenomicVectors/benchmark/timings.csv",
-             bdf, separator=',', header=true)
+CSV.write( "/Users/phaverty/.julia/v0.6/GenomicVectors/benchmark/timings.csv",
+             bdf, header=true)
 
 jdf = timings
 rdf = bdf[ bdf[:language] .== "R",:];
