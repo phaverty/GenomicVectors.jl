@@ -12,7 +12,9 @@ function genopos(positions, chromosomes, chrinfo::GenomeInfo)
     prev_chr = chromosomes[1]
     len = lengths[prev_chr]
     o = offsets[prev_chr]
-    @inbounds for (i,x,chr) in zip(1:length(positions), positions, chromosomes)
+    @inbounds for i in 1:length(positions)
+        chr = chromosomes[i]
+        x = positions[i]
         if chr != prev_chr
             prev_chr = chr
             len = lengths[prev_chr]
