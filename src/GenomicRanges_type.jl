@@ -119,7 +119,7 @@ function Base.convert(::Type{DataFrame}, x::GenomicRanges)
         e_res[i] = epos - o
         i = i + 1
     end
-    return( DataFrame( [c_res,s_res,e_res,strands(x)],[:Chromosome, :Start, :End, :Strand] ) )
+    DataFrame( Chromosome = c_res, Start = s_res, End = e_res, Strand = _strands(x) )
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicRanges)

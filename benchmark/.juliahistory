@@ -16,3 +16,168 @@ issorted(gr)
 @time sort(gr)
 @time sort(gr);
 timings
+timings
+timings
+@code_warntype(coverage(gr))
+@code_warntype(gaps(gr))
+using Profile
+Profile.clear()
+@profile(coverage(gr))
+Profile.print()
+@time coverage(gr)
+Profile.clear()
+@profile starts(gr)
+Profile.print()
+Profile.clear()
+@profile for i in 1:100 starts(gr) end
+Profile.print()
+timings
+timings
+@code_warntype disjoin(gr)
+Profile.clear())
+Profile.clear()
+@profile for i in 1:100 disjoin(gr) end
+Profile.print()
+Profile.clear()
+@profile for i in 1:100 coverage(gr) end; Profile.print()
+Profile.clear(); @profile for i in 1:10 starts(gr) end; Profile.print()
+Profile.clear(); @profile for i in 1:100 starts(gr) end; Profile.print()
+Profile.clear(); @profile for i in 1:1000 starts(gr) end; Profile.print()
+length(reader)
+
+function GenomicRanges(genome_name, reader::BioAlignments.BAM.Reader)
+    info = GenomeInfo(genome_name, reader)
+    chr = String[]
+    left_pos = Int64[]
+    right_pos = Int64[]
+    record = BAM.Record()
+    while !eof(reader)
+        read!(reader, record)
+        push!(chr, BAM.refname(record))
+        push!(left_pos, leftposition(record))
+        push!(right_pos, rightposition(record))
+    end
+    GenomicRanges(chr, left_pos, right_pos, info)
+end
+
+reader.start_offset
+reader.index
+reader.header
+length(gr)
+Profile.clear())
+Profile.clear()
+@profile gr = GenomicRanges("hg19", reader); Profile.print()
+@profile gr = GenomicRanges("hg19", reader); Profile.print()
+
+
+Profile.clear()
+genome_name = "hg19"
+Profile.clear()
+@profile GenomicRanges(chr, left_pos, right_pos, info); Profile.print()
+@code_warntype GenomicRanges(chr, left_pos, right_pos, info)
+@code_warntype genopos(left_pos, chr, info)
+Profile.clear()
+@profile genopos(left_pos, chr, info); Profile.print()
+x = genopos(left_pos, chr, info); 
+Profile.clear(); @profile chrpos(x, info); Profile.print()
+@time chrpos(x, info)
+@time chrpos(x, info);
+@time genopos(left_pos, chr, info);
+@time chromosomes(x, info);
+import GenomicVectors.genopos
+
+function genopos(positions, chromosomes, chrinfo::GenomeInfo)
+    if length(positions) != length(chromosomes)
+        throw(ArgumentError("Arguments positions and chromosomes must have the same length."))
+    end
+    offsets = chr_offsets(chrinfo)
+    lengths = chr_lengths(chrinfo)
+    gpos = similar(offsets, length(positions))
+    prev_chr = chromosomes[1]
+    len = lengths[prev_chr]
+    o = offsets[prev_chr]
+    i = 0
+    @inbounds for (x,chr) in zip(positions, chromosomes)
+        i = i + 1
+        if chr != prev_chr
+            prev_chr = chr
+            len = lengths[prev_chr]
+            o = offsets[prev_chr]
+        end
+        if 1 <= x <= len
+            gpos[i] = x + o
+        else
+            error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
+        end
+    end
+    gpos
+end
+
+@time genopos(left_pos, chr, info);
+@time genopos(left_pos, chr, info);
+
+function genopos(positions, chromosomes, chrinfo::GenomeInfo)
+    if length(positions) != length(chromosomes)
+        throw(ArgumentError("Arguments positions and chromosomes must have the same length."))
+    end
+    offsets = chr_offsets(chrinfo)
+    lengths = chr_lengths(chrinfo)
+    gpos = similar(offsets, length(positions))
+    prev_chr = chromosomes[1]
+    len = lengths[prev_chr]
+    o = offsets[prev_chr]
+    @inbounds for i in 1:length(positions)
+        chr = chromosomes[i]
+        pos = positions[i]
+        if chr != prev_chr
+            prev_chr = chr
+            len = lengths[prev_chr]
+            o = offsets[prev_chr]
+        end
+        if 1 <= x <= len
+            gpos[i] = x + o
+        else
+            error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
+        end
+    end
+    gpos
+end
+
+@time genopos(left_pos, chr, info);
+@time genopos(left_pos, chr, info)
+
+function genopos(positions, chromosomes, chrinfo::GenomeInfo)
+    if length(positions) != length(chromosomes)
+        throw(ArgumentError("Arguments positions and chromosomes must have the same length."))
+    end
+    offsets = chr_offsets(chrinfo)
+    lengths = chr_lengths(chrinfo)
+    gpos = similar(offsets, length(positions))
+    prev_chr = chromosomes[1]
+    len = lengths[prev_chr]
+    o = offsets[prev_chr]
+    @inbounds for i in 1:length(positions)
+        chr = chromosomes[i]
+        x = positions[i]
+        if chr != prev_chr
+            prev_chr = chr
+            len = lengths[prev_chr]
+            o = offsets[prev_chr]
+        end
+        if 1 <= x <= len
+            gpos[i] = x + o
+        else
+            error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
+        end
+    end
+    gpos
+end
+
+@time genopos(left_pos, chr, info)
+@time genopos(left_pos, chr, info)
+@time genopos(left_pos, chr, info);
+@time chrpos(x, info);
+Profile.clear())
+Profile.clear()
+@profile genopos(left_pos, chr, info); Profile.print()
+exit()
