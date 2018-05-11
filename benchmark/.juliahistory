@@ -181,3 +181,432 @@ Profile.clear())
 Profile.clear()
 @profile genopos(left_pos, chr, info); Profile.print()
 exit()
+issorted
+methods(issorted)
+timings
+timings
+bdf = timings
+Pkg.add("CSV")
+?write
+?CSV.write
+?CSV.write
+?CSV.write
+Profile.clear()
+@profile convert(DataFrame, gr); Profile.print()
+convert(DataFrame, gr)
+Profile.clear()
+@profile convert(DataFrame, gr); Profile.print()
+import Base.convert
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    #return( DataFrame( [c_res,s_res,e_res,strands(x)], [:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( [c_res,s_res,e_res], [:Chromosome, :Start, :End] ) )
+end
+
+Profile.clear()
+@profile convert(DataFrame, gr); Profile.print()
+## Conversions
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    #return( DataFrame( [c_res,s_res,e_res,strands(x)], [:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( [s_res,e_res], [:Start, :End] ) )
+end
+
+Profile.clear; convert(DataFrame, gr); Profile.print(); @profile convert(DataFrame, gr); Profile.print()
+Profile.print()
+Profile.clear()
+Profile.clear; convert(DataFrame, gr); @profile convert(DataFrame, gr); Profile.print()
+ convert(DataFrame, gr); Profile.print()
+@
+p
+@time convert(DataFrame, gr);
+
+## Conversions
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    #return( DataFrame( [c_res,s_res,e_res,strands(x)], [:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( [s_res,e_res, strands(x)], [:Start, :End, :Strand] ) )
+end
+
+@time convert(DataFrame, gr);
+@time convert(DataFrame, gr);
+strands(gr)
+
+## Conversions
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    #return( DataFrame( [c_res,s_res,e_res,strands(x)], [:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( [s_res,e_res, _strands(x)], [:Start, :End, :Strand] ) )
+end
+
+@time convert(DataFrame, gr[1:4,]);
+@time convert(DataFrame, gr);
+
+## Conversions
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    #return( DataFrame( [c_res,s_res,e_res,strands(x)], [:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( Start = s_res, End = e_res Strand = _strands(x) )
+end
+
+
+## Conversions
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    #return( DataFrame( [c_res,s_res,e_res,strands(x)], [:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( Start = s_res, End = e_res Strand = _strands(x) ) )
+end
+
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    #return( DataFrame( [c_res,s_res,e_res,strands(x)], [:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( Start = s_res, End = e_res Strand = _strands(x) ) )
+end
+
+
+#function Base.setindex!(x::GenomicRanges, value::GenomicRanges, i::AbstractArray)
+#
+#end
+## Conversions
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    #return( DataFrame( [c_res,s_res,e_res,strands(x)], [:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( Start = s_res, End = e_res Strand = _strands(x) ) )
+end
+
+#end
+## Conversions
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    #return( DataFrame( [c_res,s_res,e_res,strands(x)], [:Chromosome, :Start, :End, :Strand] ) )
+    return( DataFrame( Start = s_res, End = e_res, Strand = _strands(x) ) )
+end
+
+convert(DataFrame, gr[1:4])
+@time convert(DataFrame, gr);
+#end
+## Conversions
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    return( DataFrame( Chromosome = c_res, Start = s_res, End = e_res, Strand = _strands(x) ) )
+end
+
+convert(DataFrame, gr[1:4])
+@time convert(DataFrame, gr);
+@time convert(DataFrame, gr);
+Profile.clear()
+@profile convert(DataFrame, gr);
+Profile.print()
+
+## Conversions
+function Base.convert(::Type{DataFrame}, x::GenomicRanges)
+    n = length(x)
+    chrs = chr_names(x)
+    c_res = similar(chrs, n)
+    s_res = similar(x.starts, n)
+    e_res = similar(x.ends, n)
+    ends = chr_ends(x.chrinfo)
+    offsets = chr_offsets(x.chrinfo)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for (spos,epos) in eachrange(x)
+        if spos > e || spos <= o
+            r = 1
+            while spos > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        s_res[i] = spos - o
+        e_res[i] = epos - o
+        i = i + 1
+    end
+    DataFrame( Chromosome = c_res, Start = s_res, End = e_res, Strand = _strands(x) )
+end
+
+convert(DataFrame, gr[1:4])
+function Base.convert(::Type{DataFrame}, x::GenomicPositions)
+    chrs = chr_names(x)
+    n = length(x)
+    c_res = similar(chrs, n)
+    p_res = similar(_genostarts(x), n)
+    ends = chr_ends(x)
+    offsets = chr_offsets(x)
+    i = r = 1
+    e = ends[r]
+    o = offsets[r]
+    c = chrs[r]
+    @inbounds for g in _genostarts(x)
+        if g > e || g <= o
+            r = 1
+            while g > ends[r]
+                r = r + 1
+            end
+            e = ends[r]
+            o = offsets[r]
+            c = chrs[r]
+        end
+        c_res[i] = c
+        p_res[i] = g - o
+        i = i + 1
+    end
+    DataFrame( Chromosome = c_res, Position = p_res )
+end
+
+convert(DataFrame, gpos)
+exit()
