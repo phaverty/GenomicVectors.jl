@@ -250,17 +250,17 @@ function disjoin(gr::GenomicRanges)
     current_end = next_start = 0
     i = 1
     while i < n
-        println("i is ", i, " and n is ", n)
+#        println("i is ", i, " and n is ", n)
         next_start = _genostarts(out)[i + 1]
         current_end = _genoends(out)[i]
         if next_start <= current_end
-            println("splitting ...")
+#            println("splitting ...")
             insert!(_genoends(out), i, next_start - 1)
             insert!(_genostarts(out), i + 2, current_end + 1)
             insert!(_strands(out), i, STRAND_NA)
             n = n + 1
-        else
-            println("NOT splitting ...")
+#        else
+#            println("NOT splitting ...")
         end
         i = i + 1
     end

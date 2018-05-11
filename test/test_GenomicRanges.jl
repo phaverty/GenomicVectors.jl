@@ -213,7 +213,6 @@ e = [150, 250, 300, 600]
 d = [STRAND_NA,STRAND_NA,STRAND_NA,STRAND_NA]
 x = GenomicRanges(chrs,s,e,d,chrinfo)
 
-
 chrs = ["chr1","chr1","chr1","chr1","chr1","chr1","chr1"]
 s = [100, 200, 300, 450, 700, 750, 800]
 e = [500, 250, 400, 550, 775, 825, 850]

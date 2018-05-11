@@ -1,0 +1,18 @@
+@code_warntype starts(gr)
+@code_lowered starts(gr)
+starts(gr)
+genostarts(gr)
+@time coverage(gr)
+@time gaps(gr)
+@time gaps(gr);
+@time disjoin(gr);
+@time collapse(gr);
+collapse(gr)
+length()
+length(collapse(gr))
+issorted(gr)
+@time issorted(gr)
+@time sort(gr)
+@time sort(gr)
+@time sort(gr);
+timings
