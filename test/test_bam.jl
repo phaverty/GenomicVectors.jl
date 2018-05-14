@@ -4,7 +4,7 @@ using GenomicVectors
 using Base.Test
 using BioAlignments
 
-#@testset begin
+@testset begin
 
     bam_file = "GSE25840_GSM424320_GM06985_gencode_spliced.head.bam"
     #bam_path = joinpath(Pkg.dir("BioFmtSpecimens"),"BAM", bam_file)
@@ -19,6 +19,6 @@ using BioAlignments
 
     close(reader)
 
-#end # testset
+end # testset
 
 end # module
