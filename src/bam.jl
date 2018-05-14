@@ -26,3 +26,14 @@ function GenomicRanges(genome_name, reader::BioAlignments.BAM.Reader)
     end
     GenomicRanges(chr, left_pos, right_pos, info)
 end
+
+
+function strand(record::BAM.Record)
+    ## FIXME: push up to BioAligments
+    if BAM.flag(record) & 0x10 == 0
+        s = STRAND_POS
+    else
+        s = STRAND_NEG
+    end
+    s
+end

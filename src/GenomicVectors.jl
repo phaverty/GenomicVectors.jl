@@ -43,6 +43,9 @@ export rowindex, table
 # RCall
 import RCall: sexp, rcopy, RClass, rcopytype, @R_str, S4Sxp
 
+# BAM
+export strand
+
 ### Includes
 include("GenomeInfo_type.jl")
 include("utils.jl")
