@@ -1,4 +1,5 @@
 using GenomicVectors
+using GenomicFeatures
 using BioAlignments
 using DataFrames
 using CSV
