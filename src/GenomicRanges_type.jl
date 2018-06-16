@@ -225,7 +225,11 @@ Merges overlapping ranges
 function collapse(gr::GenomicRanges)
     out = similar(gr)
     out.strands[:] = STRAND_NA # move me to GenomicFeatures.similar
-    x = sort(gr)
+    if issorted(gr)
+        x = gr
+    else
+        x = sort(gr)
+    end
     current_end = 0
     i = 0
     for (s,e) in eachrange(x)
