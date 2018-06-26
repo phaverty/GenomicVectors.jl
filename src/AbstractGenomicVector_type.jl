@@ -190,9 +190,13 @@ set of ranges in `gr`.
 """
 function coverage(gr::AbstractGenomicVector)
     out = RLEVector(0, last(chr_ends(gr)))
-    for (s,e) in eachrange(gr)
+    @inbounds for (s,e) in eachrange(gr)
         r = s:e
-        out[r] = out[r] .+ 1
+        x = out[r]
+        for i in 1:length(x.runvalues)
+            x.runvalues[i] = x.runvalues[i] + 1
+        end
+        out[r] = x
     end
     out
 end

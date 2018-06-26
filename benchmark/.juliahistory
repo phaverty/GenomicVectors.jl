@@ -1,50 +1,3 @@
-    offsets = chr_offsets(chrinfo)
-    lengths = chr_lengths(chrinfo)
-    gpos = similar(offsets, length(positions))
-    prev_chr = chromosomes[1]
-    len = lengths[prev_chr]
-    o = offsets[prev_chr]
-    @inbounds for i in 1:length(positions)
-        chr = chromosomes[i]
-        pos = positions[i]
-        if chr != prev_chr
-            prev_chr = chr
-            len = lengths[prev_chr]
-            o = offsets[prev_chr]
-        end
-        if 1 <= x <= len
-            gpos[i] = x + o
-        else
-            error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
-        end
-    end
-    gpos
-end
-
-@time genopos(left_pos, chr, info);
-@time genopos(left_pos, chr, info)
-
-function genopos(positions, chromosomes, chrinfo::GenomeInfo)
-    if length(positions) != length(chromosomes)
-        throw(ArgumentError("Arguments positions and chromosomes must have the same length."))
-    end
-    offsets = chr_offsets(chrinfo)
-    lengths = chr_lengths(chrinfo)
-    gpos = similar(offsets, length(positions))
-    prev_chr = chromosomes[1]
-    len = lengths[prev_chr]
-    o = offsets[prev_chr]
-    @inbounds for i in 1:length(positions)
-        chr = chromosomes[i]
-        x = positions[i]
-        if chr != prev_chr
-            prev_chr = chr
-            len = lengths[prev_chr]
-            o = offsets[prev_chr]
-        end
-        if 1 <= x <= len
-            gpos[i] = x + o
-        else
             error("Position $x is outside the bounds of chromosome $chr (length $(lengths[prev_chr])).")
         end
     end
@@ -498,3 +451,50 @@ bdf[:,10:end]
 @timeit collapse(gr)
 @timeit collapse(gr)
 exit()
+@time coverage(gr)
+@time coverage(gr)
+Profile.clear()
+@profile coverage(gr); Profile.print()
+@time coverage(gr)
+@time coverage(gr)
+x
+x
+x
+exit()
+exit()
+@time coverage(gr)
+@time coverage(gr)
+Profile.clear()
+@profile coverage(gr); Profile.print()
+bdf
+@time coverage(gr)
+@time coverage(gr)
+Profile.clear(); @profile for i in 1:10 sort(gr) end ; Profile.print()
+@time sort(gr)
+Profile.clear(); @profile coverage(gr); Profile.print()
+exit()
+@time coverage(gr)
+coverage(gr)
+coverage(gr)
+
+
+@time coverage(gr)
+Profile.clear(); @profile coverage(gr); Profile.print()
+import RLEVectors.ree!
+exit()
+@time coverage(gr)
+bdf
+@timeit coverage(gr)
+@timeit coverage(gr)
+@timeit coverage(gr)
+@timeit coverage(gr)
+@timeit coverage(gr)
+@timeit coverage(gr)
+bdf
+exit()
+@time coverage(gr)
+102 + 7\8
+102 + 78
+Profile.clear; @profile coverage(gr); Profile.print()
+15 / 50
+@time coverage(gr)

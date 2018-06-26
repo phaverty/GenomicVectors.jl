@@ -23,6 +23,7 @@ bam_path = joinpath(Pkg.dir("GenomicVectors"),"BAM", bam_file)
 #bam_path = "/Users/phaverty/R1039_LIB3086_SAM636333_L4_NXG2275.analyzed.bam"
 reader = open(BAM.Reader, bam_path)
 gr = GenomicRanges("hg19", reader)
+
 timings = DataFrame()
 timings[:language] = "julia"
 timings[:language_version] = VERSION
