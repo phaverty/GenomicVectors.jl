@@ -42,7 +42,7 @@
 An AbstractGenomicVector is a Vector that describes positions or ranges in a single genome, in an arbitrary order. An AbstractGenomicVector must implement the GenomeInfo and GenoPos Interfaces. Sorting is by chromosome then by nucleotide position.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/AbstractGenomicVector_type.jl#L5-L10' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/AbstractGenomicVector_type.jl#L5-L10' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomeInfo' href='#GenomicVectors.GenomeInfo'>#</a>
 **`GenomicVectors.GenomeInfo`** &mdash; *Type*.
@@ -68,7 +68,7 @@ chrinfo[2] # 5e5
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/GenomeInfo_type.jl#L5-L23' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/GenomeInfo_type.jl#L5-L23' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomicPositions' href='#GenomicVectors.GenomicPositions'>#</a>
 **`GenomicVectors.GenomicPositions`** &mdash; *Type*.
@@ -97,7 +97,7 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/GenomicPositions_type.jl#L5-L27' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/GenomicPositions_type.jl#L5-L27' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomicRanges' href='#GenomicVectors.GenomicRanges'>#</a>
 **`GenomicVectors.GenomicRanges`** &mdash; *Type*.
@@ -127,7 +127,7 @@ Getting/setting by a scalar gives/takes a GenomicFeatures.Interval. The leftposi
 The `each` function produces an iterator of (start,end) two-tuples in genome location units. This is use for many internal functions, like sorting. This is intentionally similar to `RLEVectors.each`.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/GenomicRanges_type.jl#L5-L35' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/GenomicRanges_type.jl#L5-L35' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.GenomicDataFrame' href='#GenomicVectors.GenomicDataFrame'>#</a>
 **`GenomicVectors.GenomicDataFrame`** &mdash; *Type*.
@@ -151,7 +151,7 @@ A DataFrame-like class with a GenomicVector as an index.
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/GenomicDataFrame_type.jl#L5-L20' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/GenomicDataFrame_type.jl#L5-L20' class='documenter-source'>source</a><br>
 
 
 <a id='Interfaces-and-Accessing-position-info-1'></a>
@@ -239,7 +239,7 @@ genopos(chrpos, chromosomes, chrinfo)
 Given chromosome and chromosome position information and a description of the chromosomes (a GenoPos object), calculate the corresponding positions in the linear genome.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/AbstractGenomicVector_type.jl#L27-L73' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/AbstractGenomicVector_type.jl#L27-L73' class='documenter-source'>source</a><br>
 
 
 <a id='Modifying-positions-1'></a>
@@ -265,7 +265,7 @@ slide(g::AbstractGenomicVector, x::Integer)
 Slide locations to the left or right on the genome. (Use a negative `x` to go left.) Locations may not be slid off the end of a chromosome (an error is generated).
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/GenomicPositions_type.jl#L105-L114' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/GenomicPositions_type.jl#L106-L115' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.collapse' href='#GenomicVectors.collapse'>#</a>
 **`GenomicVectors.collapse`** &mdash; *Function*.
@@ -275,7 +275,7 @@ Slide locations to the left or right on the genome. (Use a negative `x` to go le
 Merges overlapping ranges
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/GenomicRanges_type.jl#L222-L224' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/GenomicRanges_type.jl#L222-L224' class='documenter-source'>source</a><br>
 
 <a id='RLEVectors.disjoin' href='#RLEVectors.disjoin'>#</a>
 **`RLEVectors.disjoin`** &mdash; *Function*.
@@ -285,7 +285,7 @@ Merges overlapping ranges
 Splits overlapping ranges to create a disjoint set of ranges
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/GenomicRanges_type.jl#L244-L246' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/GenomicRanges_type.jl#L248-L250' class='documenter-source'>source</a><br>
 
 <a id='GenomicVectors.gaps' href='#GenomicVectors.gaps'>#</a>
 **`GenomicVectors.gaps`** &mdash; *Function*.
@@ -295,17 +295,38 @@ Splits overlapping ranges to create a disjoint set of ranges
 Returns GenomicRanges of regions between collapsed input ranges, e.g. introns
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/GenomicRanges_type.jl#L270-L272' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/GenomicRanges_type.jl#L274-L276' class='documenter-source'>source</a><br>
 
 <a id='GenomicFeatures.coverage' href='#GenomicFeatures.coverage'>#</a>
 **`GenomicFeatures.coverage`** &mdash; *Function*.
 
 
 
+```
+coverage(gr::AbstractGenomicVector)
+```
+
 Returns RLE giving counts of ranges in `gr` overlapping each index spanned by the full set of ranges in `gr`.
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/AbstractGenomicVector_type.jl#L187-L190' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/AbstractGenomicVector_type.jl#L187-L192' class='documenter-source'>source</a><br>
+
+
+```
+coverage(reader::BioAlignments.BAM.Reader)
+```
+
+Coverage may be calculated directly from a BAM file.
+
+```
+bam_path = joinpath(Pkg.dir("GenomicVectors"),"BAM", bam_file)
+reader = open(BAM.Reader, bam_path)
+coverage(reader)
+close(reader)
+```
+
+
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/bam.jl#L42-L51' class='documenter-source'>source</a><br>
 
 
 <a id='Querying-positions-1'></a>
@@ -353,7 +374,7 @@ setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 ```
 
 
-<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/950d9a0976c188b3f3a71d678ed30af28af72b14/src/AbstractGenomicVector_type.jl#L151-L181' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/phaverty/GenomicVectors.jl/blob/02464382c98737757c75db95944c4f6455e0a32a/src/AbstractGenomicVector_type.jl#L151-L181' class='documenter-source'>source</a><br>
 
 
 <a id='A-round-trip-to-R-1'></a>
@@ -394,5 +415,20 @@ gr = GenomicRanges(s,e,chrinfo)
 rle = RLEVector([2,3,9,1,0],cumsum([6,6,6,6,6]))
 collect(rle[gr])
 map(mean, rle[gr])
+
+# Working with BAM files
+
+One can create GenomicRanges from a BAM file. Additionally, coverage can be calculated
+directly from a BAM file.
+
+```
+
+
+julia bam_path = joinpath(Pkg.dir("GenomicVectors"),"BAM", bam_file) reader = open(BAM.Reader, bam_path) gr = GenomicRanges("hg19", reader) c1 = coverage(gr) reader = open(BAM.Reader, bam_path) c2 = coverage(reader) c1 == c2
+
+
+```
+
+
 ```
 

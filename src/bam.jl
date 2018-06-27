@@ -38,3 +38,37 @@ function strand(record::BAM.Record)
     end
     s
 end
+
+"""
+    coverage(reader::BioAlignments.BAM.Reader)
+
+Coverage may be calculated directly from a BAM file.
+
+    bam_path = joinpath(Pkg.dir("GenomicVectors"),"BAM", bam_file)
+    reader = open(BAM.Reader, bam_path)
+    coverage(reader)
+    close(reader)
+"""
+function coverage(reader::BioAlignments.BAM.Reader)
+    # FIXME: factor out code shared with coverage(GenomicRanges)
+    chrinfo = GenomeInfo("temp", reader)
+    offsets = chr_offsets(chrinfo)
+    out = RLEVector(0, last(chr_ends(chrinfo)))
+    record = BAM.Record()
+    while !eof(reader)
+        read!(reader, record)
+        if BAM.ismapped(record)
+            chr = BAM.refname(record)
+            offset = offsets[chr] # fixme
+            s = leftposition(record) + offset
+            e = rightposition(record) + offset
+            r = s:e
+            x = out[r]
+            for i in 1:length(x.runvalues)
+                @inbounds x.runvalues[i] = x.runvalues[i] + 1
+            end
+            out[r] = x
+        end
+        end
+    out
+end

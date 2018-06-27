@@ -20,7 +20,7 @@ end
 
 bam_file = "GSE25840_GSM424320_GM06985_gencode_spliced.head.bam"
 bam_path = joinpath(Pkg.dir("GenomicVectors"),"BAM", bam_file)
-#bam_path = "/Users/phaverty/R1039_LIB3086_SAM636333_L4_NXG2275.analyzed.bam"
+bam_path = "/Users/phaverty/R1039_LIB3086_SAM636333_L4_NXG2275.analyzed.bam"
 reader = open(BAM.Reader, bam_path)
 gr = GenomicRanges("hg19", reader)
 

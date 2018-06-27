@@ -19,6 +19,16 @@ using BioAlignments
 
     close(reader)
 
+    bam_path = joinpath(Pkg.dir("GenomicVectors"),"BAM", bam_file)
+    reader = open(BAM.Reader, bam_path)
+    gr = GenomicRanges("hg19", reader)
+    close(reader)
+    c1 = coverage(gr)
+    reader = open(BAM.Reader, bam_path)
+    c2 = coverage(reader)
+    close(reader)
+    @test c1 == c2
+
 end # testset
 
 end # module

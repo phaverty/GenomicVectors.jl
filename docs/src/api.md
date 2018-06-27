@@ -70,4 +70,21 @@ gr = GenomicRanges(s,e,chrinfo)
 rle = RLEVector([2,3,9,1,0],cumsum([6,6,6,6,6]))
 collect(rle[gr])
 map(mean, rle[gr])
+
+# Working with BAM files
+
+One can create GenomicRanges from a BAM file. Additionally, coverage can be calculated
+directly from a BAM file.
+
+```julia
+bam_path = joinpath(Pkg.dir("GenomicVectors"),"BAM", bam_file)
+reader = open(BAM.Reader, bam_path)
+gr = GenomicRanges("hg19", reader)
+c1 = coverage(gr)
+reader = open(BAM.Reader, bam_path)
+c2 = coverage(reader)
+c1 == c2
+```
+
+
 ```

@@ -9,7 +9,7 @@
 ## Features
 
 
-  * [ ] `show` for GenomicRanges should covert genoPos to chrPos
+  * [x] `show` for GenomicRanges should covert genoPos to chrPos
   * [x] as.string for GenomicPositions
   * [x] as.string for GenomicRanges
   * [x] get both chr and pos for GenomicPositions

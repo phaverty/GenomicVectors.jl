@@ -185,6 +185,8 @@ findoverlaps, findin, indexin, in, intersect, setdiff, nearest, overlap_table
 
 # Summarizing Ranges
 """
+    coverage(gr::AbstractGenomicVector)
+
 Returns RLE giving counts of ranges in `gr` overlapping each index spanned by the full
 set of ranges in `gr`.
 """
@@ -194,7 +196,7 @@ function coverage(gr::AbstractGenomicVector)
         r = s:e
         x = out[r]
         for i in 1:length(x.runvalues)
-            x.runvalues[i] = x.runvalues[i] + 1
+            @inbounds x.runvalues[i] = x.runvalues[i] + 1
         end
         out[r] = x
     end
