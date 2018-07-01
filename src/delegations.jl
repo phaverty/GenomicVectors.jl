@@ -62,4 +62,4 @@ end
 ### maximum, maximum!, minimum, minimum!, extrema, findmax, findmin, maxabs, maxabs!, minabs, minabs!, sum, count, foreach, map, etc.
 ### filter(function, x::GenomicPositions, filter!(function, x::GenomicPositions)
 ### push!, pop!
-### splice!, deleteat!, insert!, shift!, unshift!, pop!, push!, intersect!, setdiff!
+### splice!, deleteat!, insert!, popfirst!, pushfirst!, pop!, push!, intersect!, setdiff!
