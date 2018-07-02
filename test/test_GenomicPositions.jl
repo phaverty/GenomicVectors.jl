@@ -1,7 +1,7 @@
 module TestGenomicPositions
 
 using GenomicVectors
-using Base.Test
+using Test
 using RLEVectors
 using DataFrames
 using GenomicFeatures

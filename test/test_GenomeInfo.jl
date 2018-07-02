@@ -1,7 +1,7 @@
 module TestGenomeInfo
 
 using GenomicVectors
-using Base.Test
+using Test
 using GenomicFeatures
 
 @testset begin

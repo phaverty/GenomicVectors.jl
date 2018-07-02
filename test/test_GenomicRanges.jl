@@ -1,7 +1,7 @@
 module TestGenomicRanges
 
 using GenomicVectors
-using Base.Test
+using Test
 using GenomicFeatures
 using DataFrames
 using RLEVectors
