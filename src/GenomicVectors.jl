@@ -1,5 +1,3 @@
-__precompile__(true)
-
 module GenomicVectors
 
 # Re-implementation of the GenomicRanges type from Bioconductor's GenomicRanges package by H. Pages, P. Aboyoun and M.Lawrence
