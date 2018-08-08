@@ -32,8 +32,8 @@ struct GenomicPositions{T1 <: Integer} <: AbstractGenomicVector{T1}
         new(genopos,chrinfo)
     end
 end
-GenomicPositions{T1 <: Integer}(genopos::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicPositions{T1}(genopos, chrinfo)
-GenomicPositions{T1 <: Integer}(pos::Vector{T1}, chromosomes::Vector{String}, chrinfo::GenomeInfo{T1}) = GenomicPositions{T1}(genopos(pos, chromosomes, chrinfo),chrinfo)
+GenomicPositions(genopos::Vector{T1}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicPositions{T1}(genopos, chrinfo)
+GenomicPositions(pos::Vector{T1}, chromosomes::Vector{String}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicPositions{T1}(genopos(pos, chromosomes, chrinfo),chrinfo)
 
 ## GenomeInfo Interface
 chr_info(x::GenomicPositions) = x.chrinfo
@@ -153,7 +153,7 @@ Base.in(query::GenomicPositions, target::GenomicPositions, exact::Bool=true) = [
 For each `query` finds index in `target` that is nearest on the same chromosome.
 If no match on the same chromosome exists, the index will be 0.
 """
-function nearest{T}(query::GenomicPositions{T}, target::GenomicPositions{T})
+function nearest(query::GenomicPositions{T}, target::GenomicPositions{T}) where T
     same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
     target_gpos = target.genopos
     target_chrs = chromosomes(target)

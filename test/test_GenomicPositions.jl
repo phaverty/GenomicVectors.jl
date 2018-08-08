@@ -1,7 +1,7 @@
 module TestGenomicPositions
 
 using GenomicVectors
-using Base.Test
+using Test
 using RLEVectors
 using DataFrames
 using GenomicFeatures
@@ -39,7 +39,7 @@ y = copy(x)
 slide!(y, 5)
 @test !(y == x)
 io = IOBuffer()
-@test typeof(show(io,x)) == Void # At least test that show does not give error
+@test typeof(show(io,x)) == Nothing # At least test that show does not give error
 
 # resize!
 x = GenomicPositions(pos,chrs,chrinfo)
@@ -148,7 +148,7 @@ chrs = ["chr2","chr2","chr2","chrX"]
 x = GenomicPositions([5,20,30,5],chrs,chrinfo)
 y = GenomicPositions([30,5,21,1000],chrs,chrinfo)
 @test indexin(x,y) == [2,0,1,0]
-@test findin(x,y) == [1,3]
+@test findall(in(y), x) == [1,3]
 
 ## Array operations
 # size, length, endof, empty!, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!, setdiff!, symdiff!, intersect!

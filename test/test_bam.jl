@@ -1,7 +1,7 @@
 module TestBam
 
 using GenomicVectors
-using Base.Test
+using Test
 using BioAlignments
 
 @testset begin

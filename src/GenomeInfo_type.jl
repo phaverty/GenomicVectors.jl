@@ -31,7 +31,7 @@ struct GenomeInfo{T1<:Integer}
     end
 end
 
-function GenomeInfo{T1<:Integer}(name::String, chromosomes::Vector{String}, lengths::Vector{T1})
+function GenomeInfo(name::String, chromosomes::Vector{String}, lengths::Vector{T1}) where T1<:Integer
     GenomeInfo{T1}(name, chromosomes, lengths)
 end
 

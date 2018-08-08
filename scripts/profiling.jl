@@ -102,7 +102,7 @@ function genopos3(positions, chromosomes, chrinfo::GenomeInfo)
     chrnames = chr_names(chrinfo)
     gpos = similar(offsets, length(positions))
     prev_chr = chromosomes[1]
-    prev_chrind = findin([prev_chr],chrnames)[1]
+    prev_chrind = findall(in(chrnames), [prev_chr])[1]
     len = lengths[prev_chrind]
     o = offsets[prev_chrind]
     @inbounds for (i,x,chr) in zip(1:length(positions), positions, chromosomes)

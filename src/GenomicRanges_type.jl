@@ -53,14 +53,14 @@ struct GenomicRanges{T1 <: Integer} <: AbstractGenomicVector{T1}
 end
 
 ## Create with specified strands
-GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, strands::Vector{Char}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo),strands,chrinfo)
-GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, strands::Vector{Strand}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo),strands,chrinfo)
-GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, strands::Vector{Char}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,strands,chrinfo)
-GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, strands::Vector{Strand}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,strands,chrinfo)
+GenomicRanges(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, strands::Vector{Char}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo),strands,chrinfo)
+GenomicRanges(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, strands::Vector{Strand}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo),strands,chrinfo)
+GenomicRanges(genostarts::Vector{T1}, genoends::Vector{T1}, strands::Vector{Char}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicRanges{T1}(genostarts,genoends,strands,chrinfo)
+GenomicRanges(genostarts::Vector{T1}, genoends::Vector{T1}, strands::Vector{Strand}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicRanges{T1}(genostarts,genoends,strands,chrinfo)
 
 ## Create with default strands
-GenomicRanges{T1 <: Integer}(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo), nothing, chrinfo)
-GenomicRanges{T1 <: Integer}(genostarts::Vector{T1}, genoends::Vector{T1}, chrinfo::GenomeInfo{T1}) = GenomicRanges{T1}(genostarts,genoends,nothing,chrinfo)
+GenomicRanges(chrs::Vector{String}, starts::Vector{T1}, ends::Vector{T1}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicRanges{T1}(genopos(starts,chrs,chrinfo), genopos(ends,chrs,chrinfo), nothing, chrinfo)
+GenomicRanges(genostarts::Vector{T1}, genoends::Vector{T1}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicRanges{T1}(genostarts,genoends,nothing,chrinfo)
 
 ## For GenomeInfo Interface
 chr_info(x::GenomicRanges) = x.chrinfo

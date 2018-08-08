@@ -1,7 +1,7 @@
 module TestGenomicRanges
 
 using GenomicVectors
-using Base.Test
+using Test
 using GenomicFeatures
 using DataFrames
 using RLEVectors
@@ -16,7 +16,7 @@ e = [120, 240, 350, 455]
 gr = GenomicRanges(chrs,s,e,chrinfo)
 @test isa(gr,GenomicRanges)
 io = IOBuffer()
-@test typeof(show(io,gr)) == Void # At least test that show does not give error
+@test typeof(show(io,gr)) == Nothing # At least test that show does not give error
 
 @test_throws ArgumentError GenomicRanges(chrs,s,e[1:2],chrinfo)
 @test_throws ArgumentError GenomicRanges(chrs,s,e,['.','.'],chrinfo)
@@ -114,7 +114,7 @@ chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 gr1 = GenomicRanges( [30123,40456,40000],[30130,40500,40100],chrinfo )
 gr2 = GenomicRanges( [100,30123,40000],[200,30130,40200],chrinfo )
 @test indexin(gr1,gr2) == [2,0,0]
-@test findin(gr1,gr2) == [1]
+@test findall(in(gr2), gr1) == [1]
 @test intersect(gr1,gr2) == gr1[ [1] ]
 @test setdiff(gr1,gr2) == gr1[ [2,3] ]
 @test in(gr1,gr2,true) == BitArray([ true, false, false ])

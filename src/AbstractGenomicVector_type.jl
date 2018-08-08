@@ -95,7 +95,7 @@ end
 
 ## Indexing
 Base.IndexStyle(::Type{<:AbstractGenomicVector}) = IndexLinear()
-Base.getindex(x::AbstractGenomicVector,i::AbstractGenomicVector) = getindex(x, findin(y,x))
+Base.getindex(x::AbstractGenomicVector,i::AbstractGenomicVector) = getindex(x, findall(in(x), y))
 
 ## Searching
 _exact_overlap(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
@@ -114,7 +114,7 @@ end
 
 function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y,exact)
-    inds = Vector{Int64}(0)
+    inds = Vector{Int64}()
     for (el_a,el_b) in ol
         push!(inds,metadata(el_a))
     end
@@ -210,7 +210,7 @@ AbstractGenomicVector. The vector must span the full length of the genome
 specified by the chr_info of the AbstractGenomicVector. This is useful for summarizing
 an RLEVector of data (say DNA copy number) by genome regions (e.g. genes).
 """
-immutable GenomicVectorIterator{T1<:Integer,T2<:AbstractVector}
+struct GenomicVectorIterator{T1<:Integer,T2<:AbstractVector}
     genostarts::Vector{T1}
     genoends::Vector{T1}
     v::T2
