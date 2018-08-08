@@ -14,7 +14,7 @@ function GenomicRanges(genome_name, reader::BioAlignments.BAM.Reader)
     chr = String[]
     left_pos = Int64[]
     right_pos = Int64[]
-    strand_pos = Vector{Strand}(0)
+    strand_pos = Vector{Strand}()
     record = BAM.Record()
     ## FIXME: convert to genopos in the loop?
     while !eof(reader)

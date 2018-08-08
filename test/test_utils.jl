@@ -1,7 +1,7 @@
 module TestUtils
 
 using GenomicVectors
-using Base.Test
+using Test
 
 @testset begin
 
