@@ -3,7 +3,6 @@ module GenomicVectors
 # Re-implementation of the GenomicRanges type from Bioconductor's GenomicRanges package by H. Pages, P. Aboyoun and M.Lawrence
 
 using RLEVectors
-using AxisArrays
 using GenomicFeatures
 using DataFrames
 using BioAlignments
