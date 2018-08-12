@@ -24,13 +24,13 @@ chrinfo[2] # 5e5
 struct GenomeInfo{T <: Integer}
     name::Symbol
     chr_ends::NamedTuple
-    function GenomeInfo2{T}(name::String, chromosomes::Vector{String}, lengths::Vector{T}) where T <: Integer
+    function GenomeInfo{T}(name::String, chromosomes::Vector{String}, lengths::Vector{T}) where T <: Integer
         n = Symbol(name)
         length(chromosomes) != length(lengths) && throw(ArgumentError("'chromosomes' and 'lengths' must be the same length."))
         c = Tuple( Symbol(x) for x in chrs )
         e = Tuple( x for x in cumsum(ends) )
         nt = NamedTuple{c}(e)
-        new(n, nt)
+        new(n,nt)
     end
 end
 #struct GenomeInfo{T1<:Integer}
