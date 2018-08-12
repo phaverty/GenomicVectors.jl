@@ -22,26 +22,19 @@ chrinfo[2] # 5e5
 ```
 """
 struct GenomeInfo{T <: Integer}
-    name::Symbol
+    #name::Symbol
+    name::String
     chr_ends::NamedTuple
     function GenomeInfo{T}(name::String, chromosomes::Vector{String}, lengths::Vector{T}) where T <: Integer
-        n = Symbol(name)
+        #        n = Symbol(name)
+        n = name
         length(chromosomes) != length(lengths) && throw(ArgumentError("'chromosomes' and 'lengths' must be the same length."))
         c = Tuple( Symbol(x) for x in chrs )
-        e = Tuple( x for x in cumsum(ends) )
+        e = Tuple( x for x in cumsum(lengths) )
         nt = NamedTuple{c}(e)
         new(n,nt)
     end
 end
-#struct GenomeInfo{T1<:Integer}
-#    name::String
-#    chr_ends::AxisArray{T1,1,Vector{Int64},Tuple{AxisArrays.Axis{:chromosome,Array{String,1}}}}
-#    function GenomeInfo{T1}(name::String, chromosomes::Vector{String}, lengths::Vector{T1}) where T1 <: Integer
-#        length(chromosomes) != length(lengths) && throw(ArgumentError("'chromosomes' and 'lengths' must be the same length."))
-#        ends = AxisArray(cumsum(lengths), Axis{:chromosome}(chromosomes))
-#        new(name, ends)
-#    end
-#end
 
 function GenomeInfo(name::String, chromosomes::Vector{String}, lengths::Vector{T1}) where T1<:Integer
     GenomeInfo{T1}(name, chromosomes, lengths)
@@ -60,7 +53,7 @@ end
 genome(x::GenomeInfo) =  x.name
 #chr_names(x::GenomeInfo) = axisvalues(x.chr_ends)[1]
 chr_names(x::GenomeInfo) = keys(x.chr_ends)
-chr_ends(x::GenomeInfo) = copy(x.chr_ends)
+chr_ends(x::GenomeInfo) = collect(x.chr_ends)
 
 function chr_offsets(x::GenomeInfo)
     ends = chr_ends(x)
