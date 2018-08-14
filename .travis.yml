@@ -10,7 +10,7 @@ julia:
 
 notifications:
   email: true
-
+n
 before_install:
   # linux
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9; fi
@@ -26,9 +26,9 @@ before_install:
 
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia --check-bounds=yes -e 'Pkg.clone(pwd()); Pkg.build("GenomicVectors"); Pkg.test("GenomicVectors"; coverage=true)'
+  - julia --check-bounds=yes -e 'using Pkg; Pkg.clone(pwd()); Pkg.build("GenomicVectors"); Pkg.test("GenomicVectors"; coverage=true)'
 
 after_success:
-  - julia -e 'cd(Pkg.dir("GenomicVectors")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
-  - julia -e 'Pkg.add("Documenter")'
-  - julia -e 'cd(Pkg.dir("GenomicVectors")); include(joinpath("docs", "make.jl"))'
+  - julia -e 'using Pkg; cd(Pkg.dir("GenomicVectors")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  - julia -e 'using Pkg; Pkg.add("Documenter")'
+  - julia -e 'using Pkg; cd(Pkg.dir("GenomicVectors")); include(joinpath("docs", "make.jl"))'
