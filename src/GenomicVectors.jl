@@ -1,6 +1,6 @@
 module GenomicVectors
 
-# Re-implementation of the GenomicRanges type from Bioconductor's GenomicRanges package by H. Pages, P. Aboyoun and M.Lawrence
+# Re-implementation of the GenomicRanges type from Bioconductor's GenomicRanges package by H. Pages, P. Aboyoun and M. Lawrence
 
 using RLEVectors
 using GenomicFeatures

@@ -21,8 +21,8 @@ A DataFrame-like class with a GenomicVector as an index.
 struct GenomicDataFrame{T1 <: AbstractGenomicVector, T2 <: AbstractDataFrame} <: AbstractDataFrame
     rowindex::T1
     table::T2
-function GenomicDataFrame{T1,T2}(rowindex,table) where {T1 <: AbstractGenomicVector,T2 <: AbstractDataFrame}
-    nrow = size(table,1)
+    function GenomicDataFrame{T1,T2}(rowindex,table) where {T1 <: AbstractGenomicVector,T2 <: AbstractDataFrame}
+        nrow = size(table,1)
         if nrow != 0 && length(rowindex) != nrow
             throw(ArgumentError("GenomicDataFrame requires that `length(rowindex) == size(table,1)`"))
         end
