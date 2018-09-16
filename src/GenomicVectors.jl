@@ -6,7 +6,7 @@ using RLEVectors
 using GenomicFeatures
 using DataFrames
 using BioAlignments
-#using RCall
+using RCall
 
 # utils
 export genopos
@@ -38,7 +38,7 @@ import Base: similar, copy, unique, size, length, endof, issubset, vcat, union, 
 export rowindex, table
 
 # RCall
-#import RCall: sexp, rcopy, RClass, rcopytype, @R_str, S4Sxp
+import RCall: sexp, rcopy, RClass, rcopytype, @R_str, S4Sxp
 
 # BAM
 export strand
@@ -51,7 +51,7 @@ include("GenomicPositions_type.jl")
 include("GenomicRanges_type.jl")
 include("GenomicDataFrame_type.jl")
 include("delegations.jl")
-#include("rcall.jl")
+include("rcall.jl")
 include("bam.jl")
 include("precompile.jl")
 _precompile_()
