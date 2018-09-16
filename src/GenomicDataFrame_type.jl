@@ -55,12 +55,12 @@ Base.setindex!(gt::GenomicDataFrame,value,j) = setindex!(_table(gt),value,j)
 Base.setindex!(gt::GenomicDataFrame,value,i,j) = setindex!(_table(gt),value,i,j)
 
 ## Getters that delegate to the AbstractDataFrame row index
-for op in [:chr_info, :_strands, :_genostarts, :_genoends, :(RLEVectors.starts), :(RLEVectors.ends), :(RLEVectors.widths), :chromosomes, :genostarts, :genoends, :strands, :(RLEVectors.each), :chrpos, :genopos, :chrindex, :reduce, :gaps, :coverage, :disjoin, :collapse]
+for op in [:chr_info, :_strands, :_genostarts, :_genoends, :(RLEVectors.starts), :(RLEVectors.ends), :(RLEVectors.widths), :chromosomes, :genostarts, :genoends, :strands, :(RLEVectors.eachrange), :chrpos, :genopos, :chrindex, :reduce, :gaps, :coverage, :disjoin, :collapse]
     @eval ($op)(x::GenomicDataFrame) = ($op)(_rowindex(x))
 end
 
 ## two-arg functions that delegate to the genome info if one is a GenomicDataFrame
-for op in [:overlap_table, :(Base.indexin), :(Base.findin), :(Base.in)]
+for op in [:overlap_table, :(Base.indexin), :(Base.findall), :(Base.in)]
     @eval ($op)(x::GenomicDataFrame,y::AbstractGenomicVector,exact::Bool=true) = ($op)(_rowindex(x),y,exact)
     @eval ($op)(x::AbstractGenomicVector,y::GenomicDataFrame,exact::Bool=true) = ($op)(x,_rowindex(y),exact)
     @eval ($op)(x::GenomicDataFrame,y::GenomicDataFrame,exact::Bool=true) = ($op)(_rowindex(x),_rowindex(y),exact)

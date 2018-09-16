@@ -15,13 +15,13 @@ for op in [:similar, :resize!]
 end
 
 ### Operations that operate directly on the internal genopos, not mutating
-for op in [:size, :length, :endof]
+for op in [:size, :length, :lastindex]
     @eval (Base.$op)(x::GenomicPositions) = ($op)(x.genopos)
     @eval (Base.$op)(x::GenomicRanges) = ($op)(x.starts)
 end
 
 ### Operations that work on two GenomicPositions and return something else
-for op in [:issubset,:indexin,:findin] # max, min, etc. would go here if I decide that they make sense
+for op in [:issubset,:indexin,:findall] # max, min, etc. would go here if I decide that they make sense
     @eval begin
         function (Base.$op)(x::GenomicPositions, y::GenomicPositions, exact::Bool=true)
             same_genome(x, y) || throw(ArgumentError("Both GenomicPositions must be from the same genome."))
