@@ -15,7 +15,7 @@ for op in [:similar, :resize!]
 end
 
 ### Operations that operate directly on the internal genopos, not mutating
-for op in [:size, :length, :endof]
+for op in [:size, :length, :lastindex]
     @eval (Base.$op)(x::GenomicPositions) = ($op)(x.genopos)
     @eval (Base.$op)(x::GenomicRanges) = ($op)(x.starts)
 end

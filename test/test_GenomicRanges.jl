@@ -119,7 +119,7 @@ gr2 = GenomicRanges( [100,30123,40000],[200,30130,40200],chrinfo )
 @test setdiff(gr1,gr2) == gr1[ [2,3] ]
 @test in(gr1,gr2,true) == BitArray([ true, false, false ])
 @test indexin(gr1,gr2,false) == [2,0,3]
-@test findin(gr1,gr2,false) == [1,3]
+@test findall(in(gr1,false),gr2) == [1,3]
 @test intersect(gr1,gr2,false) == gr1[ [1,3] ]
 @test setdiff(gr1,gr2,false) == gr1[ [2] ]
 @test in(gr1,gr2,false) == BitArray([ true, false, true ])

@@ -112,7 +112,7 @@ function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact:
     ol
 end
 
-function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+function Base.findall(testfun::Function, x::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y,exact)
     inds = Vector{Int64}()
     for (el_a,el_b) in ol
@@ -123,9 +123,13 @@ end
 
 function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y,exact)
-    inds = zeros(Int64,length(x))
+    inds = Array{Union{Nothing, Int64}}(nothing, length(x))
     for (el_a,el_b) in ol
-        inds[ metadata(el_a) ] = metadata(el_b)
+        m_a = metadata(el_a)
+        m_b = metadata(el_b)
+        if m_a != nothing && m_b < m_a
+            inds[ m_a ] = m_b
+        end
     end
     inds
 end
@@ -203,47 +207,51 @@ function coverage(gr::AbstractGenomicVector)
     out
 end
 
-## Iterators
-"""
-Iterates over sections of a vector indexed by the genostarts and genoends of an
-AbstractGenomicVector. The vector must span the full length of the genome
-specified by the chr_info of the AbstractGenomicVector. This is useful for summarizing
-an RLEVector of data (say DNA copy number) by genome regions (e.g. genes).
-"""
-struct GenomicVectorIterator{T1<:Integer,T2<:AbstractVector}
-    genostarts::Vector{T1}
-    genoends::Vector{T1}
-    v::T2
-end
-"""
-    vector[ AbstractGenomicVector ]
-
-Returns an iterator over sections of a vector indexed by the genostarts and genoends of an
-AbstractGenomicVector. The vector must span the full length of the genome
-specified by the chr_info of the AbstractGenomicVector. This is useful for summarizing
-an RLEVector of data (say DNA copy number) by genome regions (e.g. genes).
-"""
-function Base.getindex(v::T1, g::T2) where T2 <: AbstractGenomicVector where T1 <: RLEVector
-    if length(v) != chr_ends(g)[end]
-        error("When subsetting an Vector with a GenomicVector, the Vector must span the entire genome.")
-    end
-    GenomicVectorIterator(_genostarts(g), _genoends(g), v)
-end
-
-function Base.start(x::GenomicVectorIterator)
-    1
-end
-
-function Base.next(x::GenomicVectorIterator, state)
-    first = x.genostarts[state]
-    last = x.genoends[state]
-    ( x.v[first:last], state + 1)
-end
-
-function Base.done(x::GenomicVectorIterator, state)
-    state > size(x.genostarts,1)
-end
-
-function Base.length(x::GenomicVectorIterator)
-    size(x.genostarts,1)
-end
+# ## Iterators
+# """
+# Iterates over sections of a vector indexed by the genostarts and genoends of an
+# AbstractGenomicVector. The vector must span the full length of the genome
+# specified by the chr_info of the AbstractGenomicVector. This is useful for summarizing
+# an RLEVector of data (say DNA copy number) by genome regions (e.g. genes).
+# """
+# struct GenomicVectorIterator{T1<:Integer,T2<:AbstractVector}
+#     genostarts::Vector{T1}
+#     genoends::Vector{T1}
+#     v::T2
+# end
+# """
+#     vector[ AbstractGenomicVector ]
+#
+# Returns an iterator over sections of a vector indexed by the genostarts and genoends of an
+# AbstractGenomicVector. The vector must span the full length of the genome
+# specified by the chr_info of the AbstractGenomicVector. This is useful for summarizing
+# an RLEVector of data (say DNA copy number) by genome regions (e.g. genes).
+# """
+# function Base.getindex(v::T1, g::T2) where T2 <: AbstractGenomicVector where T1 <: RLEVector
+#     if length(v) != chr_ends(g)[end]
+#         error("When subsetting an Vector with a GenomicVector, the Vector must span the entire genome.")
+#     end
+#     GenomicVectorIterator(_genostarts(g), _genoends(g), v)
+# end
+#
+# function Base.iterate(GenomicVectorIterator, state = 1)
+#
+# end
+#
+# function Base.start(x::GenomicVectorIterator)
+#     1
+# end
+#
+# function Base.next(x::GenomicVectorIterator, state)
+#     first = x.genostarts[state]
+#     last = x.genoends[state]
+#     ( x.v[first:last], state + 1)
+# end
+#
+# function Base.done(x::GenomicVectorIterator, state)
+#     state > size(x.genostarts,1)
+# end
+#
+# function Base.length(x::GenomicVectorIterator)
+#     size(x.genostarts,1)
+# end
