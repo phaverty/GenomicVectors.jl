@@ -112,15 +112,6 @@ function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact:
     ol
 end
 
-#function Base.findall(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
-#    ol = findoverlaps(x,y,exact)
-#    inds = Vector{Int64}()
-#    for (el_a,el_b) in ol
-#        push!(inds,metadata(el_a))
-#    end
-#    sort(unique(inds))
-#end
-
 function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
     ol = findoverlaps(x,y,exact)
     inds = Array{Union{Nothing, Int64}}(nothing, length(x))
@@ -140,8 +131,8 @@ function overlap_table(x::AbstractGenomicVector, y::AbstractGenomicVector, exact
     vcat(olap_pairs...)
 end
 
-Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = indexin(x,y,exact) .!= 0
-#Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ findin(x,y,exact) ]
+Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = indexin(x,y,exact) .!= nothing
+Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ in(x,y,exact) ]
 Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[in(x,y,exact) .== false]
 
 #nearest(x::AbstractGenomicVector, query::Interval)

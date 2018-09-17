@@ -21,7 +21,7 @@ export GenomicDataFrame, GenomicVectorIterator
 export chr_ends, chr_lengths, chr_offsets, chr_names, same_genome
 
 # GenomicPositions and GenomicRanges
-import Base: size, length, empty!, intersect, findall
+import Base: size, length, empty!, intersect, indexin, in
 import RLEVectors: starts, widths, ends, eachrange, disjoin
 import GenomicFeatures: coverage
 export genome, chr_info, chromosomes, chrpos, chrindex, genopos, slide!, slide
@@ -32,13 +32,13 @@ export findoverlaps, overlap_table, eachrange
 export disjoin, gaps, coverage, collapse
 
 # Delegations
-import Base: similar, copy, unique, size, length, lastindex, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!, resize!
+import Base: similar, copy, unique, size, length, lastindex, issubset, vcat, union, intersect, indexin, in, setdiff, symdiff, append!, prepend!, resize!
 
-# GenomicTable
+# GenomicDataFrame
 export rowindex, table
 
 # RCall
-#import RCall: sexp, rcopy, RClass, rcopytype, @R_str, S4Sxp
+import RCall: sexp, rcopy, RClass, rcopytype, @R_str, S4Sxp
 
 # BAM
 export strand
@@ -51,7 +51,7 @@ include("GenomicPositions_type.jl")
 include("GenomicRanges_type.jl")
 include("GenomicDataFrame_type.jl")
 include("delegations.jl")
-#include("rcall.jl")
+include("rcall.jl")
 include("bam.jl")
 include("precompile.jl")
 _precompile_()
