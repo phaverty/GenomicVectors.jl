@@ -60,9 +60,9 @@ end
 
 ## Conversions
 function Base.convert(::Type{DataFrame}, x::GenomicPositions)
-    chrs = chr_names(x)
+    chrs = [String(i) for i in chr_names(x)]
     n = length(x)
-    c_res = similar(chrs, n)
+    c_res = Vector{String}(undef, n)
     p_res = similar(_genostarts(x), n)
     ends = chr_ends(x)
     offsets = chr_offsets(x)
@@ -90,7 +90,7 @@ end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicPositions)
     df = convert(DataFrame,x)
-    eltype(chr_names(x))[ string(chr, ":", pos, "-", pos) for (chr,pos) in zip(df[:Chromosome], df[:Position]) ]
+    [ string(chr, ":", pos, "-", pos) for (chr,pos) in zip(df[:Chromosome], df[:Position]) ]
 end
 Base.convert(::Type{Vector}, x::GenomicPositions) = genostarts(x)
 
@@ -98,7 +98,7 @@ Base.convert(::Type{Vector}, x::GenomicPositions) = genostarts(x)
 Conversion of GenomicPositions to IntervalCollection adds index as metadata in order to recover order later.
 """
 function Base.convert(::Type{IntervalCollection}, x::GenomicPositions)
-    g = genome(x)
+    g = String(genome(x))
     IntervalCollection( sort([Interval(g,s,s,STRAND_POS,i) for (i,s) in enumerate(x)]) )
 end
 
@@ -117,7 +117,7 @@ slide, slide!
 
 function slide!(gpos::GenomicPositions, x::Integer)
     offsets = chr_offsets(gpos)
-    ends = chr_ends(gpos)
+    ends = collect(chr_ends(gpos))
     n_chrs = length(ends)
     chr_ind = 1
     i = 1
@@ -158,7 +158,7 @@ function nearest(query::GenomicPositions{T}, target::GenomicPositions{T}) where 
     target_gpos = target.genopos
     target_chrs = chromosomes(target)
     nquery = length(query)
-    res = Vector{Int64}(nquery)
+    res = Vector{Int64}(undef,nquery)
     i = 1
     for (qpos, qchr) in zip(genostarts(query), chromosomes(query))
         temp_min = typemax(Int64)

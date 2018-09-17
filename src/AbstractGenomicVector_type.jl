@@ -16,7 +16,7 @@ genoends(x::AbstractGenomicVector) = copy(_genoends(x))
 strands(x::AbstractGenomicVector) = copy(_strands(x))
 RLEVectors.starts(x::AbstractGenomicVector) = chrpos(_genostarts(x),chr_info(x))
 RLEVectors.ends(x::AbstractGenomicVector) = chrpos(_genoends(x),chr_info(x))
-RLEVectors.widths(x::AbstractGenomicVector) = (_genoends(x) - _genostarts(x)) + 1
+RLEVectors.widths(x::AbstractGenomicVector) = (_genoends(x) - _genostarts(x)) .+ 1
 RLEVectors.eachrange(x::AbstractGenomicVector) = zip(_genostarts(x),_genoends(x))
 chromosomes(x::AbstractGenomicVector) = chromosomes(_genostarts(x),chr_info(x))
 
@@ -112,7 +112,7 @@ function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact:
     ol
 end
 
-#function Base.findin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
+#function Base.findall(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 #    ol = findoverlaps(x,y,exact)
 #    inds = Vector{Int64}()
 #    for (el_a,el_b) in ol
@@ -127,7 +127,7 @@ function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact:
     for (el_a,el_b) in ol
         m_a = metadata(el_a)
         m_b = metadata(el_b)
-        if m_a != nothing && m_b < m_a
+        if inds[m_a] === nothing || inds[m_a] > m_b
             inds[ m_a ] = m_b
         end
     end
@@ -141,7 +141,7 @@ function overlap_table(x::AbstractGenomicVector, y::AbstractGenomicVector, exact
 end
 
 Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = indexin(x,y,exact) .!= 0
-Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ findin(x,y,exact) ]
+#Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ findin(x,y,exact) ]
 Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[in(x,y,exact) .== false]
 
 #nearest(x::AbstractGenomicVector, query::Interval)
@@ -169,7 +169,7 @@ Creates a `GenomicFeatures.IntersectIterator` from two `AbstractGenomicVectors`,
 
 Creates a two column table listing the pairs of indices of x and y that overlap.
 
-    findin(x::AbstractGenomicVector,y::AbstractGenomicVector, exact::Bool=true)
+    findall(x::AbstractGenomicVector,y::AbstractGenomicVector, exact::Bool=true)
 
     indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 
@@ -183,7 +183,7 @@ that is `true` for each element of `x` that is in the set `y`.
     setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
 
 """
-findoverlaps, findin, indexin, in, intersect, setdiff, nearest, overlap_table
+findoverlaps, findall, indexin, in, intersect, setdiff, nearest, overlap_table
 
 # The discussion in https://github.com/JuliaLang/Juleps/blob/master/Find.md#particular-cases is very relevant choosing names for these functions.
 
@@ -219,6 +219,7 @@ struct GenomicVectorIterator{T1<:Integer,T2<:AbstractVector}
     genoends::Vector{T1}
     v::T2
 end
+
 """
     vector[ AbstractGenomicVector ]
 
@@ -234,19 +235,11 @@ function Base.getindex(v::T1, g::T2) where T2 <: AbstractGenomicVector where T1 
     GenomicVectorIterator(_genostarts(g), _genoends(g), v)
 end
 
-#function Base.start(x::GenomicVectorIterator)
-#    1
-#end
-#
-#function Base.next(x::GenomicVectorIterator, state)
-#    first = x.genostarts[state]
-#    last = x.genoends[state]
-#    ( x.v[first:last], state + 1)
-#end
-#
-#function Base.done(x::GenomicVectorIterator, state)
-#    state > size(x.genostarts,1)
-#end
+function Base.iterate(x::GenomicVectorIterator, state = 1)
+    state > length(x) && return nothing
+    newstate = state + 1
+   ( x.v[ x.genostarts[state]:x.genoends[state] ], newstate )
+end
 
 function Base.length(x::GenomicVectorIterator)
     size(x.genostarts,1)

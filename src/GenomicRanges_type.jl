@@ -71,7 +71,7 @@ _genoends(x::GenomicRanges) = x.ends # Pass by reference for internal use
 _strands(x::GenomicRanges) = x.strands # Pass by reference for internal use
 
 ## Indexing
-Base.getindex(x::GenomicRanges, i::Int) = Interval(genome(x),x.starts[i],x.ends[i],x.strands[i],i)
+Base.getindex(x::GenomicRanges, i::Int) = Interval(String(genome(x)),x.starts[i],x.ends[i],x.strands[i],i)
 
 function Base.setindex!(x::GenomicRanges, value::Interval, i::Int)
     if !same_genome(x,value)
@@ -94,8 +94,8 @@ end
 ## Conversions
 function Base.convert(::Type{DataFrame}, x::GenomicRanges)
     n = length(x)
-    chrs = chr_names(x)
-    c_res = similar(chrs, n)
+    chrs = [String(i) for i in chr_names(x)]
+    c_res = Vector{String}(undef, n)
     s_res = similar(x.starts, n)
     e_res = similar(x.ends, n)
     ends = chr_ends(x.chrinfo)
@@ -134,7 +134,7 @@ Base.convert(::Type{GenomicPositions}, x::GenomicRanges) = GenomicPositions(geno
 Conversion of GenomicRanges to IntervalCollection adds index as metadata in order to recover order later.
 """
 function Base.convert(::Type{IntervalCollection}, x::GenomicRanges)
-    g = genome(x)
+    g = String(genome(x))
     IntervalCollection( sort( [i for i in x] ) )
 end
 
@@ -144,7 +144,7 @@ end
 """
 function slide!(gr::GenomicRanges, x::Integer)
     offsets = chr_offsets(gr)
-    ends = chr_ends(gr)
+    ends = collect(chr_ends(gr))
     n_chrs = length(ends)
     chr_ind = 1
     i = 1
@@ -224,7 +224,7 @@ Merges overlapping ranges
 """
 function collapse(gr::GenomicRanges)
     out = similar(gr)
-    out.strands[:] = STRAND_NA # move me to GenomicFeatures.similar
+    fill!(out.strands, STRAND_NA)  # move me to GenomicFeatures.similar
     if issorted(gr)
         x = gr
     else
@@ -277,7 +277,7 @@ Returns GenomicRanges of regions between collapsed input ranges, e.g. introns
 function gaps(gr::GenomicRanges)
     x = collapse(gr)
     out = similar(gr, length(x) - 1)
-    out.strands[:] = STRAND_NA # move me to GenomicFeatures.similar
+    fill!(out.strands, STRAND_NA) # move me to GenomicFeatures.similar
     for i in 1:length(out)
         _genostarts(out)[i] = _genoends(x)[i] + 1
         _genoends(out)[i] = _genostarts(x)[i + 1] - 1
