@@ -8,12 +8,12 @@ function genopos(positions, chromosomes, chrinfo::GenomeInfo)
     end
     offsets = chr_offsets(chrinfo)
     lengths = chr_lengths(chrinfo)
-    gpos = similar(offsets, length(positions))
-    prev_chr = chromosomes[1]
+    gpos = similar(positions)
+    prev_chr = Symbol(chromosomes[1])
     len = lengths[prev_chr]
     o = offsets[prev_chr]
     @inbounds for i in 1:length(positions)
-        chr = chromosomes[i]
+        chr = Symbol(chromosomes[i])
         x = positions[i]
         if chr != prev_chr
             prev_chr = chr
@@ -32,7 +32,7 @@ end
 function chrindex(positions, chrinfo::GenomeInfo)
     ends = chr_ends(chrinfo)
     offsets = chr_offsets(chrinfo)
-    res = Vector{Int64}(length(positions))
+    res = Vector{Int64}(undef, length(positions))
     i = r = 1
     e = ends[r]
     o = offsets[r]
@@ -54,7 +54,7 @@ end
 function chrpos(positions, chrinfo::GenomeInfo)
     ends = chr_ends(chrinfo)
     offsets = chr_offsets(chrinfo)
-    res = similar(positions,length(positions))
+    res = similar(positions)
     i = r = 1
     e = ends[r]
     o = offsets[r]
@@ -77,7 +77,7 @@ function chromosomes(positions, chrinfo::GenomeInfo)
     ends = chr_ends(chrinfo)
     offsets = chr_offsets(chrinfo)
     chrs = chr_names(chrinfo)
-    res = similar(chrs,length(positions))
+    res = Vector{Symbol}(undef, length(positions))
     i = r = 1
     e = ends[r]
     o = offsets[r]
