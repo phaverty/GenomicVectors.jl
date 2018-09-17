@@ -41,8 +41,8 @@ struct GenomicRanges{T1 <: Integer} <: AbstractGenomicVector{T1}
     function GenomicRanges{T1}(starts, ends, strands, chrinfo) where T1 <: Integer
         length(starts) != length(ends) && throw(ArgumentError("starts and ends must be of the same length."))
         if strands == nothing
-            strands = Vector{Strand}(length(starts))
-            strands[:] = STRAND_NA
+            strands = Vector{Strand}(undef, length(starts))
+            fill!(strands,STRAND_NA)
         else
             if length(starts) != length(strands)
                 throw(ArgumentError("starts, ends and stands must be of the same length."))

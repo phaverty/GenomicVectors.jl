@@ -233,6 +233,18 @@ rle = RLEVector([2,3,9,1,0],cumsum([6,6,6,6,6]))
 @test collect(rle[gr]) == [ [2,2,2], [2,2,2], [2,3,3,], [9,9,9], [3,3,3] ]
 @test map(mean, rle[gr]) == [2.0, 2.0, 2 + (2 / 3), 9.0, 3.0]
 
+## Same genome
+chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
+chrs = ["chr1","chr2","chr2","chrX"]
+s = [100, 200, 300, 400]
+e = [120, 240, 350, 455]
+gr = GenomicRanges(chrs,s,e,chrinfo)
+
+@test same_genome(gr,Interval("hg19",1,3,'.')) == true
+@test same_genome(Interval("hg19",1,3,'.'),gr) == true
+@test same_genome(Interval("hg18",1,3,'.'),gr) == false
+@test same_genome(Interval("hg19",1,310000,'.'),gr) == false
+
 end # testset
 
 end # module
