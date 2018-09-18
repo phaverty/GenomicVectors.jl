@@ -21,10 +21,10 @@ export GenomicDataFrame, GenomicVectorIterator
 export chr_ends, chr_lengths, chr_offsets, chr_names, same_genome
 
 # GenomicPositions and GenomicRanges
-import Base: size, length, empty!, intersect, indexin, in
+import Base: size, length, empty!, intersect, iterate, indexin
 import RLEVectors: starts, widths, ends, eachrange, disjoin
 import GenomicFeatures: coverage
-export genome, chr_info, chromosomes, chrpos, chrindex, genopos, slide!, slide
+export genome, chr_info, chromosomes, chrpos, chrindex, genopos, slide!, slide, iterate
 export strands, nearest, genostarts, genoends, starts, ends, widths
 export _genostarts, _genoends, _strands
 export findoverlaps, overlap_table, eachrange
@@ -32,7 +32,7 @@ export findoverlaps, overlap_table, eachrange
 export disjoin, gaps, coverage, collapse
 
 # Delegations
-import Base: similar, copy, unique, size, length, lastindex, issubset, vcat, union, intersect, indexin, in, setdiff, symdiff, append!, prepend!, resize!
+import Base: similar, copy, unique, size, length, lastindex, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!, resize!
 
 # GenomicDataFrame
 export rowindex, table
