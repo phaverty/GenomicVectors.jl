@@ -8,17 +8,20 @@ function genopos(positions, chromosomes, chrinfo::GenomeInfo)
     end
     offsets = chr_offsets(chrinfo)
     lengths = chr_lengths(chrinfo)
+    chr_inds = chrinfo.chr_inds
     gpos = similar(positions)
     prev_chr = Symbol(chromosomes[1])
-    len = lengths[prev_chr]
-    o = offsets[prev_chr]
+    prev_chr_ind = chr_inds[prev_chr]
+    len = lengths[prev_chr_ind]
+    o = offsets[prev_chr_ind]
     @inbounds for i in 1:length(positions)
         chr = Symbol(chromosomes[i])
         x = positions[i]
         if chr != prev_chr
             prev_chr = chr
-            len = lengths[prev_chr]
-            o = offsets[prev_chr]
+            prev_chr_ind = chr_inds[prev_chr]
+            len = lengths[prev_chr_ind]
+            o = offsets[prev_chr_ind]
         end
         if 1 <= x <= len
             gpos[i] = x + o
@@ -37,9 +40,9 @@ function chrindex(positions, chrinfo::GenomeInfo)
     e = ends[r]
     o = offsets[r]
     @inbounds for g in positions
-        if g > e || g <= o
+        if g > e || g <= o # Need to switch chromosome
             r = 1
-            while g > ends[r]
+            while g > ends[r] # Linear search
                 r = r + 1
             end
             e = ends[r]
@@ -59,9 +62,9 @@ function chrpos(positions, chrinfo::GenomeInfo)
     e = ends[r]
     o = offsets[r]
     @inbounds for g in positions
-        if g > e || g <= o
+        if g > e || g <= o # Need to switch chromosome
             r = 1
-            while g > ends[r]
+            while g > ends[r] # Linear search
                 r = r + 1
             end
             e = ends[r]
@@ -82,9 +85,9 @@ function chromosomes(positions, chrinfo::GenomeInfo)
     e = ends[r]
     o = offsets[r]
     @inbounds for g in positions
-        if g > ends[r] || g <= offsets[r]
+        if g > ends[r] || g <= offsets[r] # Need to switch chromosome
             r = 1
-            while g > ends[r]
+            while g > ends[r] # Linear search
                 r = r + 1
             end
             e = ends[r]

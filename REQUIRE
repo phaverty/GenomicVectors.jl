@@ -4,3 +4,4 @@ RLEVectors 0.7.1
 DataFrames 0.0.1
 RCall 0.7.4
 BioAlignments 1.0.0
+OrderedCollections

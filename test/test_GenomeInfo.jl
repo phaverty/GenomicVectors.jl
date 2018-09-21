@@ -8,13 +8,14 @@ using GenomicFeatures
 
     ## GenomeInfo
     chrs = ["chr1","chr2","chrX"]
-    ctuple = Tuple(Symbol(x) for x in chrs)
+    csyms = [Symbol(x) for x in chrs]
     x = GenomeInfo("hg19",chrs,Int64[3e5,2e5,1e4])
+    @test length(x) == 3
     @test genome(x) === :hg19
-    @test chr_lengths(x) == NamedTuple{ctuple}(Int64[3e5,2e5,1e4])
-    @test chr_offsets(x) == NamedTuple{ctuple}(Int64[0,3e5,5e5])
-    @test chr_ends(x) == NamedTuple{ctuple}(cumsum(Int64[3e5,2e5,1e4]))
-    @test chr_names(x) == ctuple
+    @test chr_lengths(x) == Int64[3e5,2e5,1e4]
+    @test chr_offsets(x) == Int64[0,3e5,5e5]
+    @test chr_ends(x) == cumsum(Int64[3e5,2e5,1e4])
+    @test chr_names(x) == csyms
     io = IOBuffer()
     @test typeof(show(io,x)) == Nothing # At least test that show does not give error
     @test x[:chr2] == 500000

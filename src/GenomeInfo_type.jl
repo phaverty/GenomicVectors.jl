@@ -21,21 +21,22 @@ chr_offsets(chrinfo)
 chrinfo[2] # 5e5
 ```
 """
-struct GenomeInfo{T <: Integer}
+struct GenomeInfo{T,N}
     name::Symbol
-    chr_ends::NamedTuple
-    function GenomeInfo{T}(name::String, chrs::Vector{String}, lengths::Vector{T}) where T <: Integer
+    chr_inds::OrderedDict{Symbol, T}
+    chr_ends::NTuple{N,T}
+    function GenomeInfo{T,N}(name::String, chrs::Vector{String}, lengths::Vector{T}) where {T <: Integer, N}
         n = Symbol(name)
         length(chrs) != length(lengths) && throw(ArgumentError("'chromosomes' and 'lengths' must be the same length."))
-        c = Tuple( Symbol(x) for x in chrs )
-        e = Tuple( x for x in cumsum(lengths) )
-        nt = NamedTuple{c}(e)
-        new(n,nt)
+        c = OrderedDict{Symbol,T}(Symbol(x) => i for (i,x) in enumerate(chrs) )
+        e = NTuple{N,T}(cumsum(lengths))
+        new(n, c, e)
     end
 end
 
-function GenomeInfo(name::String, chromosomes::Vector{String}, lengths::Vector{T1}) where T1<:Integer
-    GenomeInfo{T1}(name, chromosomes, lengths)
+function GenomeInfo(name::String, chromosomes::Vector{String}, lengths::Vector{T}) where {T<:Integer,N}
+    N = length(lengths)
+    GenomeInfo{T,N}(name, chromosomes, lengths)
 end
 
 function Base.show(io::IO, x::GenomeInfo)
@@ -48,30 +49,30 @@ function Base.show(io::IO, x::GenomeInfo)
     end
 end
 
+Base.length(x::GenomeInfo) = length(x.chr_ends)
 genome(x::GenomeInfo) =  x.name
-chr_names(x::GenomeInfo) = keys(x.chr_ends)
-chr_ends(x::GenomeInfo) = x.chr_ends
+chr_names(x::GenomeInfo) = collect(keys(x.chr_inds))
+chr_ends(x::GenomeInfo) = collect(x.chr_ends)
 
 function chr_offsets(x::GenomeInfo)
-    ce = chr_ends(x)
-    ends = collect(ce)
+    ends = chr_ends(x)
     n = length(ends)
     ends[2:n] = ends[1:(n-1)]
     ends[1] = 0
-    NamedTuple{keys(ce)}(ends)
+    ends
 end
 
 function chr_lengths(x::GenomeInfo)
-    ce = chr_ends(x)
-    lens = collect(chr_ends(x))
+    lens = chr_ends(x)
     lens[2:end] = diff(lens)
-    NamedTuple{keys(ce)}(lens)
+    lens
 end
 
 Base.:(==)(x::GenomeInfo, y::GenomeInfo) = isequal(x.name,y.name) && isequal(x.chr_ends,y.chr_ends)
 
-Base.getindex(x::GenomeInfo, i::Union{Symbol, <:Integer}) = x.chr_ends[i]
-Base.getindex(x::GenomeInfo, i::String) = x.chr_ends[Symbol(i)]
+Base.getindex(x::GenomeInfo, i::Integer) = x.chr_ends[i]
+Base.getindex(x::GenomeInfo, i::Symbol) = x.chr_ends[x.chr_inds[i]]
+Base.getindex(x::GenomeInfo, i::String) = x.chr_ends[x.chr_inds[Symbol(i)]]
 
 ## GenomeInfo Interface
 for op in [:chr_names, :chr_lengths, :chr_ends, :chr_offsets, :genome]

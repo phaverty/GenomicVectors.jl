@@ -4,6 +4,7 @@ using BioAlignments
 using DataFrames
 using CSV
 using RLEVectors
+using Dates
 
 macro timeit(ex)
 # like @time, but returning the timing rather than the computed value
@@ -18,16 +19,17 @@ macro timeit(ex)
   end
 end
 
-bam_file = "GSE25840_GSM424320_GM06985_gencode_spliced.head.bam"
-bam_path = joinpath(Pkg.dir("GenomicVectors"),"BAM", bam_file)
-bam_path = "/Users/phaverty/R1039_LIB3086_SAM636333_L4_NXG2275.analyzed.bam"
+#bam_file = "GSE25840_GSM424320_GM06985_gencode_spliced.head.bam"
+#bam_path = joinpath(dirname(pathof(GenomicVectors)),"BAM", bam_file)
+#bam_path = "/Users/phaverty/R1039_LIB3086_SAM636333_L4_NXG2275.analyzed.bam"
+bam_path = "/Users/phaverty/GSE25840_GSM424320_GM06985_gencode_spliced.head.bam"
 reader = open(BAM.Reader, bam_path)
 gr = GenomicRanges("hg19", reader)
 
 timings = DataFrame()
 timings[:language] = "julia"
 timings[:language_version] = VERSION
-timings[:date] = chomp(readstring(`date "+%Y-%m-%d"`))
+timings[:date] = string(Dates.today())
 timings[:length] = @timeit length(gr)
 timings[:start] = @timeit starts(gr)
 timings[:width] = @timeit widths(gr)
@@ -46,7 +48,7 @@ timings[:issorted] = @timeit issorted(gr)
 timings[:sort] = @timeit sort(gr)
 timings[:as_df] = @timeit convert(DataFrame,gr)
 
-bdf = CSV.read("/Users/phaverty/.julia/v0.6/GenomicVectors/benchmark/timings.csv",header=true);
+bdf = CSV.read("/Users/phaverty/.julia/dev/GenomicVectors/benchmark/timings.csv",header=true);
 
 for n in names(timings)
   if !(n in names(bdf))
@@ -56,7 +58,7 @@ end
 
 bdf = vcat(bdf,timings)
 
-CSV.write( "/Users/phaverty/.julia/v0.6/GenomicVectors/benchmark/timings.csv",
+CSV.write( "/Users/phaverty/.julia/dev/GenomicVectors/benchmark/timings.csv",
              bdf, header=true)
 
 jdf = timings

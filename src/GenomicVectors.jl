@@ -6,7 +6,8 @@ using RLEVectors
 using GenomicFeatures
 using DataFrames
 using BioAlignments
-#using RCall
+using RCall
+using OrderedCollections
 
 # utils
 export genopos
