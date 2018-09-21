@@ -15,8 +15,8 @@ export genopos
 # types
 import Base: ==, getindex, setindex!
 import GenomicFeatures: Interval, IntervalCollection, Strand, strand, leftposition, rightposition
-export GenomeInfo, AbstractGenomicVector, GenomicPositions, GenomicRanges
-export GenomicDataFrame, GenomicVectorIterator
+export GenomeInfo, AbstractGenomicVector, GenomicPositions, GenomicRanges, GenomicVectorIterator
+export GenomicDataFrame
 
 # GenomeInfo
 export chr_ends, chr_lengths, chr_offsets, chr_names, same_genome
@@ -33,7 +33,7 @@ export findoverlaps, overlap_table, eachrange
 export disjoin, gaps, coverage, collapse
 
 # Delegations
-import Base: similar, copy, unique, size, length, lastindex, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!, resize!
+import Base: similar, copy, unique, size, length, lastindex, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!, resize!, reduce
 
 # GenomicDataFrame
 export rowindex, table

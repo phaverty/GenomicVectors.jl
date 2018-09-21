@@ -18,17 +18,18 @@ A DataFrame-like class with a GenomicVector as an index.
     gt[1:2,1:2]
 ```
 """
-struct GenomicDataFrame{T1 <: AbstractGenomicVector, T2 <: AbstractDataFrame} <: AbstractDataFrame
+struct GenomicDataFrame{T1 <: AbstractGenomicVector, T2 <: AbstractDataFrame}
     rowindex::T1
     table::T2
-    function GenomicDataFrame{T1,T2}(rowindex,table) where {T1 <: AbstractGenomicVector,T2 <: AbstractDataFrame}
-        nrow = size(table,1)
-        if nrow != 0 && length(rowindex) != nrow
-            throw(ArgumentError("GenomicDataFrame requires that `length(rowindex) == size(table,1)`"))
-        end
-        new(rowindex,table)
-    end
+     function GenomicDataFrame{T1,T2}(rowindex,table) where {T1 <: AbstractGenomicVector,T2 <: AbstractDataFrame}
+         nrow = size(table,1)
+         if nrow != 0 && length(rowindex) != nrow
+             throw(ArgumentError("GenomicDataFrame requires that `length(rowindex) == size(table,1)`"))
+         end
+         new(rowindex,table)
+     end
 end
+
 GenomicDataFrame(gv,dt) = GenomicDataFrame{typeof(gv),typeof(dt)}(gv,dt)
 rowindex(gt::GenomicDataFrame) = copy(gt.rowindex)
 table(gt::GenomicDataFrame) = copy(gt.table)
