@@ -25,15 +25,15 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
     convert(DataFrame, y)
 ```
 """
-struct GenomicPositions{T1 <: Integer} <: AbstractGenomicVector{T1}
-    genopos::Vector{T1}
-    chrinfo::GenomeInfo{T1}
-    function GenomicPositions{T1}(genopos, chrinfo) where T1 <: Integer
+struct GenomicPositions{T <: Integer, N} <: AbstractGenomicVector{T}
+    genopos::Vector{T}
+    chrinfo::GenomeInfo{T,N}
+    function GenomicPositions{T,N}(genopos, chrinfo) where {T <: Integer,N}
         new(genopos,chrinfo)
     end
 end
-GenomicPositions(genopos::Vector{T1}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicPositions{T1}(genopos, chrinfo)
-GenomicPositions(pos::Vector{T1}, chromosomes::Vector{String}, chrinfo::GenomeInfo{T1}) where {T1 <: Integer} = GenomicPositions{T1}(genopos(pos, chromosomes, chrinfo),chrinfo)
+GenomicPositions(genopos::Vector{T}, chrinfo::GenomeInfo{T,N}) where {T <: Integer,N} = GenomicPositions{T,N}(genopos, chrinfo)
+GenomicPositions(pos::Vector{T}, chromosomes::Vector{String}, chrinfo::GenomeInfo{T,N}) where {T <: Integer,N} = GenomicPositions{T,N}(genopos(pos, chromosomes, chrinfo),chrinfo)
 
 ## GenomeInfo Interface
 chr_info(x::GenomicPositions) = x.chrinfo

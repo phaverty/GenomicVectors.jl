@@ -35,8 +35,7 @@ struct GenomeInfo{T,N}
 end
 
 function GenomeInfo(name::String, chromosomes::Vector{String}, lengths::Vector{T}) where {T<:Integer,N}
-    N = length(lengths)
-    GenomeInfo{T,N}(name, chromosomes, lengths)
+    GenomeInfo{T,length(lengths)}(name, chromosomes, lengths)
 end
 
 function Base.show(io::IO, x::GenomeInfo)
