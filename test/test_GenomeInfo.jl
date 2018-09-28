@@ -11,7 +11,7 @@ using GenomicFeatures
     csyms = [Symbol(x) for x in chrs]
     x = GenomeInfo("hg19",chrs,Int64[3e5,2e5,1e4])
     @test length(x) == 3
-    @test genome(x) === :hg19
+    @test genome(x) === "hg19"
     @test chr_lengths(x) == Int64[3e5,2e5,1e4]
     @test chr_offsets(x) == Int64[0,3e5,5e5]
     @test chr_ends(x) == cumsum(Int64[3e5,2e5,1e4])

@@ -64,7 +64,7 @@ x = GenomicPositions(pos,chrs,chrinfo)
 @test ends(x) == pos
 @test widths(x) == RLEVector(1, length(pos))
 @test chr_info(x) == chrinfo
-@test genome(x) == :hg19
+@test genome(x) == "hg19"
 @test chr_names(x) == [:chr1, :chr2, :chrX]
 @test isa(strands(x), RLEVector)
 @test chromosomes(x) == [Symbol(x) for x in chrs]

@@ -5,6 +5,7 @@ using DataFrames
 using CSV
 using RLEVectors
 using Dates
+using Profile
 
 macro timeit(ex)
 # like @time, but returning the timing rather than the computed value
@@ -19,12 +20,13 @@ macro timeit(ex)
   end
 end
 
-bam_file = "GSE25840_GSM424320_GM06985_gencode_spliced.head.bam"
+#bam_file = "GSE25840_GSM424320_GM06985_gencode_spliced.head.bam"
 #bam_path = joinpath(dirname(pathof(GenomicVectors)),"BAM", bam_file)
-bam_path = "/Users/phaverty/R1039_LIB3086_SAM636333_L4_NXG2275.analyzed.bam"
+#bam_path = "/Users/phaverty/R1039_LIB3086_SAM636333_L4_NXG2275.analyzed.bam"
 bam_path = "/Users/phaverty/GSE25840_GSM424320_GM06985_gencode_spliced.head.bam"
 reader = open(BAM.Reader, bam_path)
-@time gr = GenomicRanges("hg19", reader)
+#Profile.init(n=10000); Profile.clear(); @profile gr = GenomicRanges("hg19", reader); Profile.print()
+gr = GenomicRanges("hg19", reader)
 
 timings = DataFrame()
 timings[:language] = "julia"

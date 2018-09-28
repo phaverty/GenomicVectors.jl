@@ -22,11 +22,11 @@ chrinfo[2] # 5e5
 ```
 """
 struct GenomeInfo{T,N}
-    name::Symbol
+    name::String
     chr_inds::OrderedDict{Symbol, T}
     chr_ends::NTuple{N,T}
     function GenomeInfo{T,N}(name::String, chrs::Vector{String}, lengths::Vector{T}) where {T <: Integer, N}
-        n = Symbol(name)
+        n = name
         length(chrs) != length(lengths) && throw(ArgumentError("'chromosomes' and 'lengths' must be the same length."))
         c = OrderedDict{Symbol,T}(Symbol(x) => i for (i,x) in enumerate(chrs) )
         e = NTuple{N,T}(cumsum(lengths))
@@ -80,7 +80,7 @@ end
 same_genome(x, y) = chr_info(x) == chr_info(y)
 
 function same_genome(x, y::Interval)
-    Symbol(seqname(y)) != genome(x) && return false
+    seqname(y) != genome(x) && return false
     chrs = chromosomes( [leftposition(y),rightposition(y)], chr_info(x) )
     chrs[1] != chrs[2] && return false
     return true
