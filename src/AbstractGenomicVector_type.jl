@@ -90,7 +90,12 @@ function Base.show(io::IO, ::MIME"text/plain", x::AbstractGenomicVector)
     t = typeof(x)::DataType
     show(io, t)
     println()
-    show(io, convert(DataFrame, x))
+    max_show = 25
+    if length(x) > max_show
+        show(io, convert(DataFrame, x[1:max_show]), rowlabel = :Loc, summary = false)
+    else
+        show(io, convert(DataFrame, x), rowlabel = :Loc, summary = false)
+    end
 end
 
 ## Indexing
