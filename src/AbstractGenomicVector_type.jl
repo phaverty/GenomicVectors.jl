@@ -83,13 +83,19 @@ slide(g::AbstractGenomicVector, x::Integer) = slide!( copy(g), x )
 
 ## Show
 function Base.show(io::IO, x::AbstractGenomicVector)
-    Base.show_vector(io,convert(Vector{String},x),"[", "]")
+    if length(x) > 8
+        out = convert(Vector{String},x[1:8])
+        Base.show_vector(io, out[1:4], "[", "")
+        print(io, " … ")
+        Base.show_vector(io, out[5:8], "", "]")
+    else
+        out = convert(Vector{String},x)
+        println(io,convert(Vector{String},out))
+    end
 end
 
 function Base.show(io::IO, ::MIME"text/plain", x::AbstractGenomicVector)
-    t = typeof(x)::DataType
-    show(io, t)
-    println()
+    show(io, summary(x))
     max_show = 25
     if length(x) > max_show
         show(io, convert(DataFrame, x[1:max_show]), rowlabel = :Loc, summary = false)
