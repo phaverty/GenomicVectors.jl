@@ -9,3 +9,9 @@ GenomicFeatures = "899a7d2d-5c61-547b-bef9-6698a8d05446"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 RCall = "6f49c342-dc21-5d91-9882-a32aef131414"
 RLEVectors = "17b45ede-fd0d-54ef-b825-8cf9fc64da95"
+
+[compat]
+julia = "1.0"
+RCall = ">= 0.7.4"
+BioAlignments = ">= 0.1.0"
+GenomicFeatures = ">= 1.0.0"
