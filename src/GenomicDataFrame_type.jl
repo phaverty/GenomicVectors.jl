@@ -35,7 +35,7 @@ rowindex(gt::GenomicDataFrame) = copy(gt.rowindex)
 table(gt::GenomicDataFrame) = copy(gt.table)
 _rowindex(gt::GenomicDataFrame) = gt.rowindex
 _table(gt::GenomicDataFrame) = gt.table
-for op in [:size, :nrow, :ncol, :index, :columns]
+for op in [:size, :nrow, :ncol, :index]
     @eval (DataFrames.$op)(x::GenomicDataFrame) = ($op)(_table(x))
 end
 Base.names(x::GenomicDataFrame) = names(_table(x))
