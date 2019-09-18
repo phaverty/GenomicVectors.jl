@@ -2,11 +2,11 @@ module GenomicVectors
 
 # Re-implementation of the GenomicRanges type from Bioconductor's GenomicRanges package by H. Pages, P. Aboyoun and M. Lawrence
 
+using Requires
 using RLEVectors
 using GenomicFeatures
 using DataFrames
 using BioAlignments
-using RCall
 using OrderedCollections
 
 # utils
@@ -38,9 +38,6 @@ import Base: similar, copy, unique, size, length, lastindex, issubset, vcat, uni
 # GenomicDataFrame
 export rowindex, table
 
-# RCall
-import RCall: sexp, rcopy, RClass, rcopytype, @R_str, S4Sxp
-
 # BAM
 export strand
 
@@ -52,9 +49,12 @@ include("GenomicPositions_type.jl")
 include("GenomicRanges_type.jl")
 include("GenomicDataFrame_type.jl")
 include("delegations.jl")
-include("rcall.jl")
 include("bam.jl")
 include("precompile.jl")
 _precompile_()
+
+function __init__()
+	 @require RCall="6f49c342-dc21-5d91-9882-a32aef131414" include("rcall.jl")
+end
 
 end # module

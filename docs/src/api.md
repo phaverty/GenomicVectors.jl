@@ -38,6 +38,7 @@ findoverlaps
 
 ## A round trip to R
 ```julia
+using GenomicVectors
 using RCall
 chrinfo = GenomeInfo("hg19",["chr1","chr2","chrX"],Int64[3e5,2e5,1e4])
 chrs = ["chr1","chr2","chr2","chrX"]

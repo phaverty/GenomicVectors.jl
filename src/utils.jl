@@ -98,3 +98,8 @@ function chromosomes(positions, chrinfo::GenomeInfo)
     end
     res
 end
+
+function Base.convert(::Type{Vector{String}}, strands::Vector{Strand})
+    d = Dict(STRAND_POS => "+", STRAND_NEG => "-", STRAND_BOTH => "*", STRAND_NA => "*")
+    [ d[x] for x in strands ]
+end
