@@ -2,11 +2,12 @@ module GenomicVectors
 
 # Re-implementation of the GenomicRanges type from Bioconductor's GenomicRanges package by H. Pages, P. Aboyoun and M. Lawrence
 
+using DataFrames
+using GenomicFeatures
+using OrderedCollections
 using Requires
 using RLEVectors
-using GenomicFeatures
-using DataFrames
-using OrderedCollections
+using XAM
 
 # utils
 export genopos

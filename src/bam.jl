@@ -2,14 +2,14 @@
 ### Functions for working with BAM files ###
 ############################################
 
-function GenomeInfo(genome_name, reader::BioAlignments.BAM.Reader)
+function GenomeInfo(genome_name, reader::XAM.BAM.Reader)
     GenomeInfo(genome_name,
                reader.refseqnames,
                reader.refseqlens
                )
 end
 
-function GenomicRanges(genome_name, reader::BioAlignments.BAM.Reader)
+function GenomicRanges(genome_name, reader::XAM.BAM.Reader)
     info = GenomeInfo(genome_name, reader)
     chr = String[]
     left_pos = Int64[]
@@ -29,7 +29,7 @@ function GenomicRanges(genome_name, reader::BioAlignments.BAM.Reader)
     GenomicRanges(chr, left_pos, right_pos, strand_pos, info)
 end
 
-function strand(record::BAM.Record)
+function strand(record::XAM.BAM.Record)
     ## FIXME: push up to BioAligments
     if BAM.flag(record) & 0x10 == 0
         s = STRAND_POS
@@ -40,7 +40,7 @@ function strand(record::BAM.Record)
 end
 
 """
-    coverage(reader::BioAlignments.BAM.Reader)
+    coverage(reader::XAM.BAM.Reader)
 
 Coverage may be calculated directly from a BAM file.
 
@@ -49,7 +49,7 @@ Coverage may be calculated directly from a BAM file.
     coverage(reader)
     close(reader)
 """
-function coverage(reader::BioAlignments.BAM.Reader)
+function coverage(reader::XAM.BAM.Reader)
     # FIXME: factor out code shared with coverage(GenomicRanges)
     chrinfo = GenomeInfo("temp", reader)
     offsets = chr_offsets(chrinfo)
