@@ -11,6 +11,5 @@ RLEVectors = "17b45ede-fd0d-54ef-b825-8cf9fc64da95"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
-BioAlignments = ">= 2.0.0"
 GenomicFeatures = ">= 2.0.0"
 julia = "1"
