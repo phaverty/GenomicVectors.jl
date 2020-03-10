@@ -6,7 +6,6 @@ using Requires
 using RLEVectors
 using GenomicFeatures
 using DataFrames
-using BioAlignments
 using OrderedCollections
 
 # utils
