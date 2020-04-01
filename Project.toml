@@ -1,6 +1,6 @@
 name = "GenomicVectors"
 uuid = "96124ad7-5c0a-5c8f-8316-419835a3cefd"
-version = "0.5.0"
+version = "1.0.0"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
@@ -11,5 +11,17 @@ Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 XAM = "d759349c-bcba-11e9-07c2-5b90f8f05f7c"
 
 [compat]
-GenomicFeatures = ">= 2.0.0"
+DataFrames = "0.20.2"
+GenomicFeatures = "2.0.0"
+OrderedCollections = "1.1.0"
+RLEVectors = "0.8.2"
+Requires = "1.0.1"
+XAM = "0.2.1"
 julia = "1"
+
+[extras]
+BioAlignments = "00701ae9-d1dc-5365-b64a-a3a3ebf5695e"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test", "BioAlignments"]
