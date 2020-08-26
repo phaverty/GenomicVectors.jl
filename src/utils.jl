@@ -14,7 +14,7 @@ function genopos(positions, chromosomes, chrinfo::GenomeInfo)
     prev_chr_ind = chr_inds[prev_chr]
     len = lengths[prev_chr_ind]
     o = offsets[prev_chr_ind]
-    @inbounds for i in 1:length(positions)
+    @inbounds for i = 1:length(positions)
         chr = Symbol(chromosomes[i])
         x = positions[i]
         if chr != prev_chr
@@ -101,5 +101,5 @@ end
 
 function Base.convert(::Type{Vector{String}}, strands::Vector{Strand})
     d = Dict(STRAND_POS => "+", STRAND_NEG => "-", STRAND_BOTH => "*", STRAND_NA => "*")
-    [ d[x] for x in strands ]
+    [d[x] for x in strands]
 end
