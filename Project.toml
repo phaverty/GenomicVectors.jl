@@ -5,6 +5,7 @@ version = "1.1.0"
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 GenomicFeatures = "899a7d2d-5c61-547b-bef9-6698a8d05446"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 RLEVectors = "17b45ede-fd0d-54ef-b825-8cf9fc64da95"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"

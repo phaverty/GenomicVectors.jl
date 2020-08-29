@@ -11,7 +11,7 @@ using BioAlignments
     # Use a copy of file from BioFmtSpecimens until that package gets registered
     # BioAlignments uses a trick where they install BioFmtSpecimens inside BioAlignments at test time.
     # That's not optimal for me
-    bam_path = joinpath(@__DIR__,"..","BAM",bam_file)
+    bam_path = joinpath(@__DIR__, "..", "BAM", bam_file)
     reader = open(BAM.Reader, bam_path)
 
     info = GenomeInfo("hg19", reader)

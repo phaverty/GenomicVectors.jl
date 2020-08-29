@@ -14,11 +14,11 @@ abstract type AbstractGenomicVector{T} <: AbstractVector{T} end
 genostarts(x::AbstractGenomicVector) = copy(_genostarts(x))
 genoends(x::AbstractGenomicVector) = copy(_genoends(x))
 strands(x::AbstractGenomicVector) = copy(_strands(x))
-RLEVectors.starts(x::AbstractGenomicVector) = chrpos(_genostarts(x),chr_info(x))
-RLEVectors.ends(x::AbstractGenomicVector) = chrpos(_genoends(x),chr_info(x))
+RLEVectors.starts(x::AbstractGenomicVector) = chrpos(_genostarts(x), chr_info(x))
+RLEVectors.ends(x::AbstractGenomicVector) = chrpos(_genoends(x), chr_info(x))
 RLEVectors.widths(x::AbstractGenomicVector) = (_genoends(x) - _genostarts(x)) .+ 1
-RLEVectors.eachrange(x::AbstractGenomicVector) = zip(_genostarts(x),_genoends(x))
-chromosomes(x::AbstractGenomicVector) = chromosomes(_genostarts(x),chr_info(x))
+RLEVectors.eachrange(x::AbstractGenomicVector) = zip(_genostarts(x), _genoends(x))
+chromosomes(x::AbstractGenomicVector) = chromosomes(_genostarts(x), chr_info(x))
 
 ## FIXME: add RLEVector creation from AbstractGenomicVector and a Vector of data
 
@@ -74,23 +74,23 @@ in the linear genome.
 starts, ends, widths, chromosomes, genostarts, genoends, strands, each, chrpos, genopos, chrindex
 
 ## Sorting
-Base.sort(x::AbstractGenomicVector; rev::Bool=false) = sort!(copy(x))
-Base.issorted(x::AbstractGenomicVector; rev::Bool=false) = issorted( eachrange(x), rev=rev )
-Base.sortperm(x::AbstractGenomicVector; rev=false) = sortperm( collect(eachrange(x)), rev=rev ) # No method for iterator
+Base.sort(x::AbstractGenomicVector; rev::Bool = false) = sort!(copy(x))
+Base.issorted(x::AbstractGenomicVector; rev::Bool = false) = issorted(eachrange(x), rev = rev)
+Base.sortperm(x::AbstractGenomicVector; rev = false) = sortperm(collect(eachrange(x)), rev = rev) # No method for iterator
 
 ## Modifying
-slide(g::AbstractGenomicVector, x::Integer) = slide!( copy(g), x )
+slide(g::AbstractGenomicVector, x::Integer) = slide!(copy(g), x)
 
 ## Show
 function Base.show(io::IO, x::AbstractGenomicVector)
     if length(x) > 8
-        out = convert(Vector{String},x[1:8])
+        out = convert(Vector{String}, x[1:8])
         Base.show_vector(io, out[1:4], "[", "")
         print(io, " … ")
         Base.show_vector(io, out[5:8], "", "]")
     else
-        out = convert(Vector{String},x)
-        println(io,convert(Vector{String},out))
+        out = convert(Vector{String}, x)
+        println(io, convert(Vector{String}, out))
     end
 end
 
@@ -106,45 +106,49 @@ end
 
 ## Indexing
 Base.IndexStyle(::Type{<:AbstractGenomicVector}) = IndexLinear()
-Base.getindex(x::AbstractGenomicVector,i::AbstractGenomicVector) = getindex(x, findall(in(x), y))
+Base.getindex(x::AbstractGenomicVector, i::AbstractGenomicVector) = getindex(x, findall(in(x), y))
 
 ## Searching
-_exact_overlap(el_a::Interval, el_b::Interval) = first(el_a) == first(el_b) && last(el_a) == last(el_b)
+_exact_overlap(el_a::Interval, el_b::Interval) =
+    first(el_a) == first(el_b) && last(el_a) == last(el_b)
 
-function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=false)
+function findoverlaps(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool = false)
     same_genome(x, y) || throw(ArgumentError("Both inputs must be from the same genome."))
-    xit = convert(IntervalCollection,x)
-    yit = convert(IntervalCollection,y)
+    xit = convert(IntervalCollection, x)
+    yit = convert(IntervalCollection, y)
     if exact
-        ol = eachoverlap(xit, yit, filter=_exact_overlap)
+        ol = eachoverlap(xit, yit, filter = _exact_overlap)
     else
-        ol = eachoverlap(xit,yit)
+        ol = eachoverlap(xit, yit)
     end
     ol
 end
 
-function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
-    ol = findoverlaps(x,y,exact)
-    inds = Array{Union{Nothing, Int64}}(nothing, length(x))
-    for (el_a,el_b) in ol
+function Base.indexin(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool = true)
+    ol = findoverlaps(x, y, exact)
+    inds = Array{Union{Nothing,Int64}}(nothing, length(x))
+    for (el_a, el_b) in ol
         m_a = metadata(el_a)
         m_b = metadata(el_b)
         if inds[m_a] === nothing || inds[m_a] > m_b
-            inds[ m_a ] = m_b
+            inds[m_a] = m_b
         end
     end
     inds
 end
 
-function overlap_table(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true)
-    ol = findoverlaps(x,y,exact)
-    olap_pairs = [ [metadata(el_a), metadata(el_b)]' for (el_a,el_b) in ol ]
+function overlap_table(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool = true)
+    ol = findoverlaps(x, y, exact)
+    olap_pairs = [[metadata(el_a), metadata(el_b)]' for (el_a, el_b) in ol]
     vcat(olap_pairs...)
 end
 
-Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = indexin(x,y,exact) .!= nothing
-Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[ in(x,y,exact) ]
-Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool=true) = x[in(x,y,exact) .== false]
+Base.in(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool = true) =
+    indexin(x, y, exact) .!= nothing
+Base.intersect(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool = true) =
+    x[in(x, y, exact)]
+Base.setdiff(x::AbstractGenomicVector, y::AbstractGenomicVector, exact::Bool = true) =
+    x[in(x, y, exact).==false]
 
 #nearest(x::AbstractGenomicVector, query::Interval)
 #
@@ -198,10 +202,10 @@ set of ranges in `gr`.
 """
 function coverage(gr::AbstractGenomicVector)
     out = RLEVector(0, last(chr_ends(gr)))
-    @inbounds for (s,e) in eachrange(gr)
+    @inbounds for (s, e) in eachrange(gr)
         r = s:e
         x = out[r]
-        for i in 1:length(x.runvalues)
+        for i = 1:length(x.runvalues)
             @inbounds x.runvalues[i] = x.runvalues[i] + 1
         end
         out[r] = x
@@ -230,7 +234,7 @@ AbstractGenomicVector. The vector must span the full length of the genome
 specified by the chr_info of the AbstractGenomicVector. This is useful for summarizing
 an RLEVector of data (say DNA copy number) by genome regions (e.g. genes).
 """
-function Base.getindex(v::T1, g::T2) where T2 <: AbstractGenomicVector where T1 <: RLEVector
+function Base.getindex(v::T1, g::T2) where {T2<:AbstractGenomicVector} where {T1<:RLEVector}
     if length(v) != chr_ends(g)[end]
         error("When subsetting an Vector with a GenomicVector, the Vector must span the entire genome.")
     end
@@ -240,9 +244,9 @@ end
 function Base.iterate(x::GenomicVectorIterator, state = 1)
     state > length(x) && return nothing
     newstate = state + 1
-   ( x.v[ x.genostarts[state]:x.genoends[state] ], newstate )
+    (x.v[x.genostarts[state]:x.genoends[state]], newstate)
 end
 
 function Base.length(x::GenomicVectorIterator)
-    size(x.genostarts,1)
+    size(x.genostarts, 1)
 end

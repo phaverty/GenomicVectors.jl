@@ -25,15 +25,20 @@ By convention, all postions in a `GenomicPositions` are considered to be on the 
     convert(DataFrame, y)
 ```
 """
-struct GenomicPositions{T <: Integer, N} <: AbstractGenomicVector{T}
+struct GenomicPositions{T<:Integer,N} <: AbstractGenomicVector{T}
     genopos::Vector{T}
     chrinfo::GenomeInfo{T,N}
-    function GenomicPositions{T,N}(genopos, chrinfo) where {T <: Integer,N}
-        new(genopos,chrinfo)
+    function GenomicPositions{T,N}(genopos, chrinfo) where {T<:Integer,N}
+        new(genopos, chrinfo)
     end
 end
-GenomicPositions(genopos::Vector{T}, chrinfo::GenomeInfo{T,N}) where {T <: Integer,N} = GenomicPositions{T,N}(genopos, chrinfo)
-GenomicPositions(pos::Vector{T}, chromosomes::Vector{String}, chrinfo::GenomeInfo{T,N}) where {T <: Integer,N} = GenomicPositions{T,N}(genopos(pos, chromosomes, chrinfo),chrinfo)
+GenomicPositions(genopos::Vector{T}, chrinfo::GenomeInfo{T,N}) where {T<:Integer,N} =
+    GenomicPositions{T,N}(genopos, chrinfo)
+GenomicPositions(
+    pos::Vector{T},
+    chromosomes::Vector{String},
+    chrinfo::GenomeInfo{T,N},
+) where {T<:Integer,N} = GenomicPositions{T,N}(genopos(pos, chromosomes, chrinfo), chrinfo)
 
 ## GenomeInfo Interface
 chr_info(x::GenomicPositions) = x.chrinfo
@@ -47,15 +52,15 @@ RLEVectors.widths(x::GenomicPositions) = RLEVector(1, length(x))
 
 ## Indexing
 Base.getindex(x::GenomicPositions, i::Int) = x.genopos[i]
-Base.getindex(x::GenomicPositions, i::AbstractVector) = GenomicPositions( x.genopos[i], x.chrinfo )
+Base.getindex(x::GenomicPositions, i::AbstractVector) = GenomicPositions(x.genopos[i], x.chrinfo)
 
 function Base.setindex!(x::GenomicPositions, value, i)
-    (min,max) = extrema(i)
+    (min, max) = extrema(i)
     if min < 1 || max > x.chrinfo.chr_ends[end]
         throw(BoundsError("Incoming genopos is outside the bounds of the genome."))
     end
     x.genopos[i] = value
-    return(x)
+    return (x)
 end
 
 ## Conversions
@@ -85,12 +90,12 @@ function Base.convert(::Type{DataFrame}, x::GenomicPositions)
         i = i + 1
     end
 
-    DataFrame( Chromosome = c_res, Position = p_res )
+    DataFrame(Chromosome = c_res, Position = p_res)
 end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicPositions)
-    df = convert(DataFrame,x)
-    [ string(chr, ":", pos, "-", pos) for (chr,pos) in zip(df[:Chromosome], df[:Position]) ]
+    df = convert(DataFrame, x)
+    [string(chr, ":", pos, "-", pos) for (chr, pos) in zip(df[:Chromosome], df[:Position])]
 end
 Base.convert(::Type{Vector}, x::GenomicPositions) = genostarts(x)
 
@@ -99,7 +104,7 @@ Conversion of GenomicPositions to IntervalCollection adds index as metadata in o
 """
 function Base.convert(::Type{IntervalCollection}, x::GenomicPositions)
     g = String(genome(x))
-    IntervalCollection( sort([Interval(g,s,s,STRAND_POS,i) for (i,s) in enumerate(x)]) )
+    IntervalCollection(sort([Interval(g, s, s, STRAND_POS, i) for (i, s) in enumerate(x)]))
 end
 
 ## Altering Positions
@@ -135,16 +140,18 @@ function slide!(gpos::GenomicPositions, x::Integer)
     gpos
 end
 
-slide(gr::GenomicPositions, x::Integer) = slide!( copy(gr), x )
+slide(gr::GenomicPositions, x::Integer) = slide!(copy(gr), x)
 
 Base.empty!(x::GenomicPositions) = empty!(x.genopos)
 
 ## Sorting
-Base.sort(x::GenomicPositions; rev::Bool=false) = GenomicPositions( sort(genostarts(x), rev=rev), chr_info(x) )
-Base.sort!(x::GenomicPositions; rev::Bool=false) = sort!(x.genopos, rev=rev)
-Base.issorted(x::GenomicPositions; rev=false) = issorted(genostarts(x), rev=rev)
-Base.sortperm(x::GenomicPositions; rev=false) = sortperm(genostarts(x), rev=rev)
-Base.in(query::GenomicPositions, target::GenomicPositions, exact::Bool=true) = [in(v,target) for v in query]
+Base.sort(x::GenomicPositions; rev::Bool = false) =
+    GenomicPositions(sort(genostarts(x), rev = rev), chr_info(x))
+Base.sort!(x::GenomicPositions; rev::Bool = false) = sort!(x.genopos, rev = rev)
+Base.issorted(x::GenomicPositions; rev = false) = issorted(genostarts(x), rev = rev)
+Base.sortperm(x::GenomicPositions; rev = false) = sortperm(genostarts(x), rev = rev)
+Base.in(query::GenomicPositions, target::GenomicPositions, exact::Bool = true) =
+    [in(v, target) for v in query]
 
 ## Searching
 """
@@ -153,12 +160,13 @@ Base.in(query::GenomicPositions, target::GenomicPositions, exact::Bool=true) = [
 For each `query` finds index in `target` that is nearest on the same chromosome.
 If no match on the same chromosome exists, the index will be 0.
 """
-function nearest(query::GenomicPositions{T}, target::GenomicPositions{T}) where T
-    same_genome(query, target) || throw(ArgumentError("query and target must be from the same genome."))
+function nearest(query::GenomicPositions{T}, target::GenomicPositions{T}) where {T}
+    same_genome(query, target) ||
+        throw(ArgumentError("query and target must be from the same genome."))
     target_gpos = target.genopos
     target_chrs = chromosomes(target)
     nquery = length(query)
-    res = Vector{Int64}(undef,nquery)
+    res = Vector{Int64}(undef, nquery)
     i = 1
     for (qpos, qchr) in zip(genostarts(query), chromosomes(query))
         temp_min = typemax(Int64)

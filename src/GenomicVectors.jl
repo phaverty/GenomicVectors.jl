@@ -33,7 +33,23 @@ export findoverlaps, overlap_table, eachrange
 export disjoin, gaps, coverage, collapse
 
 # Delegations
-import Base: similar, copy, unique, size, length, lastindex, issubset, vcat, union, intersect, setdiff, symdiff, append!, prepend!, resize!, reduce
+import Base:
+    similar,
+    copy,
+    unique,
+    size,
+    length,
+    lastindex,
+    issubset,
+    vcat,
+    union,
+    intersect,
+    setdiff,
+    symdiff,
+    append!,
+    prepend!,
+    resize!,
+    reduce
 
 # GenomicDataFrame
 export rowindex, table
@@ -54,7 +70,7 @@ include("precompile.jl")
 _precompile_()
 
 function __init__()
-	 @require RCall="6f49c342-dc21-5d91-9882-a32aef131414" include("rcall.jl")
+    @require RCall = "6f49c342-dc21-5d91-9882-a32aef131414" include("rcall.jl")
 end
 
 end # module

@@ -3,10 +3,7 @@
 ############################################
 
 function GenomeInfo(genome_name, reader::XAM.BAM.Reader)
-    GenomeInfo(genome_name,
-               reader.refseqnames,
-               reader.refseqlens
-               )
+    GenomeInfo(genome_name, reader.refseqnames, reader.refseqlens)
 end
 
 function GenomicRanges(genome_name, reader::XAM.BAM.Reader)
@@ -64,11 +61,11 @@ function coverage(reader::XAM.BAM.Reader)
             e = rightposition(record) + offset
             r = s:e
             x = out[r]
-            for i in 1:length(x.runvalues)
+            for i = 1:length(x.runvalues)
                 @inbounds x.runvalues[i] = x.runvalues[i] + 1
             end
             out[r] = x
         end
-        end
+    end
     out
 end
