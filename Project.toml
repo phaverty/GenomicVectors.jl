@@ -1,23 +1,22 @@
 name = "GenomicVectors"
 uuid = "96124ad7-5c0a-5c8f-8316-419835a3cefd"
-version = "1.1.0"
+version = "1.1.1"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 GenomicFeatures = "899a7d2d-5c61-547b-bef9-6698a8d05446"
-JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 OrderedCollections = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 RLEVectors = "17b45ede-fd0d-54ef-b825-8cf9fc64da95"
 Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 XAM = "d759349c-bcba-11e9-07c2-5b90f8f05f7c"
 
 [compat]
-DataFrames = "0.20.2"
-GenomicFeatures = "2.0.0"
-OrderedCollections = "1.1.0"
-RLEVectors = "0.8.2"
-Requires = "1.0.1"
-XAM = "0.2.1"
+DataFrames = "^0.22.0"
+GenomicFeatures = "^2.0.0"
+OrderedCollections = "~1.3.0"
+RLEVectors = "^0.9.0"
+Requires = "~1.1.0"
+XAM = "^0.2.1"
 julia = "1"
 
 [extras]

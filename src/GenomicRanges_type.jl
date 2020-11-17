@@ -172,7 +172,7 @@ end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicRanges)
     df = convert(DataFrame, x)
-    String[string(c, ":", s, "-", e) for (c, s, e) in zip(df[:Chromosome], df[:Start], df[:End])]
+    String[string(c, ":", s, "-", e) for (c, s, e) in zip(df[:,:Chromosome], df[:,:Start], df[:,:End])]
 end
 
 Base.convert(::Type{Vector}, x::GenomicRanges) = collect(eachrange(x))

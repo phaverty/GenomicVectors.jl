@@ -95,7 +95,7 @@ end
 
 function Base.convert(::Type{Vector{String}}, x::GenomicPositions)
     df = convert(DataFrame, x)
-    [string(chr, ":", pos, "-", pos) for (chr, pos) in zip(df[:Chromosome], df[:Position])]
+    [string(chr, ":", pos, "-", pos) for (chr, pos) in zip(df[:,:Chromosome], df[:,:Position])]
 end
 Base.convert(::Type{Vector}, x::GenomicPositions) = genostarts(x)
 
