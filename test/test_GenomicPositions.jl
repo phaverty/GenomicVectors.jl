@@ -67,7 +67,7 @@ using GenomicFeatures
     @test genome(x) == "hg19"
     @test chr_names(x) == [:chr1, :chr2, :chrX]
     @test isa(strands(x), RLEVector)
-    @test chromosomes(x) == [Symbol(x) for x in chrs]
+    @test chromosomes(x) == chrs
 
     ## Indexing
     chrinfo = GenomeInfo("hg19", ["chr1", "chr2", "chrX"], Int64[3e5, 2e5, 1e4])

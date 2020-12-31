@@ -64,7 +64,7 @@ using RLEVectors
     @test genoends(gr) == ge
     @test strands(gr) == [STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA]
     @test GenomicVectors._strands(gr) == [STRAND_NA, STRAND_NA, STRAND_NA, STRAND_NA]
-    @test chromosomes(gr) == [:chr1, :chr2, :chr2, :chrX]
+    @test chromosomes(gr) == ["chr1", "chr2", "chr2", "chrX"]
 
     # Sorting
     chrinfo = GenomeInfo("hg19", ["chr1", "chr2", "chrX"], Int64[3e5, 2e5, 1e4])

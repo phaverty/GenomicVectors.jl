@@ -79,8 +79,8 @@ end
 function chromosomes(positions, chrinfo::GenomeInfo)
     ends = chr_ends(chrinfo)
     offsets = chr_offsets(chrinfo)
-    chrs = chr_names(chrinfo)
-    res = Vector{Symbol}(undef, length(positions))
+    chrs = [string(x) for x in chr_names(chrinfo)]
+    res = Vector{String}(undef, length(positions))
     i = r = 1
     e = ends[r]
     o = offsets[r]
