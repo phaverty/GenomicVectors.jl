@@ -1,7 +1,9 @@
 using Documenter, GenomicVectors
 
 makedocs(
-         modules = [GenomicVectors]
+         modules = [GenomicVectors],
+         format = :html
+         sitename = "GenomicVectors"
          )
 
 deploydocs(
