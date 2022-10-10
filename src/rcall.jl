@@ -29,7 +29,7 @@ function RCall.sexp(f::GenomicRanges)
     RCall.R"GRanges($c, IRanges($s, $e))
 end
 
-#function RCall.sexp(f::GenomicDataFrame)
+function RCall.sexp(f::GenomicDataFrame)
 #    RCall.R"library(GenomicRanges)"
 #    s = starts(f)
 #    e = ends(f)
@@ -38,7 +38,7 @@ end
 #    i = RCall.rcopy(chr_info(f))
 #    m = table(f)
 #    RCall.R"GRanges($c, IRanges($s, $e), $r, seqinfo = $i, mcols = DataFrame($m))"
-#end
+end
 
 #function RCall.rcopy(::Type{GenomicDataFrame}, s::Ptr{RCall.S4Sxp})
 #    GenomicDataFrame(
