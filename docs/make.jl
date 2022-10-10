@@ -2,7 +2,7 @@ using Documenter, GenomicVectors
 
 makedocs(
          modules = [GenomicVectors],
-         format = :html
+         format = :html,
          sitename = "GenomicVectors"
          )
 
