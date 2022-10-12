@@ -1,10 +1,9 @@
 using Documenter, GenomicVectors
 
 makedocs(
-         modules = [GenomicVectors]
+         sitename = "GenomicVectors"
          )
 
 deploydocs(
-           repo = "github.com/phaverty/GenomicVectors.jl.git",
-           julia = "release"
+           repo = "github.com/phaverty/GenomicVectors.jl.git"
            )

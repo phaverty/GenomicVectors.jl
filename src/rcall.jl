@@ -1,11 +1,11 @@
 using .RCall
 
 function RCall.sexp(f::GenomeInfo)
-    RCall.R"library(GenomicRanges)"
+    @rlibrary GenomicRanges
     s = [string(x) for x in chr_names(f)]
     l = collect(chr_lengths(f))
     g = genome(f)
-    RCall.R"Seqinfo($s, $l, NA, $g)"
+    RCall.reval("Seqinfo($s, $l, NA, $g)")
 end
 
 function RCall.rcopy(::Type{GenomeInfo}, s::Ptr{RCall.S4Sxp})
@@ -17,7 +17,7 @@ function RCall.rcopy(::Type{GenomeInfo}, s::Ptr{RCall.S4Sxp})
 end
 
 function RCall.sexp(f::GenomicRanges)
-    RCall.R"library(GenomicRanges)"
+    @rlibrary GenomicRanges
     s = starts(f)
     e = ends(f)
     c = [string(x) for x in chromosomes(f)]
@@ -26,11 +26,11 @@ function RCall.sexp(f::GenomicRanges)
 #    RCall.R"GRanges($c, IRanges($s, $e), $r, seqinfo = $i)"
 #    RCall.R"GRanges($c, IRanges($s, $e), seqinfo = $i)
 #    RCall.R"GRanges($c, IRanges($s, $e), $r)
-    RCall.R"GRanges($c, IRanges($s, $e))
+    RCall.reval("GRanges($c, IRanges($s, $e))")
 end
 
 #function RCall.sexp(f::GenomicDataFrame)
-#    RCall.R"library(GenomicRanges)"
+#    @rlibrary GenomicRanges
 #    s = starts(f)
 #    e = ends(f)
 #    c = [string(x) for x in chromosomes(f)]
