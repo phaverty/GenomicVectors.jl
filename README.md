@@ -1,6 +1,6 @@
 # GenomicVectors
 
-[![Build Status](https://travis-ci.com/phaverty/GenomicVectors.jl.svg?branch=master)](https://travis-ci.com/phaverty/GenomicVectors.jl)
+[![CI Testing](https://github.com/phaverty/GenomicVectors.jl/workflows/CI/badge.svg)](https://github.com/phaverty/GenomicVectors.jl/actions?query=workflow%3ACI+branch%3Amain)
 [![Coverage Status](https://codecov.io/github/phaverty/GenomicVectors.jl/coverage.svg?branch=master)](https://codecov.io/github/phaverty/GenomicVectors.jl?branch=master)
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://phaverty.github.io/GenomicVectors.jl/latest)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://phaverty.github.io/GenomicVectors.jl/stable)
